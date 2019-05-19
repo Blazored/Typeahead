@@ -1,0 +1,138 @@
+﻿@*@inherits BlazoredTypeaheadBase*@
+@typeparam TItem
+
+<div class="blazored-typeahead">
+    <input class="blazored-typeahead__input" 
+           bind-value-oninput="@SearchText" 
+           onfocus="@HandleFocus"
+           onkeyup="@HandleKeypress"
+           type="text" 
+           autocomplete="off" 
+           placeholder="@Placeholder" />
+
+    @if (Searching && SearchResults.Any())
+    {
+        <div class="blazored-typeahead__results">
+            @foreach (var item in SearchResults)
+            {
+                if (ResultTemplate != null)
+                {
+                    <div class="blazored-typeahead__result" onclick="@(async () => await SelectResult(item))">
+                        @ResultTemplate(item)
+                    </div>
+                }
+                else
+                {
+                    <div class="blazored-typeahead__result" onclick="@(async () => await SelectResult(item))">
+                        @item.ToString()
+                    </div>
+                }
+            }
+        </div>
+    }
+    else if (Searching && !SearchResults.Any())
+    {
+        <div class="blazored-typeahead__results">
+            @if (NotFoundTemplate != null)
+            {
+                <div class="blazored-typeahead__notfound">
+                    @NotFoundTemplate
+                </div>
+            }
+            else
+            {
+                <div class="blazored-typeahead__notfound">
+                    Not Results Found.
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@functions {
+
+    [Parameter] protected string Placeholder { get; set; }
+    [Parameter] protected TItem Item { get; set; }
+    [Parameter] protected EventCallback<TItem> ItemChanged { get; set; }
+    [Parameter] protected List<TItem> Data { get; set; }
+    [Parameter] protected string Remote { get; set; }
+    [Parameter] protected RenderFragment NotFoundTemplate { get; set; }
+    [Parameter] protected RenderFragment<TItem> ResultTemplate { get; set; }
+    [Parameter] protected int MinimumLength { get; set; } = 1;
+    [Parameter] protected Func<TItem, string> SearchOn { get; set; }
+
+    protected bool Searching { get; set; } = false;
+    protected List<TItem> SearchResults { get; set; } = new List<TItem>();
+
+    private string _searchText;
+    protected string SearchText
+    {
+        get => _searchText;
+        set
+        {
+            _searchText = value;
+
+            if (value.Length == 0)
+            {
+                Searching = false;
+                SearchResults.Clear();
+            }
+            else if (value.Length > MinimumLength)
+            {
+                Console.WriteLine($"Invoking search using query: {value}");
+                Searching = true;
+                Search(value);
+            }
+        }
+    }
+
+    protected override void OnInit()
+    {
+        if (Data != null && Remote != null)
+        {
+            throw new InvalidOperationException("Cannot use local and remote data sources");
+        }
+    }
+
+    protected void HandleFocus()
+    {
+        if (!string.IsNullOrWhiteSpace(_searchText))
+        {
+            Searching = true;
+            Console.WriteLine("Existing Search Continuing");
+        }
+    }
+
+    protected void HandleKeypress(UIKeyboardEventArgs args)
+    {
+        if (args.Key == "Escape")
+        {
+            Searching = false;
+        }
+    }
+
+    protected void Search(string query)
+    {
+        if (Data != null)
+        {
+            SearchData(query);
+        }
+        else
+        {
+            // Search Remote
+        }
+    }
+
+    protected async Task SelectResult(TItem item)
+    {
+        Console.WriteLine($"Selecting Item: {item}");
+        Item = item;
+        await ItemChanged.InvokeAsync(item);
+        Searching = false;
+    }
+
+    private void SearchData(string query)
+    {
+        SearchResults = Data.Where(x => SearchOn(x).ToString().ToLower().Contains(query)).ToList();
+    }
+}

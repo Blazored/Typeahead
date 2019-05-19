@@ -1,0 +1,53 @@
+﻿@page "/"
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+<BlazoredTypeahead Data="@People" 
+                   SearchOn="@(x => x.Firstname)" 
+                   bind-Item="@SelectedPerson"
+                   Placeholder="Search by first name...">
+    <ResultTemplate>
+        @context.Firstname @context.Lastname
+    </ResultTemplate>
+</BlazoredTypeahead>
+
+@if (SelectedPerson != null)
+{
+    <br />
+    <p><strong>Selected Person:</strong> @SelectedPerson.Firstname @SelectedPerson.Lastname</p>
+}
+
+@functions {
+
+    private List<Person> People = new List<Person>();
+
+    private Person SelectedPerson;
+
+    protected override void OnInit()
+    {
+        var person1 = new Person { Firstname = "John", Lastname = "Smith" };
+        var person2 = new Person { Firstname = "Jane", Lastname = "Doe" };
+        var person3 = new Person { Firstname = "Tom", Lastname = "Jones" };
+        var person4 = new Person { Firstname = "Fred", Lastname = "Gouch" };
+        var person5 = new Person { Firstname = "John", Lastname = "Philips" };
+        var person6 = new Person { Firstname = "Jon", Lastname = "Thomas" };
+
+        People.Add(person1);
+        People.Add(person2);
+        People.Add(person3);
+        People.Add(person4);
+        People.Add(person5);
+        People.Add(person6);
+    }
+
+    class Person
+    {
+        public string Firstname { get; set; }
+        public string Lastname { get; set; }
+    }
+
+}

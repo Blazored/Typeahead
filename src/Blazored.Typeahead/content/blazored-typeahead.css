@@ -1,0 +1,24 @@
+﻿.blazored-typeahead {
+
+}
+
+.blazored-typeahead__input {
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #bfbfbf;
+    padding: .5rem;
+}
+
+.blazored-typeahead__results {
+    box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    padding-top: .5rem;
+}
+
+.blazored-typeahead__result {
+    padding: .5rem;
+}
+
+.blazored-typeahead__result:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
