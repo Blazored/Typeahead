@@ -1,14 +1,25 @@
-﻿@*@inherits BlazoredTypeaheadBase*@
-@typeparam TItem
+﻿@typeparam TItem
+@inherits BlazoredTypeaheadBase<TItem>
 
 <div class="blazored-typeahead">
-    <input class="blazored-typeahead__input" 
-           bind-value-oninput="@SearchText" 
-           onfocus="@HandleFocus"
-           onkeyup="@HandleKeypress"
-           type="text" 
-           autocomplete="off" 
-           placeholder="@Placeholder" />
+    <div class="blazored-typeahead__controls" onclick="@HandleFocus">
+        @if (EditMode)
+        {
+            <input class="blazored-typeahead__input"
+                   bind-value-oninput="@SearchText"
+                   onfocus="@HandleFocus"
+                   onkeyup="@HandleKeypress"
+                   type="text"
+                   autocomplete="off"
+                   placeholder="@Placeholder" />
+        }
+        else if (!EditMode && Item != null)
+        {
+            <div class="blazored-typeahead__input-mask">
+                @SelectedTemplate(Item)
+            </div>
+        }
+    </div>
 
     @if (Searching && SearchResults.Any())
     {
@@ -18,7 +29,7 @@
                 if (ResultTemplate != null)
                 {
                     <div class="blazored-typeahead__result" onclick="@(async () => await SelectResult(item))">
-                        @ResultTemplate(item)
+                        @ResultTemplate(item).
                     </div>
                 }
                 else
@@ -48,105 +59,3 @@
         </div>
     }
 </div>
-
-@functions {
-
-    [Parameter] protected string Placeholder { get; set; }
-    [Parameter] protected TItem Item { get; set; }
-    [Parameter] protected EventCallback<TItem> ItemChanged { get; set; }
-    [Parameter] protected List<TItem> Data { get; set; }
-    [Parameter] protected string Remote { get; set; }
-    [Parameter] protected RenderFragment NotFoundTemplate { get; set; }
-    [Parameter] protected RenderFragment<TItem> ResultTemplate { get; set; }
-    [Parameter] protected int MinimumLength { get; set; } = 1;
-    [Parameter] protected Func<TItem, string> SearchOn { get; set; }
-    [Parameter] protected int Debounce { get; set; } = 300;
-
-    protected bool Searching { get; set; } = false;
-    protected List<TItem> SearchResults { get; set; } = new List<TItem>();
-
-    private System.Timers.Timer _debounceTimer;
-
-    private string _searchText;
-    protected string SearchText
-    {
-        get => _searchText;
-        set
-        {
-            _searchText = value;
-
-            if (value.Length == 0)
-            {
-                _debounceTimer.Stop();
-                Searching = false;
-                SearchResults.Clear();
-            }
-            else if (value.Length > MinimumLength)
-            {
-                _debounceTimer.Stop();
-                Console.WriteLine($"Starting Debounce Timer");
-                _debounceTimer.Start();
-                Searching = true;
-                Console.WriteLine($"Started Debounce Timer");
-                //Search(value);
-            }
-        }
-    }
-
-    protected override void OnInit()
-    {
-        if (Data != null && Remote != null)
-        {
-            throw new InvalidOperationException("Cannot use local and remote data sources");
-        }
-
-        _debounceTimer = new System.Timers.Timer();
-        _debounceTimer.Interval = Debounce;
-        _debounceTimer.AutoReset = false;
-        _debounceTimer.Elapsed += Search;
-    }
-
-    protected void HandleFocus()
-    {
-        if (!string.IsNullOrWhiteSpace(_searchText))
-        {
-            Searching = true;
-            Console.WriteLine("Existing Search Continuing");
-        }
-    }
-
-    protected void HandleKeypress(UIKeyboardEventArgs args)
-    {
-        if (args.Key == "Escape")
-        {
-            Searching = false;
-        }
-    }
-
-    protected void Search(Object source, System.Timers.ElapsedEventArgs e)
-    {
-        Console.WriteLine($"Debounce timer elapsed, beginning search for {_searchText}");
-        if (Data != null)
-        {
-            SearchData(_searchText);
-            StateHasChanged();
-        }
-        else
-        {
-            // Search Remote
-        }
-    }
-
-    protected async Task SelectResult(TItem item)
-    {
-        Console.WriteLine($"Selecting Item: {item}");
-        Item = item;
-        await ItemChanged.InvokeAsync(item);
-        Searching = false;
-    }
-
-    private void SearchData(string query)
-    {
-        SearchResults = Data.Where(x => SearchOn(x).ToString().ToLower().Contains(query)).ToList();
-    }
-}

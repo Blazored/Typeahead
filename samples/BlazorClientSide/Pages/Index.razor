@@ -11,6 +11,9 @@ Welcome to your new app.
                    bind-Item="@SelectedPerson"
                    Placeholder="Search by first name..."
                    Debounce="1000">
+    <SelectedTemplate>
+        @context.Firstname
+    </SelectedTemplate>
     <ResultTemplate>
         @context.Firstname @context.Lastname
     </ResultTemplate>
