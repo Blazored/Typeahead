@@ -2,6 +2,10 @@
 
 }
 
+.blazored-typeahead__controls {
+    cursor: text;
+}
+
 .blazored-typeahead__input {
     width: 100%;
     border-radius: 5px;
