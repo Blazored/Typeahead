@@ -9,7 +9,8 @@ Welcome to your new app.
 <BlazoredTypeahead Data="@People" 
                    SearchOn="@(x => x.Firstname)" 
                    bind-Item="@SelectedPerson"
-                   Placeholder="Search by first name...">
+                   Placeholder="Search by first name..."
+                   Debounce="1000">
     <ResultTemplate>
         @context.Firstname @context.Lastname
     </ResultTemplate>
