@@ -6,8 +6,10 @@ Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
 
-<BlazoredTypeahead Data="@People" 
-                   SearchOn="@(x => x.Firstname)" 
+<h1>Local Data Sample</h1>
+
+<BlazoredTypeahead Data="@People"
+                   SearchOn="@(x => x.Firstname)"
                    bind-Item="@SelectedPerson"
                    Placeholder="Search by first name..."
                    Debounce="1000">
@@ -25,11 +27,56 @@ Welcome to your new app.
     <p><strong>Selected Person:</strong> @SelectedPerson.Firstname @SelectedPerson.Lastname</p>
 }
 
+<hr />
+<h1>Remote Data Sample</h1>
+<BlazoredTypeahead Remote="https://localhost:44376/api/persons/?name={query}"
+                   TItem="Person"
+                   bind-Item="@RemoteSelectedPerson"
+                   Placeholder="Search by name...">
+    <SelectedTemplate>
+        @context.Firstname @context.Lastname
+    </SelectedTemplate>
+    <ResultTemplate>
+        @context.Firstname @context.Lastname <br />
+        @context.Location (Age: @context.Age)
+    </ResultTemplate>
+</BlazoredTypeahead>
+
+@if (RemoteSelectedPerson != null)
+{
+    <br />
+    <p><strong>Selected Person:</strong> @RemoteSelectedPerson.Firstname @RemoteSelectedPerson.Lastname</p>
+}
+
+<hr />
+<h1>Pre-selected Data Sample</h1>
+
+<BlazoredTypeahead Data="@People"
+                   SearchOn="@(x => x.Firstname)"
+                   bind-Item="@PreSelectedPerson"
+                   Placeholder="Search by first name..."
+                   Debounce="1000">
+    <SelectedTemplate>
+        @context.Firstname
+    </SelectedTemplate>
+    <ResultTemplate>
+        @context.Firstname @context.Lastname
+    </ResultTemplate>
+</BlazoredTypeahead>
+
+@if (PreSelectedPerson != null)
+{
+    <br />
+    <p><strong>Selected Person:</strong> @PreSelectedPerson.Firstname @PreSelectedPerson.Lastname</p>
+}
+
 @functions {
 
     private List<Person> People = new List<Person>();
 
     private Person SelectedPerson;
+    private Person RemoteSelectedPerson;
+    private Person PreSelectedPerson;
 
     protected override void OnInit()
     {
@@ -46,12 +93,8 @@ Welcome to your new app.
         People.Add(person4);
         People.Add(person5);
         People.Add(person6);
-    }
 
-    class Person
-    {
-        public string Firstname { get; set; }
-        public string Lastname { get; set; }
+        PreSelectedPerson = person5;
     }
 
 }

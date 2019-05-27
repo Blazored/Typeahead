@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Timers;
 
@@ -9,6 +10,8 @@ namespace Blazored.Typeahead
 {
     public class BlazoredTypeaheadBase<TItem> : ComponentBase, IDisposable
     {
+        [Inject] private HttpClient HttpClient { get; set; }
+
         [Parameter] protected string Placeholder { get; set; }
         [Parameter] protected TItem Item { get; set; }
         [Parameter] protected EventCallback<TItem> ItemChanged { get; set; }
@@ -38,17 +41,12 @@ namespace Blazored.Typeahead
                 if (value.Length == 0)
                 {
                     _debounceTimer.Stop();
-                    Searching = false;
                     SearchResults.Clear();
                 }
                 else if (value.Length > MinimumLength)
                 {
-                    Console.WriteLine($"Resetting Debounce Timer");
                     _debounceTimer.Stop();
-                    Console.WriteLine($"Starting Debounce Timer");
                     _debounceTimer.Start();
-                    Searching = true;
-                    Console.WriteLine($"Started Debounce Timer");
                 }
             }
         }
@@ -64,52 +62,49 @@ namespace Blazored.Typeahead
             _debounceTimer.Interval = Debounce;
             _debounceTimer.AutoReset = false;
             _debounceTimer.Elapsed += Search;
+
+            if (Item != null)
+            {
+                EditMode = false;
+            }
         }
 
         protected void HandleFocus()
         {
+            SearchText = "";
             EditMode = true;
-            if (!string.IsNullOrWhiteSpace(_searchText))
-            {
-                Searching = true;
-                Console.WriteLine("Existing Search Continuing");
-            }
         }
 
-        protected void HandleKeypress(UIKeyboardEventArgs args)
+        protected async void Search(Object source, ElapsedEventArgs e)
         {
-            if (args.Key == "Escape")
-            {
-                Searching = false;
-            }
-        }
+            Searching = true;
+            StateHasChanged();
 
-        protected void Search(Object source, ElapsedEventArgs e)
-        {
-            Console.WriteLine($"Debounce timer elapsed, beginning search for {_searchText}");
             if (Data != null)
             {
                 SearchData(_searchText);
-                StateHasChanged();
             }
             else
             {
-                // Search Remote
+                var remote = Remote.Replace("{query}", _searchText);
+                SearchResults = await HttpClient.GetJsonAsync<List<TItem>>(remote);
             }
+
+            Searching = false;
+            StateHasChanged();
         }
 
         protected async Task SelectResult(TItem item)
         {
-            Console.WriteLine($"Selecting Item: {item}");
             Item = item;
             await ItemChanged.InvokeAsync(item);
-            Searching = false;
+
             EditMode = false;
         }
 
         private void SearchData(string query)
         {
-            SearchResults = Data.Where(x => SearchOn(x).ToString().ToLower().Contains(query)).ToList();
+            SearchResults = Data.Where(x => SearchOn(x).ToString().ToLower().Contains(query.ToLower())).ToList();
         }
 
         public void Dispose()

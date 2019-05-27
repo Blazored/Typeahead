@@ -2,26 +2,31 @@
 @inherits BlazoredTypeaheadBase<TItem>
 
 <div class="blazored-typeahead">
-    <div class="blazored-typeahead__controls" onclick="@HandleFocus">
+    <div class="blazored-typeahead__controls">
         @if (EditMode)
         {
             <input class="blazored-typeahead__input"
                    bind-value-oninput="@SearchText"
                    onfocus="@HandleFocus"
-                   onkeyup="@HandleKeypress"
                    type="text"
                    autocomplete="off"
                    placeholder="@Placeholder" />
+            @if (Searching)
+            {
+                <div class="blazored-typeahead__loader-container">
+                    <div class="blazored-typeahead__loader"></div>
+                </div>
+            }
         }
         else if (!EditMode && Item != null)
         {
-            <div class="blazored-typeahead__input-mask">
+            <div class="blazored-typeahead__input-mask" onclick="@HandleFocus">
                 @SelectedTemplate(Item)
             </div>
         }
     </div>
 
-    @if (Searching && SearchResults.Any())
+    @if (EditMode && !string.IsNullOrWhiteSpace(SearchText) && SearchResults.Any())
     {
         <div class="blazored-typeahead__results">
             @foreach (var item in SearchResults)
@@ -29,7 +34,7 @@
                 if (ResultTemplate != null)
                 {
                     <div class="blazored-typeahead__result" onclick="@(async () => await SelectResult(item))">
-                        @ResultTemplate(item).
+                        @ResultTemplate(item)
                     </div>
                 }
                 else
@@ -41,7 +46,7 @@
             }
         </div>
     }
-    else if (Searching && !SearchResults.Any())
+    else if (EditMode && !string.IsNullOrWhiteSpace(SearchText) && !SearchResults.Any())
     {
         <div class="blazored-typeahead__results">
             @if (NotFoundTemplate != null)
@@ -53,7 +58,7 @@
             else
             {
                 <div class="blazored-typeahead__notfound">
-                    Not Results Found.
+                    No Results Found
                 </div>
             }
         </div>
