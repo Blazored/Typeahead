@@ -1,0 +1,34 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'vs2017-win2016'
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+- task: DotNetCoreInstaller@0
+  displayName: 'Installing .NET Core SDK...'
+  inputs:
+    version: 3.0.100-preview5-011568
+
+- task: NuGetToolInstaller@0
+  displayName: 'Installing Nuget Tools...'
+  inputs:
+    versionSpec: '4.9.2'
+
+- script: dotnet build --configuration $(buildConfiguration) src/Blazored.Typeahead/Blazored.Typeahead.csproj
+  displayName: 'Building $(buildConfiguration)...'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Generating Nuget Package... '
+  inputs:
+    command: pack
+
+    arguments: --no-build
+    packagesToPack: src/Blazored.Typeahead/Blazored.Typeahead.csproj
+    configuration: $(buildConfiguration)
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publishing Build Artifacts...'
