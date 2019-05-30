@@ -33,43 +33,73 @@ Once you've done this you can add the control to a component like so.
 <BlazoredTypeahead></BlazoredTypeahead>
 ```
 
-The control has two modes, local and remote. In local mode, you must provide the data and which property to search on. In remote mode, you provide a remote URL to query such as an API endpoint.
+### Local Data Example
 
-### Local Mode Example
 ```
-<BlazoredTypeahead Data="@People"
-                   SearchOn="@(x => x.Firstname)"
-                   bind-Item="@SelectedPerson">
+<BlazoredTypeahead Data="@SearchFilms"
+                   bind-Item="@SelectedFilm">
     <SelectedTemplate>
-        @context.Firstname
+        @context.Title
     </SelectedTemplate>
     <ResultTemplate>
-        @context.Firstname @context.Lastname
+        @context.Title (@context.Year)
     </ResultTemplate>
 </BlazoredTypeahead>
+
+@functions {
+
+    [Parameter] protected List<Film> Films { get; set; }
+
+    private async Task<List<Film>> SearchFilms(string searchText) 
+    {
+        return await Task.FromResult(Films.Where(x => x.Title.ToLower().Contains(searchText.ToLower())).ToList());
+    }
+
+}
 ```
+In the example above, the component is setup with the minimum requirements. You must provide a method which has the following signature `Task<List<T> MethodName(string searchText)`, to the `Data` parameter. The control will call this method with the current search text everytime the debounce timer expires (default: 300ms). You must also set a value for the `Item` parameter. This will be populated with the item selected from the search results.
 
-The code above is the minimum required to use the control in local mode. `Data` is the list of people the control will search on. The `SearchOn` parameter is used to tell the control which field to search. Finally, `bind-Item` is used to bind the selected item to a local field.
+The component requires two templates to be provided...
 
-The example also shows the two required templates, `SelectedTemplate` and `ResultTemplate`. The `SelectedTemplate` is used when an item is selected from the results list. The `ResultTemplate` is used for each result in the results list when searching.
+- `SelectedTemplate`
+- `ResultTemplates`
 
-### Remote Mode Example
+The `SelectedTemplate` is used to display the selected item and the `ResultTemplate` is used to display each result in the search list.
+
+
+### Remote Data Example
+
 ```
-<BlazoredTypeahead Remote="https://somesite.com/api/persons/?name={query}"
-                   TItem="Person"
-                   bind-Item="@SelectedPerson">
+@inject HttpClient httpClient
+
+<BlazoredTypeahead Data="@SearchFilms"
+                   bind-Item="@SelectedFilm"
+                   Debounce="500">
     <SelectedTemplate>
-        @context.Firstname @context.Lastname
+        @context.Title
     </SelectedTemplate>
     <ResultTemplate>
-        @context.Firstname @context.Lastname
+        @context.Title (@context.Year)
     </ResultTemplate>
+    <NotFoundTemplate>
+        Sorry, there weren't any search results.
+    </NotFoundTemplate>
 </BlazoredTypeahead>
+
+@functions {
+
+    [Parameter] protected List<Film> Films { get; set; }
+
+    private async Task<List<Film>> SearchFilms(string searchText) 
+    {
+        var response = await httpClient.GetJsonAsync<List<Film>>($"https://allfilms.com/api/films/?title={searchText}");
+        return response;
+    }
+
+}
 ```
+Because you provide the search method to the component, making a remote call is really straight-forward. In this example, the `Debounce` parameter has been upped to 500ms and the `NotFoundTemplate` has been specified.
 
-The code above is the minimum required to use the control in remote mode. `Remote` is the URL you want the control to query. When providing this URL you must include the `{query}` placeholder. The control will replace this with the search text before making a request. You must also provide the type of the result object you're expecting from the API using the `TItem` property. Again, `bind-Item` is used to bind the selected item to a local field.
-
-The example again shows the two required templates, `SelectedTemplate` and `ResultTemplate`.
 
 ### Full Options List
 Below is a list of all the options available on the Typeahead.
@@ -83,9 +113,7 @@ Below is a list of all the options available on the Typeahead.
 **Parameters**
 
 - Item (Required) - Used for binding local field to selected item on control
-- Data (Local Mode Only) - Collection to use for searching
-- SearchOn (Local Mode Only) - Property used for searching
-- Remote (Remote Mode Only) - URL of remoate API used for searching
+- Data (Required) - Method to call when performing a search
 - Placeholder (Optional) - Allows user to specify a placeholder message
 - MinimumLength (Optional - Default 1) - Minimum number of characters before starting a search
 - Debounce (Optional - Default 300) - Time to wait after last keypress before starting a search
