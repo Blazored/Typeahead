@@ -12,11 +12,11 @@
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
 
     <PackageId>Blazored.Typeahead</PackageId>
-    <Version>2.0.1</Version>
+    <Version>2.0.2</Version>
     <Authors>Chris Sainty</Authors>
     <Description>A typeahead control for Blazor applications</Description>
     <Copyright>Copyright 2019 (c) Chris Sainty. All rights reserved.</Copyright>
-    <PackageLicenseUrl>https://github.com/blazored/Typeahead/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/blazored/Typeahead</PackageProjectUrl>
     <PackageIconUrl>https://avatars1.githubusercontent.com/u/39194025</PackageIconUrl>
     <RepositoryUrl>https://github.com/blazored/Typeahead</RepositoryUrl>
