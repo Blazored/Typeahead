@@ -72,12 +72,12 @@ namespace Blazored.Typeahead
         protected async void Search(Object source, ElapsedEventArgs e)
         {
             Searching = true;
-            StateHasChanged();
+            await Invoke(StateHasChanged);
 
             SearchResults = await Data?.Invoke(_searchText);
 
             Searching = false;
-            StateHasChanged();
+            await Invoke(StateHasChanged);
         }
 
         protected async Task SelectResult(TItem item)
