@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 
@@ -37,7 +38,7 @@ namespace Blazored.Typeahead
                     _debounceTimer.Stop();
                     SearchResults.Clear();
                 }
-                else if (value.Length > MinimumLength)
+                else if (value.Length >= MinimumLength)
                 {
                     _debounceTimer.Stop();
                     _debounceTimer.Start();
@@ -86,6 +87,22 @@ namespace Blazored.Typeahead
             await ItemChanged.InvokeAsync(item);
 
             EditMode = false;
+        }
+
+        protected bool ShowSuggestions()
+        {
+            return EditMode &&
+                   !string.IsNullOrWhiteSpace(SearchText) &&
+                   SearchText.Length >= MinimumLength &&
+                   SearchResults.Any();
+        }
+
+        protected bool ShowNotFound()
+        {
+            return EditMode && 
+                   !string.IsNullOrWhiteSpace(SearchText) && 
+                   SearchText.Length >= MinimumLength &&
+                   !SearchResults.Any();
         }
 
         public void Dispose()

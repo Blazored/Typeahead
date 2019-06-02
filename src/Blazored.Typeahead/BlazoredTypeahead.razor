@@ -26,7 +26,7 @@
         }
     </div>
 
-    @if (EditMode && !string.IsNullOrWhiteSpace(SearchText) && SearchResults.Any())
+    @if (ShowSuggestions())
     {
         <div class="blazored-typeahead__results">
             @foreach (var item in SearchResults)
@@ -46,7 +46,7 @@
             }
         </div>
     }
-    else if (EditMode && !string.IsNullOrWhiteSpace(SearchText) && !SearchResults.Any())
+    else if (ShowNotFound())
     {
         <div class="blazored-typeahead__results">
             @if (NotFoundTemplate != null)
