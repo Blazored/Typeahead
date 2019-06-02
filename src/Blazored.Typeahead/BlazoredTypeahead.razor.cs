@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace Blazored.Typeahead
 {
     public class BlazoredTypeaheadBase<TItem> : ComponentBase, IDisposable
     {
+        [Inject] IJSRuntime JSRuntime { get; set; }
+
         [Parameter] protected string Placeholder { get; set; }
         [Parameter] protected TItem Item { get; set; }
         [Parameter] protected EventCallback<TItem> ItemChanged { get; set; }
@@ -24,6 +27,7 @@ namespace Blazored.Typeahead
         protected List<TItem> SearchResults { get; set; } = new List<TItem>();
 
         private Timer _debounceTimer;
+        protected ElementRef searchInput;
 
         private string _searchText;
         protected string SearchText
@@ -64,10 +68,12 @@ namespace Blazored.Typeahead
             }
         }
 
-        protected void HandleFocus()
+        protected async Task HandleFocus()
         {
             SearchText = "";
             EditMode = true;
+            await Task.Delay(250);
+            await JSRuntime.InvokeAsync<object>("Blazored.Typeahead.SetFocus", searchInput);
         }
 
         protected async void Search(Object source, ElapsedEventArgs e)
