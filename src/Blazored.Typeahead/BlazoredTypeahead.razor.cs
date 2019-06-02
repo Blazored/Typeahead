@@ -72,6 +72,7 @@ namespace Blazored.Typeahead
         {
             SearchText = "";
             EditMode = true;
+            await Task.Delay(250);
             await JSRuntime.InvokeAsync<object>("Blazored.Typeahead.SetFocus", searchInput);
         }
 
