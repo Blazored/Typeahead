@@ -5,7 +5,7 @@
 
 # Custom
 src/Blazored.Typeahead/content/*.js
-src/Blazored.Typeahead/content/*.js.map
+src/Blazored.Typeahead/content/*.map
 
 # User-specific files
 *.suo

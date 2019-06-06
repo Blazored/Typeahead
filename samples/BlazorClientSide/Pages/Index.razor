@@ -11,7 +11,8 @@ Welcome to your new app.
 
 <BlazoredTypeahead Data="@GetPeopleLocal"
                    bind-Item="@SelectedPerson"
-                   Placeholder="Search by first name...">
+                   Placeholder="Search by first name..."
+                   MinimumLength="3">
     <SelectedTemplate>
         @context.Firstname
     </SelectedTemplate>
@@ -30,7 +31,8 @@ Welcome to your new app.
 <h1>Remote Data Sample</h1>
 <BlazoredTypeahead Data="@GetPeopleRemote"
                    bind-Item="@RemoteSelectedPerson"
-                   Placeholder="Search by name...">
+                   Placeholder="Search by name..."
+                   MinimumLength="3">
     <SelectedTemplate>
         @context.Firstname @context.Lastname
     </SelectedTemplate>
