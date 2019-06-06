@@ -19,10 +19,15 @@
                 </div>
             }
         }
-        else if (!EditMode && Item != null)
+        else if (!EditMode && Value != null)
         {
-            <div class="blazored-typeahead__input-mask" onclick="@HandleFocus">
-                @SelectedTemplate(Item)
+            <div class="blazored-typeahead__input-mask-wrapper">
+                <div class="blazored-typeahead__input-mask" onclick="@HandleFocus">
+                    @SelectedTemplate(Value)
+                </div>
+                <div class="blazored-typeahead__clear" onclick="@HandleClear">
+                    &#10005;
+                </div>
             </div>
         }
     </div>

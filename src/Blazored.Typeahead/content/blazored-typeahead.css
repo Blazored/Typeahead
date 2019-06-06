@@ -70,11 +70,30 @@
     }
 }
 
+.blazored-typeahead__input-mask-wrapper {
+    display: flex;
+}
+
 .blazored-typeahead__input-mask {
-    width: 100%;
-    border-radius: 5px;
-    border: 1px solid #bfbfbf;
+    flex: 1;
+    border-radius: 5px 0 0 5px;
+    border-top: 1px solid #bfbfbf;
+    border-bottom: 1px solid #bfbfbf;
     padding: .5rem;
+    border-left: 1px solid #bfbfbf;
+}
+
+.blazored-typeahead__clear {
+    width: 50px;
+    display: flex;
+    border-radius: 0 5px 5px 0;
+    border-top: 1px solid #bfbfbf;
+    padding: .5rem;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #bfbfbf;
+    border-right: 1px solid #bfbfbf;
+    cursor: pointer;
 }
 
 .blazored-typeahead__results {

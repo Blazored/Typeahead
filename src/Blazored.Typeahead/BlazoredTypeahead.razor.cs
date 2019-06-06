@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
@@ -8,12 +9,11 @@ using System.Timers;
 
 namespace Blazored.Typeahead
 {
-    public class BlazoredTypeaheadBase<TItem> : ComponentBase, IDisposable
+    public class BlazoredTypeaheadBase<TItem> : InputBase<TItem>, IDisposable
     {
         [Inject] IJSRuntime JSRuntime { get; set; }
 
         [Parameter] protected string Placeholder { get; set; }
-        [Parameter] protected TItem Item { get; set; }
         [Parameter] protected EventCallback<TItem> ItemChanged { get; set; }
         [Parameter] protected Func<string, Task<List<TItem>>> Data { get; set; }
         [Parameter] protected RenderFragment NotFoundTemplate { get; set; }
@@ -62,7 +62,7 @@ namespace Blazored.Typeahead
             _debounceTimer.AutoReset = false;
             _debounceTimer.Elapsed += Search;
 
-            if (Item != null)
+            if (Value != null)
             {
                 EditMode = false;
             }
@@ -72,6 +72,17 @@ namespace Blazored.Typeahead
         {
             SearchText = "";
             EditMode = true;
+            await Task.Delay(250);
+            await JSRuntime.InvokeAsync<object>("Blazored.Typeahead.SetFocus", searchInput);
+        }
+
+        protected async Task HandleClear()
+        {
+            await ValueChanged.InvokeAsync(default(TItem));
+            EditContext.NotifyFieldChanged(FieldIdentifier);
+
+            EditMode = true;
+
             await Task.Delay(250);
             await JSRuntime.InvokeAsync<object>("Blazored.Typeahead.SetFocus", searchInput);
         }
@@ -89,8 +100,8 @@ namespace Blazored.Typeahead
 
         protected async Task SelectResult(TItem item)
         {
-            Item = item;
-            await ItemChanged.InvokeAsync(item);
+            await ValueChanged.InvokeAsync(item);
+            EditContext.NotifyFieldChanged(FieldIdentifier);
 
             EditMode = false;
         }
@@ -111,9 +122,18 @@ namespace Blazored.Typeahead
                    !SearchResults.Any();
         }
 
+        protected override bool TryParseValueFromString(string value, out TItem result, out string validationErrorMessage)
+        {
+            result = (TItem)(object)value;
+            validationErrorMessage = null;
+
+            return true;
+        }
+
         public void Dispose()
         {
             _debounceTimer.Dispose();
         }
+
     }
 }

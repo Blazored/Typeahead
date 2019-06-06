@@ -7,7 +7,7 @@ Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
 
-<h1>Local Data Sample</h1>
+<!-- <h1>Local Data Sample</h1>
 
 <BlazoredTypeahead Data="@GetPeopleLocal"
                    bind-Item="@SelectedPerson"
@@ -67,6 +67,35 @@ Welcome to your new app.
 {
     <br />
     <p><strong>Selected Person:</strong> @PreSelectedPerson.Firstname @PreSelectedPerson.Lastname</p>
+} -->
+
+<hr />
+<h1>Forms Sample</h1>
+
+<EditForm Model="@FormModel" OnValidSubmit="@HandleFormSubmit">
+    <DataAnnotationsValidator />
+
+    <BlazoredTypeahead Data="@GetPeopleLocal"
+                   bind-Value="@FormModel.SelectedPerson"
+                   Placeholder="Search by first name...">
+        <SelectedTemplate Context="person">
+            @person.Firstname
+        </SelectedTemplate>
+        <ResultTemplate Context="person">
+            @person.Firstname @person.Lastname
+        </ResultTemplate>
+    </BlazoredTypeahead>
+    <ValidationMessage For="@(() => FormModel.SelectedPerson)" />
+
+        <button type="submit">Submit</button>
+</EditForm>
+
+
+
+@if (FormModel.SelectedPerson != null)
+{
+    <br />
+    <p><strong>Selected Person:</strong> @FormModel.SelectedPerson.Firstname @FormModel.SelectedPerson.Lastname</p>
 }
 
 @functions {
@@ -76,6 +105,7 @@ Welcome to your new app.
     private Person SelectedPerson;
     private Person RemoteSelectedPerson;
     private Person PreSelectedPerson;
+    private FormExample FormModel = new FormExample();
 
     protected override void OnInit()
     {
@@ -106,6 +136,11 @@ Welcome to your new app.
         var result = await httpClient.GetJsonAsync<List<Person>>($"https://localhost:44376/api/persons/?name={searchText}");
 
         return result;
+    }
+
+    private void HandleFormSubmit()
+    {
+        Console.WriteLine("Form Submitted Successfully!");
     }
 
 }
