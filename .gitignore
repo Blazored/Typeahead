@@ -3,6 +3,10 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Custom
+src/Blazored.Typeahead/content/*.js
+src/Blazored.Typeahead/content/*.js.map
+
 # User-specific files
 *.suo
 *.user
