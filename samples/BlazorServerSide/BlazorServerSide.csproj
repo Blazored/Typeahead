@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Blazored.Typeahead\Blazored.Typeahead.csproj" />
+    <ProjectReference Include="..\Shared\Sample.Shared.csproj" />
   </ItemGroup>
 
 </Project>

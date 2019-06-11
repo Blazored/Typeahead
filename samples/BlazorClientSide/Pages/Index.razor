@@ -1,81 +1,12 @@
 ﻿@page "/"
 @inject  HttpClient httpClient
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
-
-<!-- <h1>Local Data Sample</h1>
-
-<BlazoredTypeahead Data="@GetPeopleLocal"
-                   bind-Item="@SelectedPerson"
-                   Placeholder="Search by first name..."
-                   MinimumLength="3">
-    <SelectedTemplate>
-        @context.Firstname
-    </SelectedTemplate>
-    <ResultTemplate>
-        @context.Firstname @context.Lastname
-    </ResultTemplate>
-</BlazoredTypeahead>
-
-@if (SelectedPerson != null)
-{
-    <br />
-    <p><strong>Selected Person:</strong> @SelectedPerson.Firstname @SelectedPerson.Lastname</p>
-}
-
-<hr />
-<h1>Remote Data Sample</h1>
-<BlazoredTypeahead Data="@GetPeopleRemote"
-                   bind-Item="@RemoteSelectedPerson"
-                   Placeholder="Search by name..."
-                   MinimumLength="3">
-    <SelectedTemplate>
-        @context.Firstname @context.Lastname
-    </SelectedTemplate>
-    <ResultTemplate>
-        @context.Firstname @context.Lastname <br />
-        @context.Location (Age: @context.Age)
-    </ResultTemplate>
-</BlazoredTypeahead>
-
-@if (RemoteSelectedPerson != null)
-{
-    <br />
-    <p><strong>Selected Person:</strong> @RemoteSelectedPerson.Firstname @RemoteSelectedPerson.Lastname</p>
-}
-
-<hr />
-<h1>Pre-selected Data Sample</h1>
-
-<BlazoredTypeahead Data="@GetPeopleLocal"
-                   bind-Item="@PreSelectedPerson"
-                   Placeholder="Search by first name..."
-                   Debounce="1000">
-    <SelectedTemplate>
-        @context.Firstname
-    </SelectedTemplate>
-    <ResultTemplate>
-        @context.Firstname @context.Lastname
-    </ResultTemplate>
-</BlazoredTypeahead>
-
-@if (PreSelectedPerson != null)
-{
-    <br />
-    <p><strong>Selected Person:</strong> @PreSelectedPerson.Firstname @PreSelectedPerson.Lastname</p>
-} -->
-
-<hr />
-<h1>Forms Sample</h1>
+<h1>Blazored Typeahead</h1>
 
 <EditForm Model="@FormModel" OnValidSubmit="@HandleFormSubmit">
     <DataAnnotationsValidator />
 
-    <BlazoredTypeahead Data="@GetPeopleLocal"
+    <BlazoredTypeahead SearchMethod="@GetPeopleLocal"
                    bind-Value="@FormModel.SelectedPerson"
                    Placeholder="Search by first name...">
         <SelectedTemplate Context="person">

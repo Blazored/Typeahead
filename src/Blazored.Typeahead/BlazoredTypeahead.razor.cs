@@ -13,9 +13,8 @@ namespace Blazored.Typeahead
     {
         [Inject] IJSRuntime JSRuntime { get; set; }
 
-        [Parameter] protected string Placeholder { get; set; }
-        [Parameter] protected EventCallback<TItem> ItemChanged { get; set; }
-        [Parameter] protected Func<string, Task<List<TItem>>> Data { get; set; }
+        [Parameter] public string Placeholder { get; set; }
+        [Parameter] protected Func<string, Task<List<TItem>>> SearchMethod { get; set; }
         [Parameter] protected RenderFragment NotFoundTemplate { get; set; }
         [Parameter] protected RenderFragment<TItem> ResultTemplate { get; set; }
         [Parameter] protected RenderFragment<TItem> SelectedTemplate { get; set; }
@@ -52,9 +51,19 @@ namespace Blazored.Typeahead
 
         protected override void OnInit()
         {
-            if (Data == null)
+            if (SearchMethod == null)
             {
-                throw new InvalidOperationException("Must provide a data source");
+                throw new InvalidOperationException($"{GetType()} requires a {nameof(SearchMethod)} parameter.");
+            }
+
+            if (SelectedTemplate == null)
+            {
+                throw new InvalidOperationException($"{GetType()} requires a {nameof(SelectedTemplate)} parameter.");
+            }
+
+            if (ResultTemplate == null)
+            {
+                throw new InvalidOperationException($"{GetType()} requires a {nameof(ResultTemplate)} parameter.");
             }
 
             _debounceTimer = new Timer();
@@ -81,6 +90,7 @@ namespace Blazored.Typeahead
             await ValueChanged.InvokeAsync(default(TItem));
             EditContext.NotifyFieldChanged(FieldIdentifier);
 
+            _searchText = "";
             EditMode = true;
 
             await Task.Delay(250);
@@ -92,7 +102,7 @@ namespace Blazored.Typeahead
             Searching = true;
             await Invoke(StateHasChanged);
 
-            SearchResults = await Data?.Invoke(_searchText);
+            SearchResults = await SearchMethod?.Invoke(_searchText);
 
             Searching = false;
             await Invoke(StateHasChanged);

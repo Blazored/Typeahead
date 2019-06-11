@@ -1,5 +1,76 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+<h1>Blazored Typeahead</h1>
 
-Welcome to your new app.
+<EditForm Model="@FormModel" OnValidSubmit="@HandleFormSubmit">
+    <DataAnnotationsValidator />
+
+    <BlazoredTypeahead SearchMethod="@GetPeopleLocal"
+                       bind-Value="@FormModel.SelectedPerson"
+                       Placeholder="Search by first name...">
+        <SelectedTemplate Context="person">
+            @person.Firstname
+        </SelectedTemplate>
+        <ResultTemplate Context="person">
+            @person.Firstname @person.Lastname
+        </ResultTemplate>
+    </BlazoredTypeahead>
+    <ValidationMessage For="@(() => FormModel.SelectedPerson)" />
+
+    <button type="submit">Submit</button>
+</EditForm>
+
+
+
+@if (FormModel.SelectedPerson != null)
+{
+    <br />
+    <p><strong>Selected Person:</strong> @FormModel.SelectedPerson.Firstname @FormModel.SelectedPerson.Lastname</p>
+}
+
+@functions {
+
+    private List<Person> People = new List<Person>();
+
+    private Person SelectedPerson;
+    private Person RemoteSelectedPerson;
+    private Person PreSelectedPerson;
+    private FormExample FormModel = new FormExample();
+
+    protected override void OnInit()
+    {
+        var person1 = new Person { Firstname = "John", Lastname = "Smith" };
+        var person2 = new Person { Firstname = "Jane", Lastname = "Doe" };
+        var person3 = new Person { Firstname = "Tom", Lastname = "Jones" };
+        var person4 = new Person { Firstname = "Fred", Lastname = "Gouch" };
+        var person5 = new Person { Firstname = "John", Lastname = "Philips" };
+        var person6 = new Person { Firstname = "Jon", Lastname = "Thomas" };
+
+        People.Add(person1);
+        People.Add(person2);
+        People.Add(person3);
+        People.Add(person4);
+        People.Add(person5);
+        People.Add(person6);
+
+        PreSelectedPerson = person5;
+    }
+
+    private async Task<List<Person>> GetPeopleLocal(string searchText)
+    {
+        return await Task.FromResult(People.Where(x => x.Firstname.ToLower().Contains(searchText.ToLower())).ToList());
+    }
+
+    //private async Task<List<Person>> GetPeopleRemote(string searchText)
+    //{
+    //    var result = await httpClient.GetJsonAsync<List<Person>>($"https://localhost:44376/api/persons/?name={searchText}");
+
+    //    return result;
+    //}
+
+    private void HandleFormSubmit()
+    {
+        Console.WriteLine("Form Submitted Successfully!");
+    }
+
+}
