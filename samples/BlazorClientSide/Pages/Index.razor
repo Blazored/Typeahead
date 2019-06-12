@@ -1,27 +1,27 @@
 ﻿@page "/"
-@inject  HttpClient httpClient
+@inject HttpClient httpClient
 
-<h1>Blazored Typeahead</h1>
+<h1>Blazored Typeahead - Form</h1>
 
 <EditForm Model="@FormModel" OnValidSubmit="@HandleFormSubmit">
     <DataAnnotationsValidator />
 
-    <BlazoredTypeahead SearchMethod="@GetPeopleLocal"
-                   bind-Value="@FormModel.SelectedPerson"
-                   Placeholder="Search by first name...">
+    <BlazoredTypeaheadInput SearchMethod="@GetPeopleLocal"
+                            bind-Value="@FormModel.SelectedPerson"
+                            Placeholder="Search by first name...">
         <SelectedTemplate Context="person">
             @person.Firstname
         </SelectedTemplate>
         <ResultTemplate Context="person">
             @person.Firstname @person.Lastname
         </ResultTemplate>
-    </BlazoredTypeahead>
+    </BlazoredTypeaheadInput>
     <ValidationMessage For="@(() => FormModel.SelectedPerson)" />
 
-        <button type="submit">Submit</button>
+    <button class="btn btn-primary" type="submit">Submit</button>
 </EditForm>
 
-
+<hr />
 
 @if (FormModel.SelectedPerson != null)
 {
@@ -29,13 +29,35 @@
     <p><strong>Selected Person:</strong> @FormModel.SelectedPerson.Firstname @FormModel.SelectedPerson.Lastname</p>
 }
 
+<hr />
+
+<h1>Blazored Typeahead - Standalone</h1>
+
+
+<BlazoredTypeahead SearchMethod="@GetPeopleLocal"
+                   bind-Value="@SelectedPerson"
+                   Placeholder="Search by first name...">
+    <SelectedTemplate Context="person">
+        @person.Firstname
+    </SelectedTemplate>
+    <ResultTemplate Context="person">
+        @person.Firstname @person.Lastname
+    </ResultTemplate>
+</BlazoredTypeahead>
+
+<hr />
+
+@if (SelectedPerson != null)
+{
+    <p>Selected: @SelectedPerson.Firstname @SelectedPerson.Lastname</p>
+}
+
+
 @functions {
 
     private List<Person> People = new List<Person>();
 
     private Person SelectedPerson;
-    private Person RemoteSelectedPerson;
-    private Person PreSelectedPerson;
     private FormExample FormModel = new FormExample();
 
     protected override void OnInit()
@@ -53,8 +75,6 @@
         People.Add(person4);
         People.Add(person5);
         People.Add(person6);
-
-        PreSelectedPerson = person5;
     }
 
     private async Task<List<Person>> GetPeopleLocal(string searchText)

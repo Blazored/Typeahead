@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
@@ -8,13 +9,11 @@ using System.Timers;
 
 namespace Blazored.Typeahead
 {
-    public class BlazoredTypeaheadBase<TItem> : ComponentBase, IDisposable
+    public class BlazoredTypeaheadInputBase<TItem> : InputBase<TItem>, IDisposable
     {
         [Inject] IJSRuntime JSRuntime { get; set; }
 
         [Parameter] public string Placeholder { get; set; }
-        [Parameter] public TItem Value { get; set; }
-        [Parameter] public EventCallback<TItem> ValueChanged { get; set; }
         [Parameter] protected Func<string, Task<List<TItem>>> SearchMethod { get; set; }
         [Parameter] protected RenderFragment NotFoundTemplate { get; set; }
         [Parameter] protected RenderFragment<TItem> ResultTemplate { get; set; }
@@ -89,6 +88,7 @@ namespace Blazored.Typeahead
         protected async Task HandleClear()
         {
             await ValueChanged.InvokeAsync(default(TItem));
+            EditContext.NotifyFieldChanged(FieldIdentifier);
 
             _searchText = "";
             EditMode = true;
@@ -109,8 +109,9 @@ namespace Blazored.Typeahead
         }
 
         protected async Task SelectResult(TItem item)
-        {               
+        {
             await ValueChanged.InvokeAsync(item);
+            EditContext.NotifyFieldChanged(FieldIdentifier);
 
             EditMode = false;
         }
@@ -129,6 +130,14 @@ namespace Blazored.Typeahead
                    !string.IsNullOrWhiteSpace(SearchText) && 
                    SearchText.Length >= MinimumLength &&
                    !SearchResults.Any();
+        }
+
+        protected override bool TryParseValueFromString(string value, out TItem result, out string validationErrorMessage)
+        {
+            result = (TItem)(object)value;
+            validationErrorMessage = null;
+
+            return true;
         }
 
         public void Dispose()

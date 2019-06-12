@@ -1,0 +1,72 @@
+﻿@typeparam TItem
+@inherits BlazoredTypeaheadInputBase<TItem>
+
+<div class="blazored-typeahead">
+    <div class="blazored-typeahead__controls">
+        @if (EditMode)
+        {
+            <input ref="searchInput"
+                   class="blazored-typeahead__input"
+                   bind-value-oninput="@SearchText"
+                   onfocus="@HandleFocus"
+                   type="text"
+                   autocomplete="off"
+                   placeholder="@Placeholder" />
+            @if (Searching)
+            {
+                <div class="blazored-typeahead__loader-container">
+                    <div class="blazored-typeahead__loader"></div>
+                </div>
+            }
+        }
+        else if (!EditMode && Value != null)
+        {
+            <div class="blazored-typeahead__input-mask-wrapper">
+                <div class="blazored-typeahead__input-mask" onclick="@HandleFocus">
+                    @SelectedTemplate(Value)
+                </div>
+                <div class="blazored-typeahead__clear" onclick="@HandleClear">
+                    &#10005;
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (ShowSuggestions())
+    {
+        <div class="blazored-typeahead__results">
+            @foreach (var item in SearchResults)
+            {
+                if (ResultTemplate != null)
+                {
+                    <div class="blazored-typeahead__result" onclick="@(async () => await SelectResult(item))">
+                        @ResultTemplate(item)
+                    </div>
+                }
+                else
+                {
+                    <div class="blazored-typeahead__result" onclick="@(async () => await SelectResult(item))">
+                        @item.ToString()
+                    </div>
+                }
+            }
+        </div>
+    }
+    else if (ShowNotFound())
+    {
+        <div class="blazored-typeahead__results">
+            @if (NotFoundTemplate != null)
+            {
+                <div class="blazored-typeahead__notfound">
+                    @NotFoundTemplate
+                </div>
+            }
+            else
+            {
+                <div class="blazored-typeahead__notfound">
+                    No Results Found
+                </div>
+            }
+        </div>
+    }
+</div>
