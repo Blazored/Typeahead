@@ -21,23 +21,100 @@ You can install from Nuget using the following command:
 Or via the Visual Studio package manger.
 
 ## Usage
-I would suggest you add the following using statement to your main `_Imports.razor` to make referencing the component a bit easier.
+The component comes in two flavors, standalone and forms integrated.
+
+### Forms Integrated
+This version of the component is integrated with the forms and authentication system Blazor provides out the of box. 
+
+I would suggest adding the following using statement to your main `_Imports.razor` to make referencing the component a bit easier.
+
+```
+@using Blazored.Typeahead.Forms
+```
+
+### Local Data Example
+```html
+<EditForm Model="@MyFormModel" OnValidSubmit="@HandlValidSubmit">
+    <BlazoredTypeaheadInput SearchMethod="@SearchFilms"
+                            bind-Value="@MyFormModel.SelectedFilm">
+        <SelectedTemplate>
+            @context.Title
+        </SelectedTemplate>
+        <ResultTemplate>
+            @context.Title (@context.Year)
+        </ResultTemplate>
+    </BlazoredTypeaheadInput>
+    <ValidationMessage For="@(() => MyFormModel.SelectedFilm)" />
+</EditForm>
+
+@functions {
+
+    [Parameter] protected List<Film> Films { get; set; }
+
+    private async Task<List<Film>> SearchFilms(string searchText) 
+    {
+        return await Task.FromResult(Films.Where(x => x.Title.ToLower().Contains(searchText.ToLower())).ToList());
+    }
+
+}
+```
+In the example above, the component is setup with the minimum requirements. You must provide a method which has the following signature `Task<List<T> MethodName(string searchText)`, to the `SearchMethod` parameter. The control will call this method with the current search text everytime the debounce timer expires (default: 300ms). You must also set a value for the `Value` parameter. This will be populated with the item selected from the search results. As this version of the control is integrated with Blazors built-in forms and validation, it must be wrapped in a `EditForm` component.
+
+The component requires two templates to be provided...
+
+- `SelectedTemplate`
+- `ResultTemplates`
+
+The `SelectedTemplate` is used to display the selected item and the `ResultTemplate` is used to display each result in the search list.
+
+
+### Remote Data Example
+
+```html
+@inject HttpClient httpClient
+
+<EditForm Model="@MyFormModel" OnValidSubmit="@HandlValidSubmit">
+    <BlazoredTypeahead SearchMethod="@SearchFilms"
+                       bind-Value="@SelectedFilm"
+                       Debounce="500">
+        <SelectedTemplate>
+            @context.Title
+        </SelectedTemplate>
+        <ResultTemplate>
+            @context.Title (@context.Year)
+        </ResultTemplate>
+        <NotFoundTemplate>
+            Sorry, there weren't any search results.
+        </NotFoundTemplate>
+    </BlazoredTypeahead>
+    <ValidationMessage For="@(() => MyFormModel.SelectedFilm)" />
+</EditForm>
+
+@functions {
+
+    [Parameter] protected List<Film> Films { get; set; }
+
+    private async Task<List<Film>> SearchFilms(string searchText) 
+    {
+        var response = await httpClient.GetJsonAsync<List<Film>>($"https://allfilms.com/api/films/?title={searchText}");
+        return response;
+    }
+
+}
+```
+Because you provide the search method to the component, making a remote call is really straight-forward. In this example, the `Debounce` parameter has been upped to 500ms and the `NotFoundTemplate` has been specified.
+
+### Standalone
+I would suggest adding the following using statement to your main `_Imports.razor` to make referencing the component a bit easier.
 
 ```
 @using Blazored.Typeahead
 ```
 
-Once you've done this you can add the control to a component like so.
-
-```
-<BlazoredTypeahead></BlazoredTypeahead>
-```
-
 ### Local Data Example
-
 ```
-<BlazoredTypeahead Data="@SearchFilms"
-                   bind-Item="@SelectedFilm">
+<BlazoredTypeahead SearchMethod="@SearchFilms"
+                   bind-Value="@SelectedFilm">
     <SelectedTemplate>
         @context.Title
     </SelectedTemplate>
@@ -57,7 +134,7 @@ Once you've done this you can add the control to a component like so.
 
 }
 ```
-In the example above, the component is setup with the minimum requirements. You must provide a method which has the following signature `Task<List<T> MethodName(string searchText)`, to the `Data` parameter. The control will call this method with the current search text everytime the debounce timer expires (default: 300ms). You must also set a value for the `Item` parameter. This will be populated with the item selected from the search results.
+In the example above, the component is setup with the minimum requirements. You must provide a method which has the following signature `Task<List<T> MethodName(string searchText)`, to the `SearchMethod` parameter. The control will call this method with the current search text everytime the debounce timer expires (default: 300ms). You must also set a value for the `Value` parameter. This will be populated with the item selected from the search results.
 
 The component requires two templates to be provided...
 
@@ -72,8 +149,8 @@ The `SelectedTemplate` is used to display the selected item and the `ResultTempl
 ```
 @inject HttpClient httpClient
 
-<BlazoredTypeahead Data="@SearchFilms"
-                   bind-Item="@SelectedFilm"
+<BlazoredTypeahead SearchMethod="@SearchFilms"
+                   bind-Value="@SelectedFilm"
                    Debounce="500">
     <SelectedTemplate>
         @context.Title
