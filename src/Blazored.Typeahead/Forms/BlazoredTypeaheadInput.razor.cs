@@ -7,13 +7,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 
-namespace Blazored.Typeahead
+namespace Blazored.Typeahead.Forms
 {
     public class BlazoredTypeaheadInputBase<TItem> : InputBase<TItem>, IDisposable
     {
         [Inject] IJSRuntime JSRuntime { get; set; }
 
-        [Parameter] public string Placeholder { get; set; }
+        [Parameter] protected string Placeholder { get; set; }
         [Parameter] protected Func<string, Task<List<TItem>>> SearchMethod { get; set; }
         [Parameter] protected RenderFragment NotFoundTemplate { get; set; }
         [Parameter] protected RenderFragment<TItem> ResultTemplate { get; set; }

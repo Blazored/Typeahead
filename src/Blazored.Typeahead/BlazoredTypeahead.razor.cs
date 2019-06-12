@@ -12,9 +12,9 @@ namespace Blazored.Typeahead
     {
         [Inject] IJSRuntime JSRuntime { get; set; }
 
-        [Parameter] public string Placeholder { get; set; }
-        [Parameter] public TItem Value { get; set; }
-        [Parameter] public EventCallback<TItem> ValueChanged { get; set; }
+        [Parameter] protected string Placeholder { get; set; }
+        [Parameter] protected TItem Value { get; set; }
+        [Parameter] protected EventCallback<TItem> ValueChanged { get; set; }
         [Parameter] protected Func<string, Task<List<TItem>>> SearchMethod { get; set; }
         [Parameter] protected RenderFragment NotFoundTemplate { get; set; }
         [Parameter] protected RenderFragment<TItem> ResultTemplate { get; set; }
