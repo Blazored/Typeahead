@@ -12,7 +12,7 @@
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
 
     <PackageId>Blazored.Typeahead</PackageId>
-    <Version>3.0.0</Version>
+    <Version>3.0.1</Version>
     <Authors>Chris Sainty</Authors>
     <Description>A typeahead control for Blazor applications</Description>
     <Copyright>Copyright 2019 (c) Chris Sainty. All rights reserved.</Copyright>
