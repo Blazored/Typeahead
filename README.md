@@ -36,7 +36,7 @@ I would suggest adding the following using statement to your main `_Imports.razo
 ```html
 <EditForm Model="@MyFormModel" OnValidSubmit="@HandlValidSubmit">
     <BlazoredTypeaheadInput SearchMethod="@SearchFilms"
-                            bind-Value="@MyFormModel.SelectedFilm">
+                            @bind-Value="@MyFormModel.SelectedFilm">
         <SelectedTemplate>
             @context.Title
         </SelectedTemplate>
@@ -47,7 +47,7 @@ I would suggest adding the following using statement to your main `_Imports.razo
     <ValidationMessage For="@(() => MyFormModel.SelectedFilm)" />
 </EditForm>
 
-@functions {
+@code {
 
     [Parameter] protected List<Film> Films { get; set; }
 
@@ -75,7 +75,7 @@ The `SelectedTemplate` is used to display the selected item and the `ResultTempl
 
 <EditForm Model="@MyFormModel" OnValidSubmit="@HandlValidSubmit">
     <BlazoredTypeahead SearchMethod="@SearchFilms"
-                       bind-Value="@SelectedFilm"
+                       @bind-Value="@SelectedFilm"
                        Debounce="500">
         <SelectedTemplate>
             @context.Title
@@ -90,7 +90,7 @@ The `SelectedTemplate` is used to display the selected item and the `ResultTempl
     <ValidationMessage For="@(() => MyFormModel.SelectedFilm)" />
 </EditForm>
 
-@functions {
+@code {
 
     [Parameter] protected List<Film> Films { get; set; }
 
@@ -114,7 +114,7 @@ I would suggest adding the following using statement to your main `_Imports.razo
 ### Local Data Example
 ```
 <BlazoredTypeahead SearchMethod="@SearchFilms"
-                   bind-Value="@SelectedFilm">
+                   @bind-Value="@SelectedFilm">
     <SelectedTemplate>
         @context.Title
     </SelectedTemplate>
@@ -123,7 +123,7 @@ I would suggest adding the following using statement to your main `_Imports.razo
     </ResultTemplate>
 </BlazoredTypeahead>
 
-@functions {
+@code {
 
     [Parameter] protected List<Film> Films { get; set; }
 
@@ -150,7 +150,7 @@ The `SelectedTemplate` is used to display the selected item and the `ResultTempl
 @inject HttpClient httpClient
 
 <BlazoredTypeahead SearchMethod="@SearchFilms"
-                   bind-Value="@SelectedFilm"
+                   @bind-Value="@SelectedFilm"
                    Debounce="500">
     <SelectedTemplate>
         @context.Title
@@ -163,7 +163,7 @@ The `SelectedTemplate` is used to display the selected item and the `ResultTempl
     </NotFoundTemplate>
 </BlazoredTypeahead>
 
-@functions {
+@code {
 
     [Parameter] protected List<Film> Films { get; set; }
 

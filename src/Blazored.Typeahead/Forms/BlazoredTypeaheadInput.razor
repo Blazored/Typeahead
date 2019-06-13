@@ -5,10 +5,11 @@
     <div class="blazored-typeahead__controls">
         @if (EditMode)
         {
-            <input ref="searchInput"
+            <input @ref="searchInput"
                    class="blazored-typeahead__input"
-                   bind-value-oninput="@SearchText"
-                   onfocus="@HandleFocus"
+                   @bind-value="@SearchText"
+                   @bind-value:event="oninput"
+                   @onfocus="@HandleFocus"
                    type="text"
                    autocomplete="off"
                    placeholder="@Placeholder" />
@@ -22,10 +23,10 @@
         else if (!EditMode && Value != null)
         {
             <div class="blazored-typeahead__input-mask-wrapper">
-                <div class="blazored-typeahead__input-mask" onclick="@HandleFocus">
+                <div class="blazored-typeahead__input-mask" @onclick="@HandleFocus">
                     @SelectedTemplate(Value)
                 </div>
-                <div class="blazored-typeahead__clear" onclick="@HandleClear">
+                <div class="blazored-typeahead__clear" @onclick="@HandleClear">
                     &#10005;
                 </div>
             </div>
@@ -39,13 +40,13 @@
             {
                 if (ResultTemplate != null)
                 {
-                    <div class="blazored-typeahead__result" onclick="@(async () => await SelectResult(item))">
+                    <div class="blazored-typeahead__result" @onclick="@(async () => await SelectResult(item))">
                         @ResultTemplate(item)
                     </div>
                 }
                 else
                 {
-                    <div class="blazored-typeahead__result" onclick="@(async () => await SelectResult(item))">
+                    <div class="blazored-typeahead__result" @onclick="@(async () => await SelectResult(item))">
                         @item.ToString()
                     </div>
                 }

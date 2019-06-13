@@ -7,7 +7,7 @@
     <DataAnnotationsValidator />
 
     <BlazoredTypeaheadInput SearchMethod="@GetPeopleLocal"
-                            bind-Value="@FormModel.SelectedPerson"
+                            @bind-Value="@FormModel.SelectedPerson"
                             Placeholder="Search by first name...">
         <SelectedTemplate Context="person">
             @person.Firstname
@@ -35,7 +35,7 @@
 
 
 <BlazoredTypeahead SearchMethod="@GetPeopleLocal"
-                   bind-Value="@SelectedPerson"
+                   @bind-Value="@SelectedPerson"
                    Placeholder="Search by first name...">
     <SelectedTemplate Context="person">
         @person.Firstname
@@ -53,7 +53,7 @@
 }
 
 
-@functions {
+@code {
 
     private List<Person> People = new List<Person>();
 
