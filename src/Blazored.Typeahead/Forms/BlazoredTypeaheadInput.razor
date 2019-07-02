@@ -6,7 +6,7 @@
         @if (EditMode)
         {
             <input @ref="searchInput"
-                   class="blazored-typeahead__input"
+                   class="blazored-typeahead__input @CssClass"
                    @bind-value="@SearchText"
                    @bind-value:event="oninput"
                    @onfocus="@HandleFocus"
@@ -51,6 +51,13 @@
                     </div>
                 }
             }
+
+            @if (FooterTemplate != null)
+            {
+                <div class="blazored-typeahead__results-footer">
+                    @FooterTemplate
+                </div>
+            }
         </div>
     }
     else if (ShowNotFound())
@@ -66,6 +73,13 @@
             {
                 <div class="blazored-typeahead__notfound">
                     No Results Found
+                </div>
+            }
+
+            @if (FooterTemplate != null)
+            {
+                <div class="blazored-typeahead__results-footer">
+                    @FooterTemplate
                 </div>
             }
         </div>

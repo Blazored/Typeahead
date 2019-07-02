@@ -18,6 +18,7 @@ namespace Blazored.Typeahead.Forms
         [Parameter] protected RenderFragment NotFoundTemplate { get; set; }
         [Parameter] protected RenderFragment<TItem> ResultTemplate { get; set; }
         [Parameter] protected RenderFragment<TItem> SelectedTemplate { get; set; }
+        [Parameter] protected RenderFragment FooterTemplate { get; set; }
         [Parameter] protected int MinimumLength { get; set; } = 1;
         [Parameter] protected int Debounce { get; set; } = 300;
 
