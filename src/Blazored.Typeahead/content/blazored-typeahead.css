@@ -13,6 +13,10 @@
     padding: .5rem;
 }
 
+.invalid {
+    border-color: red !important;
+}
+
 .blazored-typeahead__loader-container {
     position: absolute;
     top: -3px;
@@ -102,7 +106,8 @@
 }
 
 .blazored-typeahead__result,
-.blazored-typeahead__notfound{
+.blazored-typeahead__notfound,
+.blazored-typeahead__results-footer {
     padding: .5rem;
 }
 
