@@ -186,6 +186,7 @@ Below is a list of all the options available on the Typeahead.
 - ResultTemplate (Required) - Allows the user to define a template for a result in the results list
 - SelectedTemplate (Required) - Allows the user to define a template for a selected item
 - NotFoundTemplate - Allows the user to define a template when no items are found
+- FooterTemplate - Allows the user to define a template which is displayed at the end of the results list
 
 **Parameters**
 
