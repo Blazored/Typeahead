@@ -29,7 +29,7 @@
 @if (FormModel.SelectedPerson != null)
 {
     <br />
-    <p><strong>Selected Person:</strong> @FormModel.SelectedPerson.Firstname @FormModel.SelectedPerson.Lastname</p>
+    <p><strong>Selected Person:</strong> @FormModel.SelectedPerson.Firstname @FormModel.SelectedPerson.Lastname <a href="#" @onclick="@(() => FormModel.SelectedPerson = null)">delete</a></p>
 }
 
 <hr />
@@ -52,7 +52,7 @@
 
 @if (SelectedPerson != null)
 {
-    <p>Selected: @SelectedPerson.Firstname @SelectedPerson.Lastname</p>
+<p>Selected: @SelectedPerson.Firstname @SelectedPerson.Lastname <a href="#" @onclick="@(() => SelectedPerson = null)">delete</a></p>
 }
 
 

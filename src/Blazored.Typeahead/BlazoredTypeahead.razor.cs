@@ -124,11 +124,15 @@ namespace Blazored.Typeahead
                    SearchResults.Any();
         }
 
+        private bool HasValidSearch => !string.IsNullOrWhiteSpace(SearchText) && SearchText.Length >= MinimumLength;
+
+        private bool IsSearchingOrDebouncing => Searching || _debounceTimer.Enabled;
+
         protected bool ShowNotFound()
         {
-            return EditMode && 
-                   !string.IsNullOrWhiteSpace(SearchText) && 
-                   SearchText.Length >= MinimumLength &&
+            return EditMode &&
+                   HasValidSearch &&
+                   !IsSearchingOrDebouncing &&
                    !SearchResults.Any();
         }
 
