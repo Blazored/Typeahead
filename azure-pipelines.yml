@@ -11,10 +11,10 @@ steps:
 - task: DotNetCoreInstaller@0
   displayName: 'Installing .NET Core SDK...'
   inputs:
-    version: 3.0.100-preview6-012264
+    version: 3.0.100-preview7-012821
 
 - task: NuGetToolInstaller@0
-  displayName: 'Installing Nuget Tools...'
+  displayName: 'Installing NuGet Tools...'
   inputs:
     versionSpec: '4.9.2'
 
@@ -22,7 +22,7 @@ steps:
   displayName: 'Building $(buildConfiguration)...'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Generating Nuget Package... '
+  displayName: 'Generating NuGet Package... '
   inputs:
     command: pack
 

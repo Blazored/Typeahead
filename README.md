@@ -5,20 +5,29 @@ Typeahead control for Blazor applications.
 
 ![Nuget](https://img.shields.io/nuget/v/blazored.typeahead.svg)
 
-## Important Notice For Server-side Blazor Apps
-There is currently an issue with [Server-side Blazor apps](https://devblogs.microsoft.com/aspnet/aspnet-core-3-preview-2/#sharing-component-libraries) (not Client-side Blazor). They are unable to import static assets from component libraries such as this one. 
-
-You can still use this package, however, you will need to manually add the CSS file to your Server-side Blazor projects `wwwroot` folder. Then you will need to reference it in your main `_Layout.cshtml`.
-
-Alternatively, there is a great package by [Mister Magoo](https://github.com/SQL-MisterMagoo/BlazorEmbedLibrary) which offers a solution to this problem without having to manually copy files.
-
 ### Installing
 
-You can install from Nuget using the following command:
+You can install from NuGet using the following command:
 
 `Install-Package Blazored.Typeahead`
 
 Or via the Visual Studio package manger.
+
+### Server-side Blazor
+If you are using the component in a server-side Blazor application then you will need to include the CSS and JS files in your `_Host.cshtml`. IN the `head` tag add the CSS using the following tag.
+
+```
+<link href="_content/Blazored.Typeahead/blazored-typeahead.css" rel="stylesheet" />
+```
+
+Then add the JS script at the bottom of the page using the following script tag.
+
+```
+<script src="_content/Blazored.Typeahead/blazored-typeahead.js"></script>
+```
+
+### Client-side Blazor
+Both the CSS and JS files will automatically be added to your `index.html`.
 
 ## Usage
 The component comes in two flavors, standalone and forms integrated.

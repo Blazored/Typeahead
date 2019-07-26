@@ -36,4 +36,4 @@ var Blazored;
     })(Typeahead = Blazored.Typeahead || (Blazored.Typeahead = {}));
 })(Blazored || (Blazored = {}));
 Blazored.Typeahead.Load();
-//# sourceMappingURL=blazored.Typeahead.js.map
+//# sourceMappingURL=blazored-typeahead.js.map
