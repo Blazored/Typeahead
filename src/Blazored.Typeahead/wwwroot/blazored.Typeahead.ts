@@ -6,7 +6,7 @@ namespace Blazored.Typeahead {
     }
 
     export function Load(): void {
-        const typeahead = {
+        const typeahead: any = {
             Typeahead: new Typeahead()
         };
 

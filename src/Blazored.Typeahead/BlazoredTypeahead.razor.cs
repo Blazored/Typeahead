@@ -105,7 +105,7 @@ namespace Blazored.Typeahead
 
             SearchResults = await SearchMethod?.Invoke(_searchText);
 
-            Searching = false;
+            //Searching = false;
             await Invoke(StateHasChanged);
         }
 
