@@ -6,6 +6,7 @@
         @if (EditMode)
         {
             <input @ref="searchInput"
+                   @ref:suppressField
                    class="blazored-typeahead__input @CssClass"
                    @bind-value="@SearchText"
                    @bind-value:event="oninput"
