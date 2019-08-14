@@ -12,23 +12,23 @@ namespace Blazored.Typeahead
     {
         [Inject] IJSRuntime JSRuntime { get; set; }
 
-        [Parameter] protected string Placeholder { get; set; }
-        [Parameter] protected TItem Value { get; set; }
-        [Parameter] protected EventCallback<TItem> ValueChanged { get; set; }
-        [Parameter] protected Func<string, Task<List<TItem>>> SearchMethod { get; set; }
-        [Parameter] protected RenderFragment NotFoundTemplate { get; set; }
-        [Parameter] protected RenderFragment<TItem> ResultTemplate { get; set; }
-        [Parameter] protected RenderFragment<TItem> SelectedTemplate { get; set; }
-        [Parameter] protected RenderFragment FooterTemplate { get; set; }
-        [Parameter] protected int MinimumLength { get; set; } = 1;
-        [Parameter] protected int Debounce { get; set; } = 300;
+        [Parameter] public string Placeholder { get; set; }
+        [Parameter] public TItem Value { get; set; }
+        [Parameter] public EventCallback<TItem> ValueChanged { get; set; }
+        [Parameter] public Func<string, Task<List<TItem>>> SearchMethod { get; set; }
+        [Parameter] public RenderFragment NotFoundTemplate { get; set; }
+        [Parameter] public RenderFragment<TItem> ResultTemplate { get; set; }
+        [Parameter] public RenderFragment<TItem> SelectedTemplate { get; set; }
+        [Parameter] public RenderFragment FooterTemplate { get; set; }
+        [Parameter] public int MinimumLength { get; set; } = 1;
+        [Parameter] public int Debounce { get; set; } = 300;
 
         protected bool Searching { get; set; } = false;
         protected bool EditMode { get; set; } = true;
         protected List<TItem> SearchResults { get; set; } = new List<TItem>();
 
         private Timer _debounceTimer;
-        protected ElementRef searchInput;
+        protected ElementReference searchInput;
 
         private string _searchText;
         protected string SearchText
@@ -51,7 +51,7 @@ namespace Blazored.Typeahead
             }
         }
 
-        protected override void OnInit()
+        protected override void OnInitialized()
         {
             if (SearchMethod == null)
             {
@@ -101,12 +101,12 @@ namespace Blazored.Typeahead
         protected async void Search(Object source, ElapsedEventArgs e)
         {
             Searching = true;
-            await Invoke(StateHasChanged);
+            await InvokeAsync(StateHasChanged);
 
             SearchResults = await SearchMethod?.Invoke(_searchText);
 
             Searching = false;
-            await Invoke(StateHasChanged);
+            await InvokeAsync(StateHasChanged);
         }
 
         protected async Task SelectResult(TItem item)

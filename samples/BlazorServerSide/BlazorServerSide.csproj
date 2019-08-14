@@ -7,24 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\css\blazored-typeahead.css" />
-    <Content Remove="wwwroot\js\blazored.Typeahead.js" />
-    <Content Remove="wwwroot\js\blazored.Typeahead.js.map" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="wwwroot\css\blazored-typeahead.css">
-      <LogicalName>blazor:css:%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="wwwroot\js\blazored.Typeahead.js">
-      <LogicalName>blazor:js:%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="wwwroot\js\blazored.Typeahead.js.map">
-      <LogicalName>blazor:file:%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\src\Blazored.Typeahead\Blazored.Typeahead.csproj" />
     <ProjectReference Include="..\Shared\Sample.Shared.csproj" />
   </ItemGroup>

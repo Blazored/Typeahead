@@ -13,8 +13,10 @@ You can install from NuGet using the following command:
 
 Or via the Visual Studio package manger.
 
-### Server-side Blazor
-If you are using the component in a server-side Blazor application then you will need to include the CSS and JS files in your `_Host.cshtml`. IN the `head` tag add the CSS using the following tag.
+### Setup
+If will need to include the following CSS and JS files in your `index.html` (Blazor WebAssembly) or `_Host.cshtml` (Blazor Server).
+
+In the `head` tag add the following CSS.
 
 ```
 <link href="_content/Blazored.Typeahead/blazored-typeahead.css" rel="stylesheet" />
@@ -25,9 +27,6 @@ Then add the JS script at the bottom of the page using the following script tag.
 ```
 <script src="_content/Blazored.Typeahead/blazored-typeahead.js"></script>
 ```
-
-### Client-side Blazor
-Both the CSS and JS files will automatically be added to your `index.html`.
 
 ## Usage
 The component comes in two flavors, standalone and forms integrated.
