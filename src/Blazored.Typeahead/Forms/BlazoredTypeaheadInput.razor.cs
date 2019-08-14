@@ -83,7 +83,7 @@ namespace Blazored.Typeahead.Forms
             SearchText = "";
             EditMode = true;
             await Task.Delay(250);
-            await JSRuntime.InvokeAsync<object>("Blazored.Typeahead.SetFocus", searchInput);
+            await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", searchInput);
         }
 
         protected async Task HandleClear()
@@ -95,7 +95,7 @@ namespace Blazored.Typeahead.Forms
             EditMode = true;
 
             await Task.Delay(250);
-            await JSRuntime.InvokeAsync<object>("Blazored.Typeahead.SetFocus", searchInput);
+            await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", searchInput);
         }
 
         protected async void Search(Object source, ElapsedEventArgs e)
