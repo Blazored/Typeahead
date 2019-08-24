@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
@@ -85,6 +85,18 @@ namespace Blazored.Typeahead
             EditMode = true;
             await Task.Delay(250);
             await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", searchInput);
+        }
+
+        /// <summary>
+        /// Handles the Enter Key Event when the item is selected.
+        /// </summary>
+        /// <param name="args">Arguments of the KeyUpEvent"/></param>
+        /// <param name="item">Selected Item</param>
+        /// <returns></returns>
+        protected async Task HandleEnterKeySelect(UIKeyboardEventArgs args, TItem item)
+        {
+            if (args.Key == "Enter")
+                await SelectResult(item);
         }
 
         protected async Task HandleClear()
