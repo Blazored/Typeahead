@@ -41,13 +41,13 @@
             {
                 if (ResultTemplate != null)
                 {
-                    <div class="blazored-typeahead__result" tabindex="0"  @onclick="@(_ => SelectResult(item))" @onkeyup="@((e) => HandleEnterKeySelect(e,item))">
+                    <div class="blazored-typeahead__result @GetFocussedSuggestionClass(item)" tabindex="0"  @onclick="@(_ => SelectResult(item))" @onkeyup="@((e) => HandleKeyUpOnSuggestion(e,item))">
                         @ResultTemplate(item)
                     </div>
                 }
                 else
                 {
-                    <div class="blazored-typeahead__result" tabindex="0" @onclick="@(_ => SelectResult(item))" @onkeyup="@((e) => HandleEnterKeySelect(e,item))">
+                    <div class="blazored-typeahead__result @GetFocussedSuggestionClass(item)" tabindex="0" @onclick="@(_ => SelectResult(item))" @onkeyup="@((e) => HandleKeyUpOnSuggestion(e,item))">
                         @item.ToString()
                     </div>
                 }
