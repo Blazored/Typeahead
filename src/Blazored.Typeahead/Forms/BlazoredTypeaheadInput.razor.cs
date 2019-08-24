@@ -86,6 +86,18 @@ namespace Blazored.Typeahead.Forms
             await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", searchInput);
         }
 
+        /// <summary>
+        /// Handles the Enter Key Event when the item is selected.
+        /// </summary>
+        /// <param name="args">Arguments of the KeyUpEvent"/></param>
+        /// <param name="item">Selected Item</param>
+        /// <returns></returns>
+        protected async Task HandleEnterKeySelect(UIKeyboardEventArgs args, TItem item)
+        {
+            if (args.Key == "Enter")
+                await SelectResult(item);
+        }
+
         protected async Task HandleClear()
         {
             await ValueChanged.InvokeAsync(default(TItem));
