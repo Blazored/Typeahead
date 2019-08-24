@@ -41,13 +41,13 @@
             {
                 if (ResultTemplate != null)
                 {
-                    <div class="blazored-typeahead__result" tabindex="0"  @onclick="@(() => await SelectResult(item))" @onkeyup="@((e) => HandleEnterKeySelect(e,item))">
+                    <div class="blazored-typeahead__result" tabindex="0"  @onclick="@(_ => SelectResult(item))" @onkeyup="@((e) => HandleEnterKeySelect(e,item))">
                         @ResultTemplate(item)
                     </div>
                 }
                 else
                 {
-                    <div class="blazored-typeahead__result" tabindex="0" @onclick="@(async () => await SelectResult(item))" @onkeyup="@((e) => HandleEnterKeySelect(e,item))">
+                    <div class="blazored-typeahead__result" tabindex="0" @onclick="@(_ => SelectResult(item))" @onkeyup="@((e) => HandleEnterKeySelect(e,item))">
                         @item.ToString()
                     </div>
                 }

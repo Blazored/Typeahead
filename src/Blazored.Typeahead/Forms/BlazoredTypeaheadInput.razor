@@ -41,13 +41,13 @@
             {
                 if (ResultTemplate != null)
                 {
-                    <div class="blazored-typeahead__result" @onclick="@(async () => await SelectResult(item))">
+                    <div class="blazored-typeahead__result" @onclick="@(_ () => SelectResult(item))">
                         @ResultTemplate(item)
                     </div>
                 }
                 else
                 {
-                    <div class="blazored-typeahead__result" @onclick="@(async () => await SelectResult(item))">
+                    <div class="blazored-typeahead__result" @onclick="@(_ => SelectResult(item))">
                         @item.ToString()
                     </div>
                 }
