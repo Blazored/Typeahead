@@ -13,6 +13,10 @@
     padding: .5rem;
 }
 
+.blazored-typeahead__input-hidden {
+    display: none;
+}
+
 .invalid {
     border-color: red !important;
 }
@@ -56,12 +60,17 @@
     background: none;
 }
 
+    .blazored-typeahead__input__icon:hover {
+        background-color: #f5f5f5;
+    }
+
+
 .blazored-typeahead__results {
     box-shadow: 0 5px 10px rgba(0,0,0,.2);
     padding-top: .5rem;
-    min-height:2rem;
-    max-height:30rem;
-    overflow-y:auto;
+    min-height: 2rem;
+    max-height: 30rem;
+    overflow-y: auto;
 }
 
 .blazored-typeahead__result,
@@ -75,9 +84,7 @@
         background-color: #f5f5f5;
         cursor: pointer;
     }
-.blazored-typeahead__input-hidden{
-    display:none;
-}
+
 .blazored-typeahead__loader {
     width: 24px;
     height: 24px;
