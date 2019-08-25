@@ -142,7 +142,7 @@ namespace Blazored.Typeahead.Forms
 
         protected string GetSelectedSuggestionClass(TItem item)
         {
-            if (item == null)
+            if (Value == null)
                 return null;
             if (Value.Equals(item))
                 return "blazored-typeahead__result-selected"; 
