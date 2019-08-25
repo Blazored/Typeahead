@@ -59,6 +59,9 @@
 .blazored-typeahead__results {
     box-shadow: 0 5px 10px rgba(0,0,0,.2);
     padding-top: .5rem;
+    min-height:2rem;
+    max-height:30rem;
+    overflow-y:auto;
 }
 
 .blazored-typeahead__result,
