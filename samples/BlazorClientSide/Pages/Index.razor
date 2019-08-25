@@ -118,12 +118,12 @@
         });
     }
 
-    private async Task<List<Person>> GetPeopleLocal(string searchText)
+    private async Task<IEnumerable<Person>> GetPeopleLocal(string searchText)
     {
         return await Task.FromResult(People.Where(x => x.Firstname.ToLower().Contains(searchText.ToLower())).ToList());
     }
 
-    private async Task<List<Person>> GetPeopleRemote(string searchText)
+    private async Task<IEnumerable<Person>> GetPeopleRemote(string searchText)
     {
         var result = await httpClient.GetJsonAsync<List<Person>>($"https://localhost:44376/api/persons/?name={searchText}");
 
