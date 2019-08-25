@@ -45,7 +45,7 @@
 <div class="blazored-typeahead__results">
     @foreach (var item in SearchResults)
     {
-        <div @key="item" class="blazored-typeahead__result @GetFocussedSuggestionClass(item)" tabindex="0" @onclick="@(_ => SelectResult(item))" @onkeyup="@((e) => HandleKeyUpOnSuggestion(e,item))">
+        <div @key="item" class="blazored-typeahead__result @GetSelectedSuggestionClass(item)" tabindex="0" @onclick="@(_ => SelectResult(item))" @onkeyup="@((e) => HandleKeyUpOnSuggestion(e,item))">
             @if (ResultTemplate != null)
             {
                 @ResultTemplate(item)

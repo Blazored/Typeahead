@@ -28,7 +28,6 @@ namespace Blazored.Typeahead.Forms
         protected bool ShouldShowInput { get; private set; } = true;
         protected bool ShouldShowMask { get; private set; } = false;
         protected TItem[] SearchResults { get; set; } = new TItem[0];
-        protected TItem FocussedSuggestion { get; private set; }
         
         private Timer _debounceTimer;
         protected ElementReference searchInput;
@@ -114,7 +113,6 @@ namespace Blazored.Typeahead.Forms
             ShouldShowMenu = false;
             ShouldShowInput = true;
             ShouldShowMask = false;
-            FocussedSuggestion = default;
             await Task.Delay(250); // Possible race condition here, but it's not harmfull
             await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", searchInput);
         }
@@ -138,62 +136,16 @@ namespace Blazored.Typeahead.Forms
 
         protected async Task HandleKeyUpOnSuggestion(UIKeyboardEventArgs args, TItem item)
         {
-            if (args.Key == "Tab")
-                FocussedSuggestion = item;
-            if (args.Key == "ArrowDown")
-                FocusNextSuggestion();
-            if (args.Key == "ArrowUp")
-                FocusPreviousSuggestion();
             if (args.Key == "Enter")
-                await SelectResult(FocussedSuggestion);
+                await SelectResult(item);
         }
 
-        private void FocusNextSuggestion()
+        protected string GetSelectedSuggestionClass(TItem item)
         {
-            var indexOfCurrentSuggestion = Array.FindIndex(SearchResults, x => x.Equals(FocussedSuggestion));
-            var indexOfNextSuggestion = indexOfCurrentSuggestion + 1;
-
-            if (indexOfNextSuggestion > SearchResults.Length - 1)
-            {
-                FocusFirstSuggestion();
-            }
-            else
-            {
-                FocussedSuggestion = SearchResults[indexOfNextSuggestion];
-            }
-        }
-
-        private void FocusPreviousSuggestion()
-        {
-            var indexOfCurrentSuggestion = Array.FindIndex(SearchResults, x => x.Equals(FocussedSuggestion));
-            var indexOfPreviousSuggestion = indexOfCurrentSuggestion - 1;
-
-            if (indexOfPreviousSuggestion < 0)
-            {
-                FocusLastSuggestion();
-            }
-            else
-            {
-                FocussedSuggestion = SearchResults[indexOfPreviousSuggestion];
-            }
-        }
-
-        private void FocusFirstSuggestion()
-        {
-            FocussedSuggestion = SearchResults[0];
-        }
-
-        private void FocusLastSuggestion()
-        {
-            FocussedSuggestion = SearchResults[SearchResults.Length - 1];
-        }
-
-        protected string GetFocussedSuggestionClass(TItem item)
-        {
-            if (FocussedSuggestion == null)
+            if (item == null)
                 return null;
-            if (FocussedSuggestion.Equals(item))
-                return "blazored-typeahead__result-focussed"; 
+            if (Value.Equals(item))
+                return "blazored-typeahead__result-selected"; 
             return null;
         }
 
@@ -216,7 +168,6 @@ namespace Blazored.Typeahead.Forms
             ShouldShowMenu = false;
             ShouldShowInput = false;
             ShouldShowMask = true;
-            FocussedSuggestion = item;
         }
 
         protected bool ShouldShowSuggestions()
