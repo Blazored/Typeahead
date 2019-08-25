@@ -75,6 +75,18 @@ namespace Blazored.Typeahead
             _debounceTimer.AutoReset = false;
             _debounceTimer.Elapsed += Search;
 
+            Initialze();
+        }
+
+        protected override void OnParametersSet()
+        {
+            Initialze();
+        }
+
+        private void Initialze()
+        {
+            _searchText = "";
+            ShouldShowMenu = false;
             if (Value == null)
             {
                 ShouldShowMask = false;
@@ -82,14 +94,13 @@ namespace Blazored.Typeahead
             }
             else
             {
-                ShouldShowInput = true;
-                ShouldShowMask = false;
+                ShouldShowInput = false;
+                ShouldShowMask = true;
             }
         }
-
         protected void HandleClick()
         {
-            SearchText = "";
+            _searchText = string.Empty;
             ShouldShowMenu = false;
             ShouldShowMask = false;
             ShouldShowInput = true;

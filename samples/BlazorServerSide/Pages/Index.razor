@@ -112,8 +112,10 @@
             new Person() { Firstname = "Maridel", Lastname = "Dalley" },
             new Person() { Firstname = "Wini", Lastname = "Hundley" },
         });
-
+        SelectedPerson = new Person("Benjamin", "Test", 28, "Belgium");
     }
+
+
 
     private async Task<IEnumerable<Person>> GetPeopleLocal(string searchText)
     {
