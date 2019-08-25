@@ -10,7 +10,7 @@
                    class="blazored-typeahead__input @CssClass"
                    @bind-value="@SearchText"
                    @bind-value:event="oninput"
-                   @onfocus="@HandleFocus"
+                   @onclick="@HandleClick"
                    type="text"
                    autocomplete="off"
                    placeholder="@Placeholder" />
@@ -24,7 +24,7 @@
         else if (!EditMode && Value != null)
         {
             <div class="blazored-typeahead__input-mask-wrapper">
-                <div class="blazored-typeahead__input-mask" @onclick="@HandleFocus">
+                <div class="blazored-typeahead__input-mask" @onclick="@HandleMaskClick">
                     @SelectedTemplate(Value)
                 </div>
                 <div class="blazored-typeahead__clear" @onclick="@HandleClear">

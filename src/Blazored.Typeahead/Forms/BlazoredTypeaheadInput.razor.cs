@@ -78,10 +78,17 @@ namespace Blazored.Typeahead.Forms
             }
         }
 
-        protected async Task HandleFocus()
+        protected void HandleClick()
         {
             SearchText = "";
             EditMode = true;
+        }
+
+        protected async Task HandleMaskClick()
+        {
+            SearchText = "";
+            EditMode = true;
+            // Because we don't have focus when we clicked on the wrapper.
             await Task.Delay(250);
             await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", searchInput);
         }
