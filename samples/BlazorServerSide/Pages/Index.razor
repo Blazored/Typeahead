@@ -61,19 +61,58 @@
 
     protected override void OnInitialized()
     {
-        var person1 = new Person { Firstname = "John", Lastname = "Smith" };
-        var person2 = new Person { Firstname = "Jane", Lastname = "Doe" };
-        var person3 = new Person { Firstname = "Tom", Lastname = "Jones" };
-        var person4 = new Person { Firstname = "Fred", Lastname = "Gouch" };
-        var person5 = new Person { Firstname = "John", Lastname = "Philips" };
-        var person6 = new Person { Firstname = "Jon", Lastname = "Thomas" };
+        People.AddRange(new List<Person>() {
+            new Person() { Firstname = "Martelle", Lastname = "Cullon" },
+            new Person() { Firstname = "Zelda", Lastname = "Abrahamsson" },
+            new Person() { Firstname = "Benedetta", Lastname = "Posse" },
+            new Person() { Firstname = "Benoite", Lastname = "Gobel" },
+            new Person() { Firstname = "Charlot", Lastname = "Fullicks" },
+            new Person() { Firstname = "Vinson", Lastname = "Turbat" },
+            new Person() { Firstname = "Lenore", Lastname = "Malam" },
+            new Person() { Firstname = "Emanuele", Lastname = "Kolakovic" },
+            new Person() { Firstname = "Rosalyn", Lastname = "Mackin" },
+            new Person() { Firstname = "Yanaton", Lastname = "Krishtopaittis" },
+            new Person() { Firstname = "Frederik", Lastname = "McGeachie" },
+            new Person() { Firstname = "Parrnell", Lastname = "Ramsby" },
+            new Person() { Firstname = "Coreen", Lastname = "McGann" },
+            new Person() { Firstname = "Kyle", Lastname = "Coster" },
+            new Person() { Firstname = "Evangelia", Lastname = "Bowker" },
+            new Person() { Firstname = "Angeli", Lastname = "Collihole" },
+            new Person() { Firstname = "Bill", Lastname = "Lawther" },
+            new Person() { Firstname = "Kore", Lastname = "Reide" },
+            new Person() { Firstname = "Tracy", Lastname = "Gwinnell" },
+            new Person() { Firstname = "Lazaro", Lastname = "Partington" },
+            new Person() { Firstname = "Doretta", Lastname = "Aingell" },
+            new Person() { Firstname = "Olvan", Lastname = "Andraud" },
+            new Person() { Firstname = "Templeton", Lastname = "Chetwynd" },
+            new Person() { Firstname = "Daile", Lastname = "Kelsow" },
+            new Person() { Firstname = "Marcie", Lastname = "Brearty" },
+            new Person() { Firstname = "Irwinn", Lastname = "Lilian" },
+            new Person() { Firstname = "Niki", Lastname = "Moreland" },
+            new Person() { Firstname = "Honey", Lastname = "Waddup" },
+            new Person() { Firstname = "Amber", Lastname = "Hoopper" },
+            new Person() { Firstname = "Delilah", Lastname = "Dougary" },
+            new Person() { Firstname = "Tory", Lastname = "Ovington" },
+            new Person() { Firstname = "Doralin", Lastname = "Conrard" },
+            new Person() { Firstname = "Eugene", Lastname = "Custard" },
+            new Person() { Firstname = "Corella", Lastname = "Peotz" },
+            new Person() { Firstname = "Chris", Lastname = "Rayne" },
+            new Person() { Firstname = "Alexandro", Lastname = "Kwietek" },
+            new Person() { Firstname = "Selie", Lastname = "Tenwick" },
+            new Person() { Firstname = "Corliss", Lastname = "Haensel" },
+            new Person() { Firstname = "Misti", Lastname = "Jikylls" },
+            new Person() { Firstname = "Rosaline", Lastname = "Jephson" },
+            new Person() { Firstname = "Irene", Lastname = "Farnsworth" },
+            new Person() { Firstname = "Dominique", Lastname = "O'Shiels" },
+            new Person() { Firstname = "Mellie", Lastname = "Cyson" },
+            new Person() { Firstname = "Madelena", Lastname = "Chin" },
+            new Person() { Firstname = "Charlotte", Lastname = "Clixby" },
+            new Person() { Firstname = "Samara", Lastname = "Shavel" },
+            new Person() { Firstname = "Brod", Lastname = "Kitt" },
+            new Person() { Firstname = "Maridel", Lastname = "Dalley" },
+            new Person() { Firstname = "Wini", Lastname = "Hundley" },
+        });
 
-        People.Add(person1);
-        People.Add(person2);
-        People.Add(person3);
-        People.Add(person4);
-        People.Add(person5);
-        People.Add(person6);
     }
 
     private async Task<IEnumerable<Person>> GetPeopleLocal(string searchText)
