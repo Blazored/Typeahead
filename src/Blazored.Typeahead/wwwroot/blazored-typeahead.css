@@ -70,9 +70,10 @@
     padding: .5rem;
 }
 
-    .blazored-typeahead__result-selected, .blazored-typeahead__result:focus {
+    .blazored-typeahead__result-selected, .blazored-typeahead__result:hover, .blazored-typeahead__result:focus {
         outline: -webkit-focus-ring-color auto 1px;
         background-color: #f5f5f5;
+        cursor: pointer;
     }
 .blazored-typeahead__input-hidden{
     display:none;
