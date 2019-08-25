@@ -153,7 +153,7 @@ namespace Blazored.Typeahead.Forms
         {
             Searching = true;
             await InvokeAsync(StateHasChanged);
-            SearchResults = (await SearchMethod?.Invoke(_searchText)).ToArray();
+            SearchResults = (await SearchMethod?.Invoke(_searchText)).Take(MaximumSuggestions).ToArray();
 
             Searching = false;
             ShouldShowMenu = true;
