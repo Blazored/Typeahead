@@ -129,10 +129,13 @@
         cursor: pointer;
     }
 
-.blazored-typeahead__result_focussed {
+.blazored-typeahead__result-focussed {
     outline: -webkit-focus-ring-color auto 1px !important;
     background-color: #f5f5f5;
 }
 .blazored-typeahead__result:focus {
     outline: none;
+}
+.blazored-typeahead__input-hidden{
+    display:none;
 }

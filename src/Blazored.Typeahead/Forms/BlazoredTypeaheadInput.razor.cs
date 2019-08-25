@@ -24,8 +24,9 @@ namespace Blazored.Typeahead.Forms
         [Parameter] public int MaximumSuggestions { get; set; } = 25;
 
         protected bool Searching { get; set; } = false;
-        protected bool EditMode { get; set; } = true;
-        protected bool ShowMode { get; set; } = true;
+        protected bool ShouldShowMenu { get; private set; } = false;
+        protected bool ShouldShowInput { get; private set; } = true;
+        protected bool ShouldShowMask { get; private set; } = false;
         protected TItem[] SearchResults { get; set; } = new TItem[0];
         protected TItem FocussedSuggestion { get; private set; }
         
@@ -75,36 +76,64 @@ namespace Blazored.Typeahead.Forms
             _debounceTimer.AutoReset = false;
             _debounceTimer.Elapsed += Search;
 
-            if (Value != null)
+            if (Value == null)
             {
-                EditMode = false;
+                ShouldShowMask = false;
+                ShouldShowInput = true;
+            }
+            else
+            {
+                ShouldShowInput = true;
+                ShouldShowMask = false;
             }
         }
 
         protected void HandleClick()
         {
             SearchText = "";
-            EditMode = true;
+            ShouldShowMenu = false;
+            ShouldShowMask = false;
+            ShouldShowInput = true;
         }
         protected async Task HandleMaskClick()
         {
             SearchText = "";
-            EditMode = true;
-            await Task.Delay(250);
+            ShouldShowInput = true;
+            ShouldShowMenu = false;
+            ShouldShowMask = false;
+            await Task.Delay(250); // Possible race condition here, but it's not harmfull
+            await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", searchInput);
+        }
+
+        protected async Task HandleClear()
+        {
+            await ValueChanged.InvokeAsync(default);
+            EditContext.NotifyFieldChanged(FieldIdentifier);
+
+            SearchText = "";
+            ShouldShowMenu = false;
+            ShouldShowInput = true;
+            ShouldShowMask = false;
+            FocussedSuggestion = default;
+            await Task.Delay(250); // Possible race condition here, but it's not harmfull
             await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", searchInput);
         }
 
         protected async Task ShowMaximumSuggestions()
         {
-            ShowMode = !ShowMode;
-            _searchText = "";
-            Searching = true;
-            await InvokeAsync(StateHasChanged);
+            ShouldShowMenu = !ShouldShowMenu;
 
-            SearchResults = (await SearchMethod?.Invoke(_searchText)).Take(MaximumSuggestions).ToArray();
+            if (ShouldShowMenu)
+            {
+                _searchText = "";
+                Searching = true;
+                await InvokeAsync(StateHasChanged);
 
-            Searching = false;
-            await InvokeAsync(StateHasChanged);
+                SearchResults = (await SearchMethod?.Invoke(_searchText)).Take(MaximumSuggestions).ToArray();
+
+                Searching = false;
+                await InvokeAsync(StateHasChanged);
+            }
         }
 
         protected async Task HandleKeyUpOnSuggestion(UIKeyboardEventArgs args, TItem item)
@@ -164,32 +193,18 @@ namespace Blazored.Typeahead.Forms
             if (FocussedSuggestion == null)
                 return null;
             if (FocussedSuggestion.Equals(item))
-                return "blazored-typeahead__result_focussed";
+                return "blazored-typeahead__result-focussed"; 
             return null;
-        }
-
-        protected async Task HandleClear()
-        {
-            await ValueChanged.InvokeAsync(default);
-            EditContext.NotifyFieldChanged(FieldIdentifier);
-
-            SearchText = "";
-            EditMode = true;
-            ShowMode = false;
-            FocussedSuggestion = default;
-
-            await Task.Delay(250);
-            await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", searchInput);
         }
 
         protected async void Search(Object source, ElapsedEventArgs e)
         {
             Searching = true;
             await InvokeAsync(StateHasChanged);
-
-            SearchResults = (await SearchMethod?.Invoke(_searchText)).Take(MaximumSuggestions).ToArray();
+            SearchResults = (await SearchMethod?.Invoke(_searchText)).ToArray();
 
             Searching = false;
+            ShouldShowMenu = true;
             await InvokeAsync(StateHasChanged);
         }
 
@@ -198,14 +213,15 @@ namespace Blazored.Typeahead.Forms
             await ValueChanged.InvokeAsync(item);
             EditContext.NotifyFieldChanged(FieldIdentifier);
 
-            EditMode = false;
-            ShowMode = false;
+            ShouldShowMenu = false;
+            ShouldShowInput = false;
+            ShouldShowMask = true;
             FocussedSuggestion = item;
         }
 
         protected bool ShouldShowSuggestions()
         {
-            return (EditMode || ShowMode) &&
+            return ShouldShowMenu &&
                    SearchResults.Any();
         }
 
@@ -215,7 +231,7 @@ namespace Blazored.Typeahead.Forms
 
         protected bool ShowNotFound()
         {
-            return EditMode &&
+            return ShouldShowMenu &&
                    HasValidSearch &&
                    !IsSearchingOrDebouncing &&
                    !SearchResults.Any();
