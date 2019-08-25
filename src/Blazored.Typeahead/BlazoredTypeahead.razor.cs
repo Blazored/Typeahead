@@ -14,7 +14,7 @@ namespace Blazored.Typeahead
         [Parameter] public string Placeholder { get; set; }
         [Parameter] public TItem Value { get; set; }
         [Parameter] public EventCallback<TItem> ValueChanged { get; set; }
-        [Parameter] public Func<string, Task<List<TItem>>> SearchMethod { get; set; }
+        [Parameter] public Func<string, Task<IEnumerable<TItem>>> SearchMethod { get; set; }
         [Parameter] public RenderFragment NotFoundTemplate { get; set; }
         [Parameter] public RenderFragment<TItem> ResultTemplate { get; set; }
         [Parameter] public RenderFragment<TItem> SelectedTemplate { get; set; }
@@ -26,7 +26,7 @@ namespace Blazored.Typeahead
         protected bool Searching { get; set; } = false;
         protected bool EditMode { get; set; } = true;
         protected bool ShowMode { get; set; } = true;
-        protected List<TItem> SearchResults { get; set; } = new List<TItem>();
+        protected TItem[] SearchResults { get; set; } = new TItem[0];
         protected TItem FocussedSuggestion { get; private set; }
 
         private Timer _debounceTimer;
@@ -43,7 +43,7 @@ namespace Blazored.Typeahead
                 if (value.Length == 0)
                 {
                     _debounceTimer.Stop();
-                    SearchResults.Clear();
+                    SearchResults = new TItem[0];
                 }
                 else if (value.Length >= MinimumLength)
                 {
@@ -101,8 +101,7 @@ namespace Blazored.Typeahead
             Searching = true;
             await InvokeAsync(StateHasChanged);
 
-            var allResults = await SearchMethod?.Invoke(_searchText);
-            SearchResults = allResults.Take(MaximumSuggestions).ToList();
+            SearchResults = (await SearchMethod?.Invoke(_searchText)).Take(MaximumSuggestions).ToArray();
 
             Searching = false;
             await InvokeAsync(StateHasChanged);
@@ -122,10 +121,10 @@ namespace Blazored.Typeahead
 
         private void FocusNextSuggestion()
         {
-            var indexOfCurrentSuggestion = SearchResults.IndexOf(FocussedSuggestion);
+            var indexOfCurrentSuggestion = Array.FindIndex(SearchResults, x => x.Equals(FocussedSuggestion));
             var indexOfNextSuggestion = indexOfCurrentSuggestion + 1;
 
-            if (indexOfNextSuggestion > SearchResults.Count - 1)
+            if (indexOfNextSuggestion > SearchResults.Length - 1)
             {
                 FocusFirstSuggestion();
             }
@@ -137,7 +136,7 @@ namespace Blazored.Typeahead
 
         private void FocusPreviousSuggestion()
         {
-            var indexOfCurrentSuggestion = SearchResults.IndexOf(FocussedSuggestion);
+            var indexOfCurrentSuggestion = Array.FindIndex(SearchResults, x => x.Equals(FocussedSuggestion));
             var indexOfPreviousSuggestion = indexOfCurrentSuggestion - 1;
 
             if (indexOfPreviousSuggestion < 0)
@@ -157,7 +156,7 @@ namespace Blazored.Typeahead
 
         private void FocusLastSuggestion()
         {
-            FocussedSuggestion = SearchResults[SearchResults.Count-1];
+            FocussedSuggestion = SearchResults[SearchResults.Length - 1];
         }
 
         protected string GetFocussedSuggestionClass(TItem item)
@@ -186,7 +185,7 @@ namespace Blazored.Typeahead
         {
             Searching = true;
             await InvokeAsync(StateHasChanged);
-            SearchResults = await SearchMethod?.Invoke(_searchText);
+            SearchResults = (await SearchMethod?.Invoke(_searchText)).ToArray();
 
             Searching = false;
             await InvokeAsync(StateHasChanged);

@@ -76,7 +76,7 @@
         People.Add(person6);
     }
 
-    private async Task<List<Person>> GetPeopleLocal(string searchText)
+    private async Task<IEnumerable<Person>> GetPeopleLocal(string searchText)
     {
         return await Task.FromResult(People.Where(x => x.Firstname.ToLower().Contains(searchText.ToLower())).ToList());
     }
