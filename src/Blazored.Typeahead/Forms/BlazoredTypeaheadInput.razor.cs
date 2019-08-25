@@ -21,11 +21,14 @@ namespace Blazored.Typeahead.Forms
         [Parameter] public RenderFragment FooterTemplate { get; set; }
         [Parameter] public int MinimumLength { get; set; } = 1;
         [Parameter] public int Debounce { get; set; } = 300;
+        [Parameter] public int MaximumSuggestions { get; set; } = 25;
 
         protected bool Searching { get; set; } = false;
         protected bool EditMode { get; set; } = true;
+        protected bool ShowMode { get; set; } = true;
         protected List<TItem> SearchResults { get; set; } = new List<TItem>();
-
+        protected TItem FocussedSuggestion { get; private set; }
+        
         private Timer _debounceTimer;
         protected ElementReference searchInput;
 
@@ -78,7 +81,12 @@ namespace Blazored.Typeahead.Forms
             }
         }
 
-        protected async Task HandleFocus()
+        protected void HandleClick()
+        {
+            SearchText = "";
+            EditMode = true;
+        }
+        protected async Task HandleMaskClick()
         {
             SearchText = "";
             EditMode = true;
@@ -86,13 +94,90 @@ namespace Blazored.Typeahead.Forms
             await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", searchInput);
         }
 
+        protected async Task ShowMaximumSuggestions()
+        {
+            ShowMode = !ShowMode;
+            _searchText = "";
+            Searching = true;
+            await InvokeAsync(StateHasChanged);
+
+            var allResults = await SearchMethod?.Invoke(_searchText);
+            SearchResults = allResults.Take(MaximumSuggestions).ToList();
+
+            Searching = false;
+            await InvokeAsync(StateHasChanged);
+        }
+
+        protected async Task HandleKeyUpOnSuggestion(UIKeyboardEventArgs args, TItem item)
+        {
+            if (args.Key == "Tab")
+                FocussedSuggestion = item;
+            if (args.Key == "ArrowDown")
+                FocusNextSuggestion();
+            if (args.Key == "ArrowUp")
+                FocusPreviousSuggestion();
+            if (args.Key == "Enter")
+                await SelectResult(FocussedSuggestion);
+        }
+
+        private void FocusNextSuggestion()
+        {
+            var indexOfCurrentSuggestion = SearchResults.IndexOf(FocussedSuggestion);
+            var indexOfNextSuggestion = indexOfCurrentSuggestion + 1;
+
+            if (indexOfNextSuggestion > SearchResults.Count - 1)
+            {
+                FocusFirstSuggestion();
+            }
+            else
+            {
+                FocussedSuggestion = SearchResults[indexOfNextSuggestion];
+            }
+        }
+
+        private void FocusPreviousSuggestion()
+        {
+            var indexOfCurrentSuggestion = SearchResults.IndexOf(FocussedSuggestion);
+            var indexOfPreviousSuggestion = indexOfCurrentSuggestion - 1;
+
+            if (indexOfPreviousSuggestion < 0)
+            {
+                FocusLastSuggestion();
+            }
+            else
+            {
+                FocussedSuggestion = SearchResults[indexOfPreviousSuggestion];
+            }
+        }
+
+        private void FocusFirstSuggestion()
+        {
+            FocussedSuggestion = SearchResults[0];
+        }
+
+        private void FocusLastSuggestion()
+        {
+            FocussedSuggestion = SearchResults[SearchResults.Count - 1];
+        }
+
+        protected string GetFocussedSuggestionClass(TItem item)
+        {
+            if (FocussedSuggestion == null)
+                return null;
+            if (FocussedSuggestion.Equals(item))
+                return "blazored-typeahead__result_focussed";
+            return null;
+        }
+
         protected async Task HandleClear()
         {
-            await ValueChanged.InvokeAsync(default(TItem));
+            await ValueChanged.InvokeAsync(default);
             EditContext.NotifyFieldChanged(FieldIdentifier);
 
-            _searchText = "";
+            SearchText = "";
             EditMode = true;
+            ShowMode = false;
+            FocussedSuggestion = default;
 
             await Task.Delay(250);
             await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", searchInput);
@@ -115,13 +200,13 @@ namespace Blazored.Typeahead.Forms
             EditContext.NotifyFieldChanged(FieldIdentifier);
 
             EditMode = false;
+            ShowMode = false;
+            FocussedSuggestion = item;
         }
 
-        protected bool ShowSuggestions()
+        protected bool ShouldShowSuggestions()
         {
-            return EditMode &&
-                   !string.IsNullOrWhiteSpace(SearchText) &&
-                   SearchText.Length >= MinimumLength &&
+            return (EditMode || ShowMode) &&
                    SearchResults.Any();
         }
 

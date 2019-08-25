@@ -1,14 +1,14 @@
-﻿.blazored-typeahead {
+.blazored-typeahead {
 }
 
 .blazored-typeahead__controls {
     position: relative;
     cursor: text;
+    display: flex;
 }
 
 .blazored-typeahead__input {
     width: 100%;
-    border-radius: 5px;
     border: 1px solid #bfbfbf;
     padding: .5rem;
 }
@@ -28,7 +28,8 @@
     width: 50px;
     height: 50px;
 }
-.blazored-typeahead__loader, 
+
+.blazored-typeahead__loader,
 .blazored-typeahead__loader:after {
     border-radius: 50%;
     width: 3em;
@@ -76,6 +77,7 @@
 
 .blazored-typeahead__input-mask-wrapper {
     display: flex;
+    width: 100%;
 }
 
 .blazored-typeahead__input-mask {
@@ -90,7 +92,6 @@
 .blazored-typeahead__clear {
     width: 50px;
     display: flex;
-    border-radius: 0 5px 5px 0;
     border-top: 1px solid #bfbfbf;
     padding: .5rem;
     align-items: center;
@@ -98,6 +99,18 @@
     border-bottom: 1px solid #bfbfbf;
     border-right: 1px solid #bfbfbf;
     cursor: pointer;
+}
+
+.blazored-typeahead__input__icon {
+    display: flex;
+    border-radius: 0 5px 5px 0;
+    border-top: 1px solid #bfbfbf;
+    border-left: 0;
+    border-right: 1px solid #bfbfbf;
+    border-bottom: 1px solid #bfbfbf;
+    padding: .5rem;
+    cursor: pointer;
+    background: none;
 }
 
 .blazored-typeahead__results {
@@ -111,7 +124,15 @@
     padding: .5rem;
 }
 
-    .blazored-typeahead__result:hover {
+    .blazored-typeahead__result:hover, .blazored-typeahead__input__icon:hover {
         background-color: #f5f5f5;
         cursor: pointer;
     }
+
+.blazored-typeahead__result_focussed {
+    outline: -webkit-focus-ring-color auto 1px !important;
+    background-color: #f5f5f5;
+}
+.blazored-typeahead__result:focus {
+    outline: none;
+}
