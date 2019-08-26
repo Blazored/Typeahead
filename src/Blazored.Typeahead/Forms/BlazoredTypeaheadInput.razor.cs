@@ -23,11 +23,11 @@ namespace Blazored.Typeahead.Forms
         [Parameter] public int Debounce { get; set; } = 300;
         [Parameter] public int MaximumSuggestions { get; set; } = 25;
 
-        protected bool Searching { get; set; } = false;
-        protected bool ShouldShowMenu { get; private set; } = false;
-        protected bool ShouldShowInput { get; private set; } = true;
-        protected bool ShouldShowMask { get; private set; } = false;
-        protected TItem[] SearchResults { get; set; } = new TItem[0];
+        protected bool IsSearching { get; set; } = false;
+        protected bool IsShowingSuggestions { get; private set; } = false;
+        protected bool IsShowingSearchbar { get; private set; } = true;
+        protected bool IsShowingMask { get; private set; } = false;
+        protected TItem[] Suggestions { get; set; } = new TItem[0];
         protected string SearchText
         {
             get => _searchText;
@@ -38,7 +38,7 @@ namespace Blazored.Typeahead.Forms
                 if (value.Length == 0)
                 {
                     _debounceTimer.Stop();
-                    SearchResults = new TItem[0];
+                    Suggestions = new TItem[0];
                 }
                 else if (value.Length >= MinimumLength)
                 {
@@ -53,7 +53,7 @@ namespace Blazored.Typeahead.Forms
         protected ElementReference typeahead;
 
         private Timer _debounceTimer;
-        private string _searchText;
+        private string _searchText = string.Empty;
         private bool _firstRender = true; // remove in preview 9
 
         protected override void OnInitialized()
@@ -101,16 +101,16 @@ namespace Blazored.Typeahead.Forms
         private void Initialze()
         {
             _searchText = "";
-            ShouldShowMenu = false;
+            IsShowingSuggestions = false;
             if (Value == null)
             {
-                ShouldShowMask = false;
-                ShouldShowInput = true;
+                IsShowingMask = false;
+                IsShowingSearchbar = true;
             }
             else
             {
-                ShouldShowInput = false;
-                ShouldShowMask = true;
+                IsShowingSearchbar = false;
+                IsShowingMask = true;
             }
         }
 
@@ -125,17 +125,17 @@ namespace Blazored.Typeahead.Forms
 
         protected async Task ShowMaximumSuggestions()
         {
-            ShouldShowMenu = !ShouldShowMenu;
+            IsShowingSuggestions = !IsShowingSuggestions;
 
-            if (ShouldShowMenu)
+            if (IsShowingSuggestions)
             {
                 _searchText = "";
-                Searching = true;
+                IsSearching = true;
                 await InvokeAsync(StateHasChanged);
 
-                SearchResults = (await SearchMethod?.Invoke(_searchText)).Take(MaximumSuggestions).ToArray();
+                Suggestions = (await SearchMethod?.Invoke(_searchText)).Take(MaximumSuggestions).ToArray();
 
-                Searching = false;
+                IsSearching = false;
                 await InvokeAsync(StateHasChanged);
             }
         }
@@ -192,12 +192,12 @@ namespace Blazored.Typeahead.Forms
 
         protected async void Search(Object source, ElapsedEventArgs e)
         {
-            Searching = true;
+            IsSearching = true;
             await InvokeAsync(StateHasChanged);
-            SearchResults = (await SearchMethod?.Invoke(_searchText)).Take(MaximumSuggestions).ToArray();
+            Suggestions = (await SearchMethod?.Invoke(_searchText)).Take(MaximumSuggestions).ToArray();
 
-            Searching = false;
-            ShouldShowMenu = true;
+            IsSearching = false;
+            IsShowingSuggestions = true;
             await InvokeAsync(StateHasChanged);
         }
 
@@ -211,20 +211,20 @@ namespace Blazored.Typeahead.Forms
 
         protected bool ShouldShowSuggestions()
         {
-            return ShouldShowMenu &&
-                   SearchResults.Any();
+            return IsShowingSuggestions &&
+                   Suggestions.Any();
         }
 
         private bool HasValidSearch => !string.IsNullOrWhiteSpace(SearchText) && SearchText.Length >= MinimumLength;
 
-        private bool IsSearchingOrDebouncing => Searching || _debounceTimer.Enabled;
+        private bool IsSearchingOrDebouncing => IsSearching || _debounceTimer.Enabled;
 
         protected bool ShowNotFound()
         {
-            return ShouldShowMenu &&
+            return IsShowingSuggestions &&
                    HasValidSearch &&
                    !IsSearchingOrDebouncing &&
-                   !SearchResults.Any();
+                   !Suggestions.Any();
         }
 
         protected override bool TryParseValueFromString(string value, out TItem result, out string validationErrorMessage)

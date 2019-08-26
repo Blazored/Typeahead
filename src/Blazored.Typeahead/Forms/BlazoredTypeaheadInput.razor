@@ -5,13 +5,13 @@
     <div class="blazored-typeahead__controls" @ref="typeahead" @ref:suppressField>
         <input @ref="searchInput"
                @ref:suppressField
-               class="blazored-typeahead__input @CssClass @(!ShouldShowInput ? "blazored-typeahead__input-hidden" : null)"
+               class="blazored-typeahead__input @CssClass @(!IsShowingSearchbar ? "blazored-typeahead__input-hidden" : null)"
                @bind-value="@SearchText"
                @bind-value:event="oninput"
                type="text"
                autocomplete="off"
                placeholder="@Placeholder" />
-        @if (ShouldShowMask && Value != null)
+        @if (IsShowingMask && Value != null)
         {
             <div class="blazored-typeahead__input-mask-wrapper">
                 <div class="blazored-typeahead__input-mask" @onclick="@HandleClear" @onkeyup="@HandleKeyUpOnMask" tabindex="0" @ref="mask" @ref:suppressField>
@@ -22,8 +22,8 @@
                 </div>
             </div>
         }
-    <div class="blazored-typeahead__input__icon" @onclick="ShowMaximumSuggestions" @onkeyup="@HandleKeyUpOnShowMaximum" tabindex="@(ShouldShowMenu ? "-1" : "0")">
-        @if (Searching)
+    <div class="blazored-typeahead__input__icon" @onclick="ShowMaximumSuggestions" @onkeyup="@HandleKeyUpOnShowMaximum" tabindex="@(IsShowingSuggestions ? "-1" : "0")">
+        @if (IsSearching)
         {
             <div class="blazored-typeahead__loader"></div>
         }
@@ -42,7 +42,7 @@
     @if (ShouldShowSuggestions())
     {
 <div class="blazored-typeahead__results">
-    @foreach (var item in SearchResults)
+    @foreach (var item in Suggestions)
     {
         <div @key="item" class="blazored-typeahead__result @GetSelectedSuggestionClass(item)" tabindex="0" @onclick="@(_ => SelectResult(item))" @onkeyup="@((e) => HandleKeyUpOnSuggestion(e,item))">
             @if (ResultTemplate != null)
