@@ -79,15 +79,15 @@ namespace Blazored.Typeahead
             _debounceTimer.AutoReset = false;
             _debounceTimer.Elapsed += Search;
 
-            Initialze();
+            Initialize();
         }
 
         protected override void OnParametersSet()
         {
-            Initialze();
+            Initialize();
         }
 
-        private void Initialze()
+        private void Initialize()
         {
             IsShowingSuggestions = false;
             if (Value == null)
@@ -150,7 +150,7 @@ namespace Blazored.Typeahead
                 case "Escape":
                 case "Backspace":
                 case "Delete":
-                    Initialze();
+                    Initialize();
                     await Task.Delay(250);
                     await Interop.Focus(JSRuntime, searchInput);
                     break;
@@ -227,13 +227,13 @@ namespace Blazored.Typeahead
 
         protected void OnFocusOut(object sender, EventArgs e)
         {
-            Initialze();
+            Initialize();
             InvokeAsync(StateHasChanged);
         }
 
         protected void OnEscape(object sender, EventArgs e)
         {
-            Initialze();
+            Initialize();
             InvokeAsync(StateHasChanged);
         }
 
