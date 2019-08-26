@@ -56,7 +56,6 @@ namespace Blazored.Typeahead
         private string _searchText = string.Empty;
         private bool _firstRender = true; // remove in preview 9
 
-
         protected override void OnInitialized()
         {
             if (SearchMethod == null)
@@ -82,6 +81,18 @@ namespace Blazored.Typeahead
             Initialize();
         }
 
+        protected override async Task OnAfterRenderAsync()
+        {
+            if (_firstRender)
+            {
+                _firstRender = false;
+                await Interop.AddEscapeEventListener(JSRuntime, typeahead);
+                await Interop.AddFocusOutEventListener(JSRuntime, typeahead);
+                Interop.OnEscapeEvent += OnEscape;
+                Interop.OnFocusOutEvent += OnFocusOut;
+            }
+        }
+
         protected override void OnParametersSet()
         {
             Initialize();
@@ -99,18 +110,6 @@ namespace Blazored.Typeahead
             {
                 IsShowingSearchbar = false;
                 IsShowingMask = true;
-            }
-        }
-
-        protected override async Task OnAfterRenderAsync()
-        {
-            if (_firstRender)
-            {
-                _firstRender = false;
-                await Interop.AddEscapeEventListener(JSRuntime, typeahead);
-                await Interop.AddFocusOutEventListener(JSRuntime, typeahead);
-                Interop.OnEscapeEvent += OnEscape;
-                Interop.OnFocusOutEvent += OnFocusOut;
             }
         }
 

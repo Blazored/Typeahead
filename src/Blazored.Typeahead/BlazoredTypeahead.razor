@@ -15,7 +15,7 @@
         {
             <div class="blazored-typeahead__input-mask-wrapper">
                 <div class="blazored-typeahead__input-mask" @onclick="@HandleClear" @onkeyup="@HandleKeyUpOnMask" tabindex="0" @ref="mask" @ref:suppressField>
-                    @SelectedTemplate(Value)                                                                                   
+                    @SelectedTemplate(Value)
                 </div>
                 <div class="blazored-typeahead__clear" @onclick="@HandleClear" tabindex="-1">
                     &#10005;
@@ -25,7 +25,7 @@
         <div class="blazored-typeahead__input__icon" @onclick="ShowMaximumSuggestions" @onkeyup="@HandleKeyUpOnShowMaximum" tabindex="@(IsShowingSuggestions ? "-1" : "0")">
             @if (IsSearching)
             {
-            <div class="blazored-typeahead__loader"></div>
+                <div class="blazored-typeahead__loader"></div>
             }
             else
             {

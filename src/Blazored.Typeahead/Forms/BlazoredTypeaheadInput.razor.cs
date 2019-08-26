@@ -129,7 +129,7 @@ namespace Blazored.Typeahead.Forms
 
             if (IsShowingSuggestions)
             {
-                _searchText = "";
+                SearchText = "";
                 IsSearching = true;
                 await InvokeAsync(StateHasChanged);
 
