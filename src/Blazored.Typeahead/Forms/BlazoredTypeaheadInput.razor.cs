@@ -11,7 +11,7 @@ namespace Blazored.Typeahead.Forms
 {
     public class BlazoredTypeaheadInputBase<TItem> : InputBase<TItem>, IDisposable
     {
-        [Inject] IJSRuntime JSRuntime { get; set; }
+        [Inject] private IJSRuntime JSRuntime { get; set; }
 
         [Parameter] public string Placeholder { get; set; }
         [Parameter] public Func<string, Task<IEnumerable<TItem>>> SearchMethod { get; set; }
@@ -28,14 +28,6 @@ namespace Blazored.Typeahead.Forms
         protected bool ShouldShowInput { get; private set; } = true;
         protected bool ShouldShowMask { get; private set; } = false;
         protected TItem[] SearchResults { get; set; } = new TItem[0];
-        
-        private Timer _debounceTimer;
-        protected ElementReference searchInput;
-        protected ElementReference mask;
-        protected ElementReference typeahead;
-
-        private string _searchText;
-        private bool _firstRender = true; // remove in preview 9
         protected string SearchText
         {
             get => _searchText;
@@ -55,6 +47,14 @@ namespace Blazored.Typeahead.Forms
                 }
             }
         }
+
+        protected ElementReference searchInput;
+        protected ElementReference mask;
+        protected ElementReference typeahead;
+
+        private Timer _debounceTimer;
+        private string _searchText;
+        private bool _firstRender = true; // remove in preview 9
 
         protected override void OnInitialized()
         {
@@ -120,7 +120,7 @@ namespace Blazored.Typeahead.Forms
             EditContext.NotifyFieldChanged(FieldIdentifier);
             SearchText = "";
             await Task.Delay(250); // Possible race condition here.
-            await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", searchInput);
+            await Interop.Focus(JSRuntime, searchInput);
         }
 
         protected async Task ShowMaximumSuggestions()
@@ -153,7 +153,7 @@ namespace Blazored.Typeahead.Forms
                 case "Delete":
                     Initialze();
                     await Task.Delay(250);
-                    await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", searchInput);
+                    await Interop.Focus(JSRuntime, searchInput);
                     break;
                 default:
                     break;
@@ -206,7 +206,7 @@ namespace Blazored.Typeahead.Forms
             await ValueChanged.InvokeAsync(item);
             EditContext.NotifyFieldChanged(FieldIdentifier);
             await Task.Delay(250);
-            await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", mask);
+            await Interop.Focus(JSRuntime, mask);
         }
 
         protected bool ShouldShowSuggestions()

@@ -10,7 +10,7 @@ namespace Blazored.Typeahead
 {
     public class BlazoredTypeaheadBase<TItem> : ComponentBase, IDisposable
     {
-        [Inject] IJSRuntime JSRuntime { get; set; }
+        [Inject] private IJSRuntime JSRuntime { get; set; }
         [Parameter] public string Placeholder { get; set; }
         [Parameter] public TItem Value { get; set; }
         [Parameter] public EventCallback<TItem> ValueChanged { get; set; }
@@ -29,11 +29,11 @@ namespace Blazored.Typeahead
         protected bool ShouldShowMask { get; private set; } = false;
         protected TItem[] SearchResults { get; set; } = new TItem[0];
 
-        private Timer _debounceTimer;
         protected ElementReference searchInput;
         protected ElementReference mask;
         protected ElementReference typeahead;
 
+        private Timer _debounceTimer;
         private string _searchText = string.Empty;
         private bool _firstRender = true; // remove in preview 9
         protected string SearchText
