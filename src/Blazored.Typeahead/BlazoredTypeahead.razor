@@ -1,7 +1,7 @@
 ﻿@typeparam TItem
 @inherits BlazoredTypeaheadBase<TItem>
 
-<div class="blazored-typeahead">
+<div class="blazored-typeahead" @ref="typeahead" @ref:suppressField>
     <div class="blazored-typeahead__controls">
         <input @ref="searchInput"
                @ref:suppressField

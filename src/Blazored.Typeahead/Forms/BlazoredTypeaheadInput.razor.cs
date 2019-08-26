@@ -32,8 +32,10 @@ namespace Blazored.Typeahead.Forms
         private Timer _debounceTimer;
         protected ElementReference searchInput;
         protected ElementReference mask;
+        protected ElementReference typeahead;
 
         private string _searchText;
+        private bool _firstRender = true; // remove in preview 9
         protected string SearchText
         {
             get => _searchText;
@@ -77,6 +79,18 @@ namespace Blazored.Typeahead.Forms
             _debounceTimer.Elapsed += Search;
 
             Initialze();
+        }
+
+        protected override async Task OnAfterRenderAsync()
+        {
+            if (_firstRender)
+            {
+                _firstRender = false;
+                await Interop.AddEscapeEventListener(JSRuntime, typeahead);
+                await Interop.AddFocusOutEventListener(JSRuntime, typeahead);
+                Interop.OnEscapeEvent += OnEscape;
+                Interop.OnEscapeEvent += OnFocusOut;
+            }
         }
 
         protected override void OnParametersSet()
@@ -221,9 +235,23 @@ namespace Blazored.Typeahead.Forms
             return true;
         }
 
+        protected void OnFocusOut(object sender, EventArgs e)
+        {
+            Initialze();
+            InvokeAsync(StateHasChanged);
+        }
+
+        protected void OnEscape(object sender, EventArgs e)
+        {
+            Initialze();
+            InvokeAsync(StateHasChanged);
+        }
+
         public void Dispose()
         {
             _debounceTimer.Dispose();
+            Interop.OnEscapeEvent -= OnEscape;
+            Interop.OnEscapeEvent -= OnFocusOut;
         }
 
     }

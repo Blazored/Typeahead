@@ -2,7 +2,7 @@
 @inherits BlazoredTypeaheadInputBase<TItem>
 
 <div class="blazored-typeahead">
-    <div class="blazored-typeahead__controls">
+    <div class="blazored-typeahead__controls" @ref="typeahead" @ref:suppressField>
         <input @ref="searchInput"
                @ref:suppressField
                class="blazored-typeahead__input @CssClass @(!ShouldShowInput ? "blazored-typeahead__input-hidden" : null)"

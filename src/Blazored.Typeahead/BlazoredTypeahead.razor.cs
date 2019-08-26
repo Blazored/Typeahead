@@ -28,12 +28,14 @@ namespace Blazored.Typeahead
         protected bool ShouldShowInput { get; private set; } = true;
         protected bool ShouldShowMask { get; private set; } = false;
         protected TItem[] SearchResults { get; set; } = new TItem[0];
-        
+
         private Timer _debounceTimer;
         protected ElementReference searchInput;
         protected ElementReference mask;
+        protected ElementReference typeahead;
 
         private string _searchText = string.Empty;
+        private bool _firstRender = true; // remove in preview 9
         protected string SearchText
         {
             get => _searchText;
@@ -98,12 +100,25 @@ namespace Blazored.Typeahead
                 ShouldShowMask = true;
             }
         }
+
+        protected override async Task OnAfterRenderAsync()
+        {
+            if (_firstRender)
+            {
+                _firstRender = false;
+                await Interop.AddEscapeEventListener(JSRuntime, typeahead);
+                await Interop.AddFocusOutEventListener(JSRuntime, typeahead);
+                Interop.OnEscapeEvent += OnEscape;
+                Interop.OnEscapeEvent += OnFocusOut;
+            }
+        }
+
         protected async Task HandleClear()
         {
             await ValueChanged.InvokeAsync(default);
             SearchText = "";
             await Task.Delay(250); // Possible race condition here.
-            await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", searchInput);
+            await Interop.Focus(JSRuntime, searchInput);
         }
 
         protected async Task ShowMaximumSuggestions()
@@ -136,7 +151,7 @@ namespace Blazored.Typeahead
                 case "Delete":
                     Initialze();
                     await Task.Delay(250);
-                    await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", searchInput);
+                    await Interop.Focus(JSRuntime, searchInput);
                     break;
                 default:
                     break;
@@ -188,7 +203,7 @@ namespace Blazored.Typeahead
         {
             await ValueChanged.InvokeAsync(item);
             await Task.Delay(250);
-            await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", mask);
+            await Interop.Focus(JSRuntime, mask);
         }
 
         protected bool ShouldShowSuggestions()
@@ -209,10 +224,23 @@ namespace Blazored.Typeahead
                    !SearchResults.Any();
         }
 
+        protected void OnFocusOut(object sender, EventArgs e)
+        {
+            Initialze();
+            InvokeAsync(StateHasChanged);
+        }
+
+        protected void OnEscape(object sender, EventArgs e)
+        {
+            Initialze();
+            InvokeAsync(StateHasChanged);
+        }
+
         public void Dispose()
         {
             _debounceTimer.Dispose();
+            Interop.OnEscapeEvent -= OnEscape;
+            Interop.OnEscapeEvent -= OnFocusOut;
         }
-
     }
 }
