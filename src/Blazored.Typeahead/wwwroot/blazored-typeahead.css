@@ -37,7 +37,7 @@
 }
 
 .blazored-typeahead__clear {
-    width: 50px;
+    width: 40px;
     display: flex;
     border-top: 1px solid #bfbfbf;
     padding: .5rem;
@@ -49,6 +49,7 @@
 }
 
 .blazored-typeahead__input__icon {
+    width: 40px;
     display: flex;
     border-radius: 0 5px 5px 0;
     border-top: 1px solid #bfbfbf;
