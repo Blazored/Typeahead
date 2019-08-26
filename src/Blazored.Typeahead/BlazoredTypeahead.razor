@@ -8,14 +8,13 @@
                class="blazored-typeahead__input @(!ShouldShowInput ? "blazored-typeahead__input-hidden" : null)"
                @bind-value="@SearchText"
                @bind-value:event="oninput"
-               @onclick="@HandleClick"
                type="text"
                autocomplete="off"
                placeholder="@Placeholder" />
         @if (ShouldShowMask && Value != null)
         {
             <div class="blazored-typeahead__input-mask-wrapper">
-                <div class="blazored-typeahead__input-mask" @onclick="@HandleMaskClick">
+                <div class="blazored-typeahead__input-mask" @onclick="@HandleClear">
                     @SelectedTemplate(Value)
                 </div>
                 <div class="blazored-typeahead__clear" @onclick="@HandleClear" tabindex="0">

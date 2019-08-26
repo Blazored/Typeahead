@@ -85,7 +85,6 @@ namespace Blazored.Typeahead
 
         private void Initialze()
         {
-            _searchText = "";
             ShouldShowMenu = false;
             if (Value == null)
             {
@@ -98,32 +97,10 @@ namespace Blazored.Typeahead
                 ShouldShowMask = true;
             }
         }
-        protected void HandleClick()
-        {
-            _searchText = string.Empty;
-            ShouldShowMenu = false;
-            ShouldShowMask = false;
-            ShouldShowInput = true;
-        }
-
-        protected async Task HandleMaskClick()
-        {
-            SearchText = "";
-            ShouldShowInput = true;
-            ShouldShowMenu = false;
-            ShouldShowMask = false;
-            await Task.Delay(250); // Possible race condition here.
-            await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", searchInput);
-        }
-
         protected async Task HandleClear()
         {
             await ValueChanged.InvokeAsync(default);
-
             SearchText = "";
-            ShouldShowMenu = false;
-            ShouldShowInput = true;
-            ShouldShowMask = false;
             await Task.Delay(250); // Possible race condition here.
             await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", searchInput);
         }
@@ -134,7 +111,7 @@ namespace Blazored.Typeahead
 
             if (ShouldShowMenu)
             {
-                _searchText = "";
+                SearchText = "";
                 Searching = true;
                 await InvokeAsync(StateHasChanged);
 
@@ -174,10 +151,6 @@ namespace Blazored.Typeahead
         protected async Task SelectResult(TItem item)
         {               
             await ValueChanged.InvokeAsync(item);
-
-            ShouldShowMenu = false;
-            ShouldShowInput = false;
-            ShouldShowMask = true;
         }
 
         protected bool ShouldShowSuggestions()

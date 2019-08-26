@@ -99,33 +99,12 @@ namespace Blazored.Typeahead.Forms
             }
         }
 
-        protected void HandleClick()
-        {
-            SearchText = "";
-            ShouldShowMenu = false;
-            ShouldShowMask = false;
-            ShouldShowInput = true;
-        }
-        protected async Task HandleMaskClick()
-        {
-            SearchText = "";
-            ShouldShowInput = true;
-            ShouldShowMenu = false;
-            ShouldShowMask = false;
-            await Task.Delay(250); // Possible race condition here, but it's not harmfull
-            await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", searchInput);
-        }
-
         protected async Task HandleClear()
         {
             await ValueChanged.InvokeAsync(default);
             EditContext.NotifyFieldChanged(FieldIdentifier);
-
             SearchText = "";
-            ShouldShowMenu = false;
-            ShouldShowInput = true;
-            ShouldShowMask = false;
-            await Task.Delay(250); // Possible race condition here, but it's not harmfull
+            await Task.Delay(250); // Possible race condition here.
             await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", searchInput);
         }
 
@@ -176,10 +155,6 @@ namespace Blazored.Typeahead.Forms
         {
             await ValueChanged.InvokeAsync(item);
             EditContext.NotifyFieldChanged(FieldIdentifier);
-
-            ShouldShowMenu = false;
-            ShouldShowInput = false;
-            ShouldShowMask = true;
         }
 
         protected bool ShouldShowSuggestions()
