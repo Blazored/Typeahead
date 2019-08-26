@@ -126,6 +126,8 @@ namespace Blazored.Typeahead
         {
             if (args.Key == "Enter")
                 await SelectResult(item);
+            if (args.Key == "Escape")
+                Initialze();
         }
 
         protected string GetSelectedSuggestionClass(TItem item)
