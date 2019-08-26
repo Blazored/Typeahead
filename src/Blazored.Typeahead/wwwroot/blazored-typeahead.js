@@ -5,7 +5,6 @@ window.blazoredTypeahead = {
     },
     addFocusoutEventListener: (element) => {
         element.addEventListener("focusout", (event) => {
-            console.log(element);
             if (element.contains(event.relatedTarget)) {
                 return; // don't react to this since it's a child.
             }
@@ -15,7 +14,6 @@ window.blazoredTypeahead = {
     },
     addEscapeEventListener: (element) => {
         element.addEventListener('keydown', (event) => {
-            console.log(element);
             const key = event.key;
             if (key === "Escape") {
                 DotNet.invokeMethodAsync(blazoredTypeahead.assemblyname, "OnEscape");

@@ -109,7 +109,7 @@ namespace Blazored.Typeahead
                 await Interop.AddEscapeEventListener(JSRuntime, typeahead);
                 await Interop.AddFocusOutEventListener(JSRuntime, typeahead);
                 Interop.OnEscapeEvent += OnEscape;
-                Interop.OnEscapeEvent += OnFocusOut;
+                Interop.OnFocusOutEvent += OnFocusOut;
             }
         }
 
