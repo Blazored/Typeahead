@@ -14,10 +14,10 @@
         @if (ShouldShowMask && Value != null)
         {
             <div class="blazored-typeahead__input-mask-wrapper">
-                <div class="blazored-typeahead__input-mask" @onclick="@HandleClear">
+                <div class="blazored-typeahead__input-mask" @onclick="@HandleClear" @onkeyup="@HandleKeyUpOnMask" tabindex="0" @ref="mask" @ref:suppressField>
                     @SelectedTemplate(Value)
                 </div>
-                <div class="blazored-typeahead__clear" @onclick="@HandleClear" tabindex="0">
+                <div class="blazored-typeahead__clear" @onclick="@HandleClear" tabindex="-1">
                     &#10005;
                 </div>
             </div>

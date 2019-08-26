@@ -31,6 +31,7 @@ namespace Blazored.Typeahead.Forms
         
         private Timer _debounceTimer;
         protected ElementReference searchInput;
+        protected ElementReference mask;
 
         private string _searchText;
         protected string SearchText
@@ -129,6 +130,24 @@ namespace Blazored.Typeahead.Forms
         {
             if (args.Key == "Enter")
                 await SelectResult(item);
+            if (args.Key == "Escape")
+            {
+                Initialze();
+                await Task.Delay(250);
+                await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", searchInput);
+            }
+        }
+
+        protected async Task HandleKeyUpOnMask(UIKeyboardEventArgs args)
+        {
+            if (args.Key == "Enter")
+                await HandleClear();
+            if (args.Key == "Escape")
+                await HandleClear();
+            if (args.Key == "Backspace")
+                await HandleClear();
+            if (args.Key == "Delete")
+                await HandleClear();
         }
 
         protected string GetSelectedSuggestionClass(TItem item)
@@ -155,6 +174,8 @@ namespace Blazored.Typeahead.Forms
         {
             await ValueChanged.InvokeAsync(item);
             EditContext.NotifyFieldChanged(FieldIdentifier);
+            await Task.Delay(250);
+            await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", mask);
         }
 
         protected bool ShouldShowSuggestions()
