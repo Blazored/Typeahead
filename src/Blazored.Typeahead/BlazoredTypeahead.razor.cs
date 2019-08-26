@@ -125,26 +125,43 @@ namespace Blazored.Typeahead
 
         protected async Task HandleKeyUpOnSuggestion(UIKeyboardEventArgs args, TItem item)
         {
-            if (args.Key == "Enter")
-                await SelectResult(item);
-            if (args.Key == "Escape")
+            // Maybe on any key except Tab and Enter, continue the typing option.
+            switch (args.Key)
             {
-                Initialze();
-                await Task.Delay(250);
-                await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", searchInput);
+                case "Enter":
+                    await SelectResult(item);
+                    break;
+                case "Escape":
+                case "Backspace":
+                case "Delete":
+                    Initialze();
+                    await Task.Delay(250);
+                    await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", searchInput);
+                    break;
+                default:
+                    break;
             }
+        }
+
+        protected async Task HandleKeyUpOnShowMaximum(UIKeyboardEventArgs args)
+        {
+            if (args.Key == "Enter")
+                await ShowMaximumSuggestions();
         }
 
         protected async Task HandleKeyUpOnMask(UIKeyboardEventArgs args)
         {
-            if (args.Key == "Enter")
-                await HandleClear();
-            if (args.Key == "Escape")
-                await HandleClear();
-            if (args.Key == "Backspace")
-                await HandleClear();
-            if (args.Key == "Delete")
-                await HandleClear();
+            switch (args.Key)
+            {
+                case "Enter":
+                case "Escape":
+                case "Backspace":
+                case "Delete":
+                    await HandleClear();
+                    break;
+                default:
+                    break;
+            }
         }
 
         protected string GetSelectedSuggestionClass(TItem item)
@@ -168,7 +185,7 @@ namespace Blazored.Typeahead
         }
 
         protected async Task SelectResult(TItem item)
-        {               
+        {
             await ValueChanged.InvokeAsync(item);
             await Task.Delay(250);
             await JSRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", mask);
@@ -178,7 +195,7 @@ namespace Blazored.Typeahead
         {
             return ShouldShowMenu &&
                    SearchResults.Any();
-        } 
+        }
 
         private bool HasValidSearch => !string.IsNullOrWhiteSpace(SearchText) && SearchText.Length >= MinimumLength;
 

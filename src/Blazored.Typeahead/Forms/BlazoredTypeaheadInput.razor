@@ -22,7 +22,7 @@
                 </div>
             </div>
         }
-    <div class="blazored-typeahead__input__icon" @onclick="ShowMaximumSuggestions" tabindex="-1">
+    <div class="blazored-typeahead__input__icon" @onclick="ShowMaximumSuggestions" @onkeyup="@HandleKeyUpOnShowMaximum" tabindex="@(ShouldShowMenu ? "-1" : "0")">
         @if (Searching)
         {
             <div class="blazored-typeahead__loader"></div>
