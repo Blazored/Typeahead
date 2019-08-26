@@ -7,20 +7,20 @@ namespace Blazored.Typeahead
 {
     public static class Interop
     {
-        public static EventHandler OnFocusOutEvent { get; set; }
-        public static EventHandler OnEscapeEvent { get; set; }
+        internal static EventHandler OnFocusOutEvent { get; set; }
+        internal static EventHandler OnEscapeEvent { get; set; }
 
-        public static async Task Focus(IJSRuntime jsRuntime, ElementReference element)
+        internal static Task Focus(IJSRuntime jsRuntime, ElementReference element)
         {
-            await jsRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", element);
+            return jsRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", element);
         }
-        public static async Task AddFocusOutEventListener(IJSRuntime jsRuntime, ElementReference element)
+        internal static Task AddFocusOutEventListener(IJSRuntime jsRuntime, ElementReference element)
         {
-            await jsRuntime.InvokeAsync<object>("blazoredTypeahead.addFocusoutEventListener", element);
+            return jsRuntime.InvokeAsync<object>("blazoredTypeahead.addFocusoutEventListener", element);
         }
-        public static async Task AddEscapeEventListener(IJSRuntime jsRuntime, ElementReference element)
+        internal static Task AddEscapeEventListener(IJSRuntime jsRuntime, ElementReference element)
         {
-            await jsRuntime.InvokeAsync<object>("blazoredTypeahead.addEscapeEventListener", element);
+            return jsRuntime.InvokeAsync<object>("blazoredTypeahead.addEscapeEventListener", element);
         }
 
         [JSInvokable]
