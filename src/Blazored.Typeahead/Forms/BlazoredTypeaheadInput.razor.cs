@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 using System;
@@ -249,7 +249,7 @@ namespace Blazored.Typeahead.Forms
 
         protected void OnFocusOut(object sender, EventArgs e)
         {
-            IsShowingSuggestions = false; 
+            Initialize();
             InvokeAsync(StateHasChanged);
         }
 

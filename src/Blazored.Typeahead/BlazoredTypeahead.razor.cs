@@ -238,7 +238,7 @@ namespace Blazored.Typeahead
 
         protected void OnFocusOut(object sender, EventArgs e)
         {
-            IsShowingSuggestions = false;
+            Initialize();
             InvokeAsync(StateHasChanged);
         }
 
