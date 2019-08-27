@@ -123,6 +123,14 @@ namespace Blazored.Typeahead.Forms
             await Interop.Focus(JSRuntime, searchInput);
         }
 
+        protected async Task HandleClickOnMask()
+        {
+            IsShowingMask = false;
+            IsShowingSearchbar = true;
+            await Task.Delay(250); // Possible race condition here. 
+            await Interop.Focus(JSRuntime, searchInput);
+        }
+
         protected async Task ShowMaximumSuggestions()
         {
             IsShowingSuggestions = !IsShowingSuggestions;
@@ -171,7 +179,11 @@ namespace Blazored.Typeahead.Forms
             switch (args.Key)
             {
                 case "Enter":
-                case "Escape":
+                    IsShowingMask = false;
+                    IsShowingSearchbar = true;
+                    await Task.Delay(250); // Possible race condition here. 
+                    await Interop.Focus(JSRuntime, searchInput); 
+                    break;
                 case "Backspace":
                 case "Delete":
                     await HandleClear();
@@ -237,7 +249,7 @@ namespace Blazored.Typeahead.Forms
 
         protected void OnFocusOut(object sender, EventArgs e)
         {
-            Initialize();
+            IsShowingSuggestions = false; 
             InvokeAsync(StateHasChanged);
         }
 
