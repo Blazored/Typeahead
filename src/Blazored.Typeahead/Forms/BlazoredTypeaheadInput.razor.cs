@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
@@ -54,7 +55,6 @@ namespace Blazored.Typeahead.Forms
 
         private Timer _debounceTimer;
         private string _searchText = string.Empty;
-        private bool _firstRender = true; // remove in preview 9
 
         protected override void OnInitialized()
         {
@@ -81,11 +81,10 @@ namespace Blazored.Typeahead.Forms
             Initialize();
         }
 
-        protected override async Task OnAfterRenderAsync()
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (_firstRender)
+            if (firstRender)
             {
-                _firstRender = false;
                 await Interop.AddEscapeEventListener(JSRuntime, typeahead);
                 await Interop.AddFocusOutEventListener(JSRuntime, typeahead);
                 Interop.OnEscapeEvent += OnEscape;
@@ -148,7 +147,7 @@ namespace Blazored.Typeahead.Forms
             }
         }
 
-        protected async Task HandleKeyUpOnSuggestion(UIKeyboardEventArgs args, TItem item)
+        protected async Task HandleKeyUpOnSuggestion(KeyboardEventArgs args, TItem item)
         {
             // Maybe on any key except Tab and Enter, continue the typing option.
             switch (args.Key)
@@ -168,13 +167,13 @@ namespace Blazored.Typeahead.Forms
             }
         }
 
-        protected async Task HandleKeyUpOnShowMaximum(UIKeyboardEventArgs args)
+        protected async Task HandleKeyUpOnShowMaximum(KeyboardEventArgs args)
         {
             if (args.Key == "Enter")
                 await ShowMaximumSuggestions();
         }
 
-        protected async Task HandleKeyUpOnMask(UIKeyboardEventArgs args)
+        protected async Task HandleKeyUpOnMask(KeyboardEventArgs args)
         {
             switch (args.Key)
             {

@@ -10,15 +10,15 @@ namespace Blazored.Typeahead
         internal static EventHandler OnFocusOutEvent { get; set; }
         internal static EventHandler OnEscapeEvent { get; set; }
 
-        internal static Task Focus(IJSRuntime jsRuntime, ElementReference element)
+        internal static ValueTask<object> Focus(IJSRuntime jsRuntime, ElementReference element)
         {
             return jsRuntime.InvokeAsync<object>("blazoredTypeahead.setFocus", element);
         }
-        internal static Task AddFocusOutEventListener(IJSRuntime jsRuntime, ElementReference element)
+        internal static ValueTask<object> AddFocusOutEventListener(IJSRuntime jsRuntime, ElementReference element)
         {
             return jsRuntime.InvokeAsync<object>("blazoredTypeahead.addFocusoutEventListener", element);
         }
-        internal static Task AddEscapeEventListener(IJSRuntime jsRuntime, ElementReference element)
+        internal static ValueTask<object> AddEscapeEventListener(IJSRuntime jsRuntime, ElementReference element)
         {
             return jsRuntime.InvokeAsync<object>("blazoredTypeahead.addEscapeEventListener", element);
         }

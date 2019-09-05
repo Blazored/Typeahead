@@ -1,10 +1,10 @@
 ﻿@typeparam TItem
 @inherits BlazoredTypeaheadBase<TItem>
+@using Microsoft.AspNetCore.Components.Web
 
-<div class="blazored-typeahead" @ref="typeahead" @ref:suppressField>
+<div class="blazored-typeahead" @ref="typeahead">
     <div class="blazored-typeahead__controls">
         <input @ref="searchInput"
-               @ref:suppressField
                class="blazored-typeahead__input @(!IsShowingSearchbar ? "blazored-typeahead__input-hidden" : null)"
                @bind-value="@SearchText"
                @bind-value:event="oninput"
@@ -14,15 +14,15 @@
         @if (IsShowingMask && Value != null)
         {
             <div class="blazored-typeahead__input-mask-wrapper">
-                <div class="blazored-typeahead__input-mask" @onclick=HandleClickOnMask @onkeyup="@HandleKeyUpOnMask" tabindex="0" @ref="mask" @ref:suppressField>
+                <div class="blazored-typeahead__input-mask" @onclick="HandleClickOnMask" @onkeyup="HandleKeyUpOnMask" tabindex="0" @ref="mask">
                     @SelectedTemplate(Value)
                 </div>
-                <div class="blazored-typeahead__clear" @onclick="@HandleClear" tabindex="-1">
+                <div class="blazored-typeahead__clear" @onclick="HandleClear" tabindex="-1">
                     &#10005;
                 </div>
             </div>
         }
-        <div class="blazored-typeahead__input__icon" @onclick="ShowMaximumSuggestions" @onkeyup="@HandleKeyUpOnShowMaximum" tabindex="@(IsShowingSuggestions ? "-1" : "0")">
+        <div class="blazored-typeahead__input__icon" @onclick="ShowMaximumSuggestions" @onkeyup="HandleKeyUpOnShowMaximum" tabindex="@(IsShowingSuggestions ? "-1" : "0")">
             @if (IsSearching)
             {
                 <div class="blazored-typeahead__loader"></div>
