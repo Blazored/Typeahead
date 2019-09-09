@@ -57,16 +57,16 @@ I would suggest adding the following using statement to your main `_Imports.razo
 
 @code {
 
-    [Parameter] protected List<Film> Films { get; set; }
+    [Parameter] protected IEnumerable<Film> Films { get; set; }
 
-    private async Task<List<Film>> SearchFilms(string searchText) 
+    private async Task<IEnumerable<Film>> SearchFilms(string searchText) 
     {
         return await Task.FromResult(Films.Where(x => x.Title.ToLower().Contains(searchText.ToLower())).ToList());
     }
 
 }
 ```
-In the example above, the component is setup with the minimum requirements. You must provide a method which has the following signature `Task<List<T> MethodName(string searchText)`, to the `SearchMethod` parameter. The control will call this method with the current search text everytime the debounce timer expires (default: 300ms). You must also set a value for the `Value` parameter. This will be populated with the item selected from the search results. As this version of the control is integrated with Blazors built-in forms and validation, it must be wrapped in a `EditForm` component.
+In the example above, the component is setup with the minimum requirements. You must provide a method which has the following signature `Task<IEnumerable<T> MethodName(string searchText)`, to the `SearchMethod` parameter. The control will call this method with the current search text everytime the debounce timer expires (default: 300ms). You must also set a value for the `Value` parameter. This will be populated with the item selected from the search results. As this version of the control is integrated with Blazors built-in forms and validation, it must be wrapped in a `EditForm` component.
 
 The component requires two templates to be provided...
 
@@ -100,11 +100,11 @@ The `SelectedTemplate` is used to display the selected item and the `ResultTempl
 
 @code {
 
-    [Parameter] protected List<Film> Films { get; set; }
+    [Parameter] protected IEnumerable<Film> Films { get; set; }
 
-    private async Task<List<Film>> SearchFilms(string searchText) 
+    private async Task<IEnumerable<Film>> SearchFilms(string searchText) 
     {
-        var response = await httpClient.GetJsonAsync<List<Film>>($"https://allfilms.com/api/films/?title={searchText}");
+        var response = await httpClient.GetJsonAsync<IEnumerable<Film>>($"https://allfilms.com/api/films/?title={searchText}");
         return response;
     }
 
@@ -133,16 +133,16 @@ I would suggest adding the following using statement to your main `_Imports.razo
 
 @code {
 
-    [Parameter] protected List<Film> Films { get; set; }
+    [Parameter] protected IEnumerable<Film> Films { get; set; }
 
-    private async Task<List<Film>> SearchFilms(string searchText) 
+    private async Task<IEnumerable<Film>> SearchFilms(string searchText) 
     {
         return await Task.FromResult(Films.Where(x => x.Title.ToLower().Contains(searchText.ToLower())).ToList());
     }
 
 }
 ```
-In the example above, the component is setup with the minimum requirements. You must provide a method which has the following signature `Task<List<T> MethodName(string searchText)`, to the `SearchMethod` parameter. The control will call this method with the current search text everytime the debounce timer expires (default: 300ms). You must also set a value for the `Value` parameter. This will be populated with the item selected from the search results.
+In the example above, the component is setup with the minimum requirements. You must provide a method which has the following signature `Task<IEnumerable<T> MethodName(string searchText)`, to the `SearchMethod` parameter. The control will call this method with the current search text everytime the debounce timer expires (default: 300ms). You must also set a value for the `Value` parameter. This will be populated with the item selected from the search results.
 
 The component requires two templates to be provided...
 
@@ -173,11 +173,11 @@ The `SelectedTemplate` is used to display the selected item and the `ResultTempl
 
 @code {
 
-    [Parameter] protected List<Film> Films { get; set; }
+    [Parameter] protected IEnumerable<Film> Films { get; set; }
 
-    private async Task<List<Film>> SearchFilms(string searchText) 
+    private async Task<IEnumerable<Film>> SearchFilms(string searchText) 
     {
-        var response = await httpClient.GetJsonAsync<List<Film>>($"https://allfilms.com/api/films/?title={searchText}");
+        var response = await httpClient.GetJsonAsync<IEnumerable<Film>>($"https://allfilms.com/api/films/?title={searchText}");
         return response;
     }
 
