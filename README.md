@@ -18,13 +18,13 @@ If will need to include the following CSS and JS files in your `index.html` (Bla
 
 In the `head` tag add the following CSS.
 
-```
+```html
 <link href="_content/Blazored.Typeahead/blazored-typeahead.css" rel="stylesheet" />
 ```
 
 Then add the JS script at the bottom of the page using the following script tag.
 
-```
+```html
 <script src="_content/Blazored.Typeahead/blazored-typeahead.js"></script>
 ```
 
@@ -36,12 +36,12 @@ This version of the component is integrated with the forms and authentication sy
 
 I would suggest adding the following using statement to your main `_Imports.razor` to make referencing the component a bit easier.
 
-```
+```cs
 @using Blazored.Typeahead.Forms
 ```
 
 ### Local Data Example
-```html
+```cs
 <EditForm Model="@MyFormModel" OnValidSubmit="@HandlValidSubmit">
     <BlazoredTypeaheadInput SearchMethod="@SearchFilms"
                             @bind-Value="@MyFormModel.SelectedFilm">
@@ -78,7 +78,7 @@ The `SelectedTemplate` is used to display the selected item and the `ResultTempl
 
 ### Remote Data Example
 
-```html
+```cs
 @inject HttpClient httpClient
 
 <EditForm Model="@MyFormModel" OnValidSubmit="@HandlValidSubmit">
@@ -115,12 +115,12 @@ Because you provide the search method to the component, making a remote call is 
 ### Standalone
 I would suggest adding the following using statement to your main `_Imports.razor` to make referencing the component a bit easier.
 
-```
+```cs
 @using Blazored.Typeahead
 ```
 
 ### Local Data Example
-```
+```cs
 <BlazoredTypeahead SearchMethod="@SearchFilms"
                    @bind-Value="@SelectedFilm">
     <SelectedTemplate>
@@ -154,7 +154,7 @@ The `SelectedTemplate` is used to display the selected item and the `ResultTempl
 
 ### Remote Data Example
 
-```
+```cs
 @inject HttpClient httpClient
 
 <BlazoredTypeahead SearchMethod="@SearchFilms"
