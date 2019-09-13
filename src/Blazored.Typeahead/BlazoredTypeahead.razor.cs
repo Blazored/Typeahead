@@ -223,8 +223,6 @@ namespace Blazored.Typeahead
                    Suggestions.Any();
         }
 
-        private bool HasValidSearch => !string.IsNullOrWhiteSpace(SearchText) && SearchText.Length >= MinimumLength;
-
         private bool IsSearchingOrDebouncing => IsSearching || _debounceTimer.Enabled;
 
         protected bool ShowNotFound()
