@@ -213,8 +213,6 @@ namespace Blazored.Typeahead
         protected async Task SelectResult(TItem item)
         {
             await ValueChanged.InvokeAsync(item);
-            await Task.Delay(250);
-            await Interop.Focus(JSRuntime, mask);
         }
 
         protected bool ShouldShowSuggestions()
