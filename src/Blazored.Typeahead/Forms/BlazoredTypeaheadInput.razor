@@ -5,12 +5,14 @@
 <div class="blazored-typeahead" @ref="typeahead">
     <div class="blazored-typeahead__controls">
         <input @ref="searchInput"
-               class="blazored-typeahead__input @CssClass @(!IsShowingSearchbar ? "blazored-typeahead__input-hidden" : null)"
                @bind-value="@SearchText"
                @bind-value:event="oninput"
                type="text"
                autocomplete="off"
-               placeholder="@Placeholder" />
+               placeholder="@Placeholder"
+               @attributes="@Attributes"
+               class="blazored-typeahead__input @CssClass @(!IsShowingSearchbar ? "blazored-typeahead__input-hidden" : null)"
+               />
         @if (IsShowingMask && Value != null)
         {
             <div class="blazored-typeahead__input-mask-wrapper">
