@@ -230,7 +230,6 @@ namespace Blazored.Typeahead
         protected bool ShowNotFound()
         {
             return IsShowingSuggestions &&
-                   HasValidSearch &&
                    !IsSearchingOrDebouncing &&
                    !Suggestions.Any();
         }
