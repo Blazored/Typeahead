@@ -1,25 +1,34 @@
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Timers;
 
 namespace Blazored.Typeahead
 {
-    public class BlazoredTypeaheadBase<TItem> : ComponentBase, IDisposable
+    public class BlazoredTypeaheadBase<TItem, TValue> : ComponentBase, IDisposable
     {
         [Inject] private IJSRuntime JSRuntime { get; set; }
-        [Parameter] public string Placeholder { get; set; }
-        [Parameter] public TItem Value { get; set; }
-        [Parameter] public EventCallback<TItem> ValueChanged { get; set; }
+
+        [CascadingParameter] private EditContext CascadedEditContext { get; set; }
+
+        [Parameter] public TValue Value { get; set; }
+        [Parameter] public EventCallback<TValue> ValueChanged { get; set; }
+        [Parameter] public Expression<Func<TValue>> ValueExpression { get; set; }
         [Parameter] public Func<string, Task<IEnumerable<TItem>>> SearchMethod { get; set; }
+        [Parameter] public Func<TItem, TValue> ConvertMethod { get; set; }
+
         [Parameter] public RenderFragment NotFoundTemplate { get; set; }
         [Parameter] public RenderFragment<TItem> ResultTemplate { get; set; }
-        [Parameter] public RenderFragment<TItem> SelectedTemplate { get; set; }
+        [Parameter] public RenderFragment<TValue> SelectedTemplate { get; set; }
         [Parameter] public RenderFragment FooterTemplate { get; set; }
+
+        [Parameter(CaptureUnmatchedValues = true)] public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
         [Parameter] public int MinimumLength { get; set; } = 1;
         [Parameter] public int Debounce { get; set; } = 300;
         [Parameter] public int MaximumSuggestions { get; set; } = 25;
@@ -53,6 +62,8 @@ namespace Blazored.Typeahead
         protected ElementReference mask;
         protected ElementReference typeahead;
 
+        private EditContext _editContext;
+        private FieldIdentifier _fieldIdentifier;
         private Timer _debounceTimer;
         private string _searchText = string.Empty;
 
@@ -61,6 +72,16 @@ namespace Blazored.Typeahead
             if (SearchMethod == null)
             {
                 throw new InvalidOperationException($"{GetType()} requires a {nameof(SearchMethod)} parameter.");
+            }
+
+            if (ConvertMethod == null)
+            {
+                if (typeof(TItem) != typeof(TValue))
+                {
+                    throw new InvalidOperationException($"{GetType()} requires a {nameof(ConvertMethod)} parameter.");
+                }
+
+                ConvertMethod = item => item is TValue value ? value : default;
             }
 
             if (SelectedTemplate == null)
@@ -77,6 +98,9 @@ namespace Blazored.Typeahead
             _debounceTimer.Interval = Debounce;
             _debounceTimer.AutoReset = false;
             _debounceTimer.Elapsed += Search;
+
+            _editContext = CascadedEditContext;
+            _fieldIdentifier = FieldIdentifier.Create(ValueExpression);
 
             Initialize();
         }
@@ -114,8 +138,10 @@ namespace Blazored.Typeahead
 
         protected async Task HandleClear()
         {
-            await ValueChanged.InvokeAsync(default);
             SearchText = "";
+            await ValueChanged.InvokeAsync(default);
+            _editContext?.NotifyFieldChanged(_fieldIdentifier);
+
             await Task.Delay(250); // Possible race condition here.
             await Interop.Focus(JSRuntime, searchInput);
         }
@@ -124,6 +150,7 @@ namespace Blazored.Typeahead
         {
             IsShowingMask = false;
             IsShowingSearchbar = true;
+
             await Task.Delay(250); // Possible race condition here.
             await Interop.Focus(JSRuntime, searchInput);
         }
@@ -212,7 +239,10 @@ namespace Blazored.Typeahead
 
         protected async Task SelectResult(TItem item)
         {
-            await ValueChanged.InvokeAsync(item);
+            TValue value = ConvertMethod(item);
+
+            await ValueChanged.InvokeAsync(value);
+            _editContext?.NotifyFieldChanged(_fieldIdentifier);
         }
 
         protected bool ShouldShowSuggestions()

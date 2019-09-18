@@ -1,16 +1,19 @@
 ﻿@typeparam TItem
-@inherits BlazoredTypeaheadBase<TItem>
+@typeparam TValue
+@inherits BlazoredTypeaheadBase<TItem, TValue>
 @using Microsoft.AspNetCore.Components.Web
 
 <div class="blazored-typeahead" @ref="typeahead">
+    
     <div class="blazored-typeahead__controls">
         <input @ref="searchInput"
-               class="blazored-typeahead__input @(!IsShowingSearchbar ? "blazored-typeahead__input-hidden" : null)"
                @bind-value="@SearchText"
                @bind-value:event="oninput"
-               type="text"
+               @attributes="AdditionalAttributes"
                autocomplete="off"
-               placeholder="@Placeholder" />
+               type="text"
+               class="blazored-typeahead__input @(!IsShowingSearchbar ? "blazored-typeahead__input-hidden" : null)" />
+        
         @if (IsShowingMask && Value != null)
         {
             <div class="blazored-typeahead__input-mask-wrapper">
@@ -22,6 +25,7 @@
                 </div>
             </div>
         }
+
         <div class="blazored-typeahead__input__icon" @onclick="ShowMaximumSuggestions" @onkeyup="HandleKeyUpOnShowMaximum" tabindex="@(IsShowingSuggestions ? "-1" : "0")">
             @if (IsSearching)
             {
@@ -38,6 +42,7 @@
             }
         </div>
     </div>
+
     @if (ShouldShowSuggestions())
     {
         <div class="blazored-typeahead__results">
