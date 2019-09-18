@@ -1,19 +1,21 @@
-﻿@typeparam TItem
+﻿@using Microsoft.AspNetCore.Components.Web
+
+@typeparam TItem
 @typeparam TValue
 @inherits BlazoredTypeaheadBase<TItem, TValue>
-@using Microsoft.AspNetCore.Components.Web
 
 <div class="blazored-typeahead" @ref="typeahead">
-    
+
     <div class="blazored-typeahead__controls">
         <input @ref="searchInput"
                @bind-value="@SearchText"
                @bind-value:event="oninput"
+               @onkeydown="HandleKeydown"
                @attributes="AdditionalAttributes"
                autocomplete="off"
                type="text"
                class="blazored-typeahead__input @(!IsShowingSearchbar ? "blazored-typeahead__input-hidden" : null)" />
-        
+
         @if (IsShowingMask && Value != null)
         {
             <div class="blazored-typeahead__input-mask-wrapper">
@@ -46,17 +48,15 @@
     @if (ShouldShowSuggestions())
     {
         <div class="blazored-typeahead__results">
-            @foreach (var item in Suggestions)
+            @for (var i = 0; i < Suggestions.Count(); i++)
             {
-                <div @key="item" class="blazored-typeahead__result @GetSelectedSuggestionClass(item)" tabindex="0" @onclick="@(_ => SelectResult(item))" @onkeyup="@((e) => HandleKeyUpOnSuggestion(e,item))">
-                    @if (ResultTemplate != null)
-                    {
-                        @ResultTemplate(item)
-                    }
-                    else
-                    {
-                        @item.ToString()
-                    }
+                var item = Suggestions[i];
+
+                <div @key="item"
+                     class="blazored-typeahead__result @GetSelectedSuggestionClass(item, i)"
+                     @onclick="@(_ => SelectResult(item))"
+                     @onkeyup="@((e) => HandleKeyUpOnSuggestion(e,item))">
+                    @ResultTemplate(item)
                 </div>
             }
 

@@ -38,6 +38,7 @@ namespace Blazored.Typeahead
         protected bool IsShowingSearchbar { get; private set; } = true;
         protected bool IsShowingMask { get; private set; } = false;
         protected TItem[] Suggestions { get; set; } = new TItem[0];
+        protected int SelectedIndex { get; set; }
         protected string SearchText
         {
             get => _searchText;
@@ -49,6 +50,7 @@ namespace Blazored.Typeahead
                 {
                     _debounceTimer.Stop();
                     Suggestions = new TItem[0];
+                    SelectedIndex = -1;
                 }
                 else if (value.Length >= MinimumLength)
                 {
@@ -123,6 +125,7 @@ namespace Blazored.Typeahead
 
         private void Initialize()
         {
+            SearchText = "";
             IsShowingSuggestions = false;
             if (Value == null)
             {
@@ -217,13 +220,38 @@ namespace Blazored.Typeahead
             }
         }
 
-        protected string GetSelectedSuggestionClass(TItem item)
+        public async Task HandleKeydown(KeyboardEventArgs args)
         {
-            if (Value == null)
-                return null;
-            if (Value.Equals(item))
-                return "blazored-typeahead__result-selected";
-            return null;
+            if (args.Key == "ArrowDown")
+                MoveSelection(1);
+            else if (args.Key == "ArrowUp")
+                MoveSelection(-1);
+            else if (args.Key == "Enter" && SelectedIndex >= 0 && SelectedIndex < Suggestions.Count())
+                await SelectResult(Suggestions[SelectedIndex]);
+        }
+
+        private void MoveSelection(int count)
+        {
+            var index = SelectedIndex + count;
+
+            if (index >= Suggestions.Count())
+                index = 0;
+
+            if (index < 0)
+                index = Suggestions.Count() - 1;
+
+            SelectedIndex = index;
+        }
+
+        protected string GetSelectedSuggestionClass(TItem item, int index)
+        {
+            const string resultClass = "blazored-typeahead__result-selected";
+            TValue value = ConvertMethod(item);
+
+            if (index == SelectedIndex)
+                return resultClass;
+
+            return Equals(value, Value) ? resultClass : string.Empty;
         }
 
         protected async void Search(Object source, ElapsedEventArgs e)
