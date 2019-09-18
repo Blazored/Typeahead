@@ -216,8 +216,6 @@ namespace Blazored.Typeahead.Forms
         {
             await ValueChanged.InvokeAsync(item);
             EditContext.NotifyFieldChanged(FieldIdentifier);
-            await Task.Delay(250);
-            await Interop.Focus(JSRuntime, mask);
         }
 
         protected bool ShouldShowSuggestions()
