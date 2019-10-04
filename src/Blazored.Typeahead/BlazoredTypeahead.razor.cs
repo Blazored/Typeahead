@@ -220,7 +220,7 @@ namespace Blazored.Typeahead
             }
         }
 
-        public async Task HandleKeydown(KeyboardEventArgs args)
+        public async Task HandleKeyup(KeyboardEventArgs args)
         {
             if (args.Key == "ArrowDown")
                 MoveSelection(1);

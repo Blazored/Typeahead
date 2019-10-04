@@ -10,7 +10,7 @@
         <input @ref="searchInput"
                @bind-value="@SearchText"
                @bind-value:event="oninput"
-               @onkeydown="HandleKeydown"
+               @onkeyup="HandleKeyup"
                @attributes="AdditionalAttributes"
                autocomplete="off"
                type="text"
