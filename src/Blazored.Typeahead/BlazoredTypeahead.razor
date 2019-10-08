@@ -41,6 +41,13 @@
     @if (ShouldShowSuggestions())
     {
         <div class="blazored-typeahead__results">
+            @if (HeaderTemplate != null)
+            {
+                <div class="blazored-typeahead__results-header">
+                    @HeaderTemplate
+                </div>
+            }
+
             @foreach (var item in Suggestions)
             {
                 <div @key="item" class="blazored-typeahead__result @GetSelectedSuggestionClass(item)" tabindex="0" @onclick="@(_ => SelectResult(item))" @onkeyup="@((e) => HandleKeyUpOnSuggestion(e,item))">
@@ -65,6 +72,13 @@
     }
     else if (ShowNotFound())
     {
+        @if (HeaderTemplate != null)
+        {
+            <div class="blazored-typeahead__results-header">
+                @HeaderTemplate
+            </div>
+        }
+
         <div class="blazored-typeahead__results">
             @if (NotFoundTemplate != null)
             {
