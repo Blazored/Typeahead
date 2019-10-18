@@ -23,6 +23,11 @@ namespace Blazored.Typeahead
             return jsRuntime.InvokeAsync<object>("blazoredTypeahead.addEscapeEventListener", element);
         }
 
+        internal static ValueTask<object> AddKeyDownEventListener(IJSRuntime jsRuntime, ElementReference element)
+        {
+            return jsRuntime.InvokeAsync<object>("blazoredTypeahead.addKeyDownEventListener", element);
+        }
+
         [JSInvokable]
         public static Task OnEscape()
         {

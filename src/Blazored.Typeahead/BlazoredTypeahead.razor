@@ -8,7 +8,7 @@
 
     <div class="blazored-typeahead__controls">
         <input @ref="searchInput"
-               @bind-value="@SearchText"
+               @bind-value="SearchText"
                @bind-value:event="oninput"
                @onkeyup="HandleKeyup"
                @attributes="AdditionalAttributes"
@@ -54,8 +54,7 @@
 
                 <div @key="item"
                      class="blazored-typeahead__result @GetSelectedSuggestionClass(item, i)"
-                     @onclick="@(_ => SelectResult(item))"
-                     @onkeyup="@((e) => HandleKeyUpOnSuggestion(e,item))">
+                     @onclick="@(_ => SelectResult(item))">
                     @ResultTemplate(item)
                 </div>
             }

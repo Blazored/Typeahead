@@ -111,9 +111,9 @@ namespace Blazored.Typeahead
         {
             if (firstRender)
             {
-                await Interop.AddEscapeEventListener(JSRuntime, typeahead);
+                await Interop.AddKeyDownEventListener(JSRuntime, searchInput);
                 await Interop.AddFocusOutEventListener(JSRuntime, typeahead);
-                Interop.OnEscapeEvent += OnEscape;
+               // Interop.OnEscapeEvent += OnEscape;
                 Interop.OnFocusOutEvent += OnFocusOut;
             }
         }
@@ -172,26 +172,6 @@ namespace Blazored.Typeahead
 
                 IsSearching = false;
                 await InvokeAsync(StateHasChanged);
-            }
-        }
-
-        protected async Task HandleKeyUpOnSuggestion(KeyboardEventArgs args, TItem item)
-        {
-            // Maybe on any key except Tab and Enter, continue the typing option.
-            switch (args.Key)
-            {
-                case "Enter":
-                    await SelectResult(item);
-                    break;
-                case "Escape":
-                case "Backspace":
-                case "Delete":
-                    Initialize();
-                    await Task.Delay(250);
-                    await Interop.Focus(JSRuntime, searchInput);
-                    break;
-                default:
-                    break;
             }
         }
 
