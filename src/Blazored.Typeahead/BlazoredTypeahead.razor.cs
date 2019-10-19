@@ -13,6 +13,15 @@ namespace Blazored.Typeahead
 {
     public class BlazoredTypeaheadBase<TItem, TValue> : ComponentBase, IDisposable
     {
+        private EditContext _editContext;
+        private FieldIdentifier _fieldIdentifier;
+        private Timer _debounceTimer;
+        private string _searchText = string.Empty;
+
+        protected ElementReference searchInput;
+        protected ElementReference mask;
+        protected ElementReference typeahead;
+
         [Inject] private IJSRuntime JSRuntime { get; set; }
 
         [CascadingParameter] private EditContext CascadedEditContext { get; set; }
@@ -31,7 +40,7 @@ namespace Blazored.Typeahead
         [Parameter(CaptureUnmatchedValues = true)] public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
         [Parameter] public int MinimumLength { get; set; } = 1;
         [Parameter] public int Debounce { get; set; } = 300;
-        [Parameter] public int MaximumSuggestions { get; set; } = 25;
+        [Parameter] public int MaximumSuggestions { get; set; } = 10;
         [Parameter] public bool Disabled { get; set; } = false;
 
         protected bool IsSearching { get; private set; } = false;
@@ -60,15 +69,6 @@ namespace Blazored.Typeahead
                 }
             }
         }
-
-        protected ElementReference searchInput;
-        protected ElementReference mask;
-        protected ElementReference typeahead;
-
-        private EditContext _editContext;
-        private FieldIdentifier _fieldIdentifier;
-        private Timer _debounceTimer;
-        private string _searchText = string.Empty;
 
         protected override void OnInitialized()
         {
@@ -114,7 +114,7 @@ namespace Blazored.Typeahead
             {
                 await Interop.AddKeyDownEventListener(JSRuntime, searchInput);
                 await Interop.AddFocusOutEventListener(JSRuntime, typeahead);
-               // Interop.OnEscapeEvent += OnEscape;
+
                 Interop.OnFocusOutEvent += OnFocusOut;
             }
         }
@@ -152,6 +152,7 @@ namespace Blazored.Typeahead
 
         protected async Task HandleClickOnMask()
         {
+            SearchText = "";
             IsShowingMask = false;
             IsShowingSearchbar = true;
 
@@ -275,17 +276,9 @@ namespace Blazored.Typeahead
             InvokeAsync(StateHasChanged);
         }
 
-        protected void OnEscape(object sender, EventArgs e)
-        {
-            Initialize();
-            InvokeAsync(StateHasChanged);
-        }
-
         public void Dispose()
         {
             _debounceTimer.Dispose();
-            Interop.OnEscapeEvent -= OnEscape;
-            Interop.OnEscapeEvent -= OnFocusOut;
         }
     }
 }

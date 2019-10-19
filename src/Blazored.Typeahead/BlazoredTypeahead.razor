@@ -14,7 +14,7 @@
                @attributes="AdditionalAttributes"
                autocomplete="off"
                type="text"
-               class="blazored-typeahead__input @(!IsShowingSearchbar ? "blazored-typeahead__input-hidden" : null)"
+               class="blazored-typeahead__input @(!IsShowingSearchbar || Disabled ? "blazored-typeahead__input-hidden" : null)"
                disabled="@Disabled" />
 
         @if (Disabled)

@@ -5,24 +5,16 @@ window.blazoredTypeahead = {
     },
     addFocusoutEventListener: (element) => {
         element.addEventListener("focusout", (event) => {
-            if (element.contains(event.target)
+            if (element.contains(document.activeElement)
                 || event.target.className === "blazored-typeahead__input__icon"
                 || event.target.className === "blazored-typeahead__input-mask") // workaround relatedTarget bug
             {
                 return; // don't react to this since it's a child.
             }
             DotNet.invokeMethodAsync(blazoredTypeahead.assemblyname, "OnFocusOut");
-        })
+        }, true);
     },
-        // No need to remove the event listeners later, the browser will clean this up automagically.
-    addEscapeEventListener: (element) => {
-        element.addEventListener('keyup', (event) => {
-            const key = event.key;
-            if (key === "Escape") {
-                DotNet.invokeMethodAsync(blazoredTypeahead.assemblyname, "OnEscape");
-            }
-        });
-    },
+    // No need to remove the event listeners later, the browser will clean this up automagically.
     addKeyDownEventListener: (element) => {
         element.addEventListener('keydown', (event) => {
             const key = event.key;

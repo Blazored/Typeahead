@@ -2,11 +2,11 @@
 
 <h1>Blazored Typeahead - Form</h1>
 
-<EditForm Model="@FormModel" OnValidSubmit="@HandleFormSubmit">
+<EditForm Model="FormModel" OnValidSubmit="HandleFormSubmit">
     <DataAnnotationsValidator />
 
-    <BlazoredTypeahead SearchMethod="@GetPeopleLocal"
-                       @bind-Value="@FormModel.SelectedPerson"
+    <BlazoredTypeahead SearchMethod="GetPeopleLocal"
+                       @bind-Value="FormModel.SelectedPerson"
                        placeholder="Search by first name...">
         <SelectedTemplate Context="person">
             @person.Firstname
@@ -33,8 +33,8 @@
 <h1>Blazored Typeahead - Standalone</h1>
 
 
-<BlazoredTypeahead SearchMethod="@GetPeopleLocal"
-                   @bind-Value="@SelectedPerson"
+<BlazoredTypeahead SearchMethod="GetPeopleLocal"
+                   @bind-Value="SelectedPerson"
                    placeholder="Search by first name...">
     <SelectedTemplate Context="person">
         @person.Firstname
