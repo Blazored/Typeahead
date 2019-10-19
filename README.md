@@ -5,6 +5,8 @@ Typeahead control for Blazor applications.
 
 ![Nuget](https://img.shields.io/nuget/v/blazored.typeahead.svg)
 
+![Screenshot](screenshot.png)
+
 ### Installing
 
 You can install from NuGet using the following command:
