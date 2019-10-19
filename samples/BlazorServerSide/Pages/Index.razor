@@ -51,6 +51,23 @@
     <p>Selected: @SelectedPerson.Firstname @SelectedPerson.Lastname</p>
 }
 
+<hr />
+
+<h1>Blazored Typeahead - Disabled</h1>
+
+
+<BlazoredTypeahead SearchMethod="@GetPeopleLocal"
+                   @bind-Value="@SelectedPerson"
+                   Disabled="true"
+                   placeholder="Search by first name...">
+    <SelectedTemplate Context="person">
+        @person.Firstname
+    </SelectedTemplate>
+    <ResultTemplate Context="person">
+        @person.Firstname @person.Lastname
+    </ResultTemplate>
+</BlazoredTypeahead>
+
 
 @code {
 

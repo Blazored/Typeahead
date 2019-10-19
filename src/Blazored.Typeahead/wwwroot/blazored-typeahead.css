@@ -29,6 +29,15 @@
     width: 100%;
 }
 
+.blazored-typeahead__input-mask-wrapper--disabled {
+    background-color: #dbdbdb;
+    cursor: not-allowed;
+}
+
+    .blazored-typeahead__input-mask-wrapper--disabled:focus {
+        border: none;
+    }
+
 .blazored-typeahead__input-mask {
     flex: 1;
     border-radius: 5px 0 0 5px;
@@ -67,6 +76,11 @@
         background-color: #f5f5f5;
     }
 
+.blazored-typeahead__input__icon--disabled,
+.blazored-typeahead__input__icon--disabled:hover {
+    background-color: #dbdbdb;
+    cursor: not-allowed;
+}
 
 .blazored-typeahead__results {
     position: absolute;

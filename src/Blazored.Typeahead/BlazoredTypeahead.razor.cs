@@ -32,6 +32,7 @@ namespace Blazored.Typeahead
         [Parameter] public int MinimumLength { get; set; } = 1;
         [Parameter] public int Debounce { get; set; } = 300;
         [Parameter] public int MaximumSuggestions { get; set; } = 25;
+        [Parameter] public bool Disabled { get; set; } = false;
 
         protected bool IsSearching { get; private set; } = false;
         protected bool IsShowingSuggestions { get; private set; } = false;
