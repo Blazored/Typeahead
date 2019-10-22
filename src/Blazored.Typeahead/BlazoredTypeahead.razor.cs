@@ -295,6 +295,11 @@ namespace Blazored.Typeahead
             }
 
             _editContext?.NotifyFieldChanged(_fieldIdentifier);
+
+            if (IsMultiselect())
+            {
+                await Interop.Focus(JSRuntime, searchInput);
+            }
         }
 
         protected bool ShouldShowSuggestions()
