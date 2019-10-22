@@ -25,64 +25,64 @@ namespace WebApi.Controllers
 
         private void CreatePeople()
         {
-            var janeSmith = new Person("Jane", "Smith", 32, "London");
+            var janeSmith = new Person(1, "Jane", "Smith", 32, "London");
             People.Add(janeSmith);
 
-            var harroldJones = new Person("Harrold", "Jones", 21, "Newcastle");
+            var harroldJones = new Person(2, "Harrold", "Jones", 21, "Newcastle");
             People.Add(harroldJones);
 
-            var jennyGarrod = new Person("Jenny", "Garrod", 46, "Bristol");
+            var jennyGarrod = new Person(3, "Jenny", "Garrod", 46, "Bristol");
             People.Add(jennyGarrod);
 
-            var jamesSmith = new Person("James", "Smith", 29, "Newquey");
+            var jamesSmith = new Person(4, "James", "Smith", 29, "Newquey");
             People.Add(jamesSmith);
 
-            var janeAustin = new Person("Jane", "Austin", 63, "Plymouth");
+            var janeAustin = new Person(5, "Jane", "Austin", 63, "Plymouth");
             People.Add(janeAustin);
 
-            var steveLongman = new Person("Steve", "Longman", 32, "Oxford");
+            var steveLongman = new Person(6, "Steve", "Longman", 32, "Oxford");
             People.Add(steveLongman);
 
-            var jeniJones = new Person("Jeni", "Jones", 27, "London");
+            var jeniJones = new Person(7, "Jeni", "Jones", 27, "London");
             People.Add(jeniJones);
 
-            var harroldGains = new Person("Harrold", "Gains", 44, "London");
+            var harroldGains = new Person(8, "Harrold", "Gains", 44, "London");
             People.Add(harroldGains);
 
-            var tomAdams = new Person("Tom", "Adams", 19, "Leeds");
+            var tomAdams = new Person(9, "Tom", "Adams", 19, "Leeds");
             People.Add(tomAdams);
 
-            var tomYates = new Person("Tom", "Yates", 65, "Manchester");
+            var tomYates = new Person(10, "Tom", "Yates", 65, "Manchester");
             People.Add(tomYates);
 
-            var janetSmith = new Person("Janet", "Smith", 23, "London");
+            var janetSmith = new Person(11, "Janet", "Smith", 23, "London");
             People.Add(janetSmith);
 
-            var harroldWise = new Person("Harrold", "Wise", 17, "Newcastle");
+            var harroldWise = new Person(12, "Harrold", "Wise", 17, "Newcastle");
             People.Add(harroldWise);
 
-            var jennyGoldman = new Person("Jenny", "Goldman", 68, "Barnham");
+            var jennyGoldman = new Person(13, "Jenny", "Goldman", 68, "Barnham");
             People.Add(jennyGoldman);
 
-            var jakeSmith = new Person("Jake", "Smith", 59, "Cambridge");
+            var jakeSmith = new Person(14, "Jake", "Smith", 59, "Cambridge");
             People.Add(jakeSmith);
 
-            var janetAustin = new Person("Janet", "Austin", 36, "Plymouth");
+            var janetAustin = new Person(15, "Janet", "Austin", 36, "Plymouth");
             People.Add(janetAustin);
 
-            var stevenLongarm = new Person("Steven", "Longarm", 22, "Norwich");
+            var stevenLongarm = new Person(16, "Steven", "Longarm", 22, "Norwich");
             People.Add(stevenLongarm);
 
-            var lucyJones = new Person("Lucy", "Jones", 71, "Liverpool");
+            var lucyJones = new Person(17, "Lucy", "Jones", 71, "Liverpool");
             People.Add(lucyJones);
 
-            var oliverGains = new Person("Oliver", "Gains", 40, "Ipswich");
+            var oliverGains = new Person(18, "Oliver", "Gains", 40, "Ipswich");
             People.Add(oliverGains);
 
-            var tomAdnams = new Person("Tom", "Adnams", 28, "Portsmouth");
+            var tomAdnams = new Person(19, "Tom", "Adnams", 28, "Portsmouth");
             People.Add(tomAdnams);
 
-            var thomasFind = new Person("Thomas", "Find", 56, "Manchester");
+            var thomasFind = new Person(20, "Thomas", "Find", 56, "Manchester");
             People.Add(thomasFind);
         }
     }

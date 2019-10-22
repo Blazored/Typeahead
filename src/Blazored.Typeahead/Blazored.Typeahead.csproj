@@ -6,7 +6,7 @@
     <RootNamespace>Blazored.Typeahead</RootNamespace>
 
     <PackageId>Blazored.Typeahead</PackageId>
-    <Version>3.1.8</Version>
+    <Version>4.0.0</Version>
     <Authors>Chris Sainty</Authors>
     <Description>A typeahead control for Blazor applications</Description>
     <Copyright>Copyright 2019 (c) Chris Sainty. All rights reserved.</Copyright>
@@ -28,6 +28,10 @@
     <EmbeddedResource Include="wwwroot\**\*.js" LogicalName="blazor:js:%(RecursiveDir)%(Filename)%(Extension)" />
     <EmbeddedResource Include="wwwroot\**\*.css" LogicalName="blazor:css:%(RecursiveDir)%(Filename)%(Extension)" />
     <EmbeddedResource Include="wwwroot\**" Exclude="**\*.js;**\*.css" LogicalName="blazor:file:%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\blazored-typeahead.js" />
   </ItemGroup>
 
 </Project>
