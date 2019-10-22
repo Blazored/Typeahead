@@ -17,6 +17,7 @@ namespace Blazored.Typeahead
         private FieldIdentifier _fieldIdentifier;
         private Timer _debounceTimer;
         private string _searchText = string.Empty;
+        private bool _eventsHookedUp = false;
 
         protected ElementReference searchInput;
         protected ElementReference mask;
@@ -29,6 +30,11 @@ namespace Blazored.Typeahead
         [Parameter] public TValue Value { get; set; }
         [Parameter] public EventCallback<TValue> ValueChanged { get; set; }
         [Parameter] public Expression<Func<TValue>> ValueExpression { get; set; }
+
+        [Parameter] public IList<TValue> Values { get; set; }
+        [Parameter] public EventCallback<IList<TValue>> ValuesChanged { get; set; }
+        [Parameter] public Expression<Func<IList<TValue>>> ValuesExpression { get; set; }
+
         [Parameter] public Func<string, Task<IEnumerable<TItem>>> SearchMethod { get; set; }
         [Parameter] public Func<TItem, TValue> ConvertMethod { get; set; }
 
@@ -42,10 +48,10 @@ namespace Blazored.Typeahead
         [Parameter] public int Debounce { get; set; } = 300;
         [Parameter] public int MaximumSuggestions { get; set; } = 10;
         [Parameter] public bool Disabled { get; set; } = false;
+        [Parameter] public bool EnableDropDown { get; set; } = false;
 
         protected bool IsSearching { get; private set; } = false;
         protected bool IsShowingSuggestions { get; private set; } = false;
-        protected bool IsShowingSearchbar { get; private set; } = true;
         protected bool IsShowingMask { get; private set; } = false;
         protected TItem[] Suggestions { get; set; } = new TItem[0];
         protected int SelectedIndex { get; set; }
@@ -103,19 +109,21 @@ namespace Blazored.Typeahead
             _debounceTimer.Elapsed += Search;
 
             _editContext = CascadedEditContext;
-            _fieldIdentifier = FieldIdentifier.Create(ValueExpression);
+            _fieldIdentifier = IsMultiselect() ? FieldIdentifier.Create(ValuesExpression) : FieldIdentifier.Create(ValueExpression);
 
             Initialize();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender)
+            if ((firstRender && !Disabled) || (!_eventsHookedUp && !Disabled))
             {
                 await Interop.AddKeyDownEventListener(JSRuntime, searchInput);
                 await Interop.AddFocusOutEventListener(JSRuntime, typeahead);
 
                 Interop.OnFocusOutEvent += OnFocusOut;
+
+                _eventsHookedUp = true;
             }
         }
 
@@ -128,22 +136,33 @@ namespace Blazored.Typeahead
         {
             SearchText = "";
             IsShowingSuggestions = false;
-            if (Value == null)
-            {
-                IsShowingMask = false;
-                IsShowingSearchbar = true;
-            }
-            else
-            {
-                IsShowingSearchbar = false;
-                IsShowingMask = true;
-            }
+            IsShowingMask = Value != null;
+        }
+
+        protected bool IsMultiselect()
+        {
+            return ValuesExpression != null;
+        }
+
+        protected async Task RemoveValue(TValue item)
+        {
+            var valueList = Values ?? new List<TValue>();
+            if (valueList.Contains(item))
+                valueList.Remove(item);
+
+            await ValuesChanged.InvokeAsync(valueList);
+            _editContext?.NotifyFieldChanged(_fieldIdentifier);
         }
 
         protected async Task HandleClear()
         {
             SearchText = "";
-            await ValueChanged.InvokeAsync(default);
+
+            if (IsMultiselect())
+                await ValuesChanged.InvokeAsync(new List<TValue>());
+            else
+                await ValueChanged.InvokeAsync(default);
+
             _editContext?.NotifyFieldChanged(_fieldIdentifier);
 
             await Task.Delay(250); // Possible race condition here.
@@ -154,7 +173,6 @@ namespace Blazored.Typeahead
         {
             SearchText = "";
             IsShowingMask = false;
-            IsShowingSearchbar = true;
 
             await Task.Delay(250); // Possible race condition here.
             await Interop.Focus(JSRuntime, searchInput);
@@ -189,7 +207,6 @@ namespace Blazored.Typeahead
             {
                 case "Enter":
                     IsShowingMask = false;
-                    IsShowingSearchbar = true;
                     await Task.Delay(250); // Possible race condition here.
                     await Interop.Focus(JSRuntime, searchInput);
                     break;
@@ -227,8 +244,18 @@ namespace Blazored.Typeahead
 
         protected string GetSelectedSuggestionClass(TItem item, int index)
         {
-            const string resultClass = "blazored-typeahead__result-selected";
+            const string resultClass = "blazored-typeahead__active-item";
             TValue value = ConvertMethod(item);
+
+            if (Equals(value, Value) || (Values?.Contains(value) ?? false))
+            {
+                if (index == SelectedIndex)
+                {
+                    return "blazored-typeahead__selected-item-highlighted";
+                }
+
+                return "blazored-typeahead__selected-item";
+            }
 
             if (index == SelectedIndex)
                 return resultClass;
@@ -249,9 +276,24 @@ namespace Blazored.Typeahead
 
         protected async Task SelectResult(TItem item)
         {
-            TValue value = ConvertMethod(item);
+            var value = ConvertMethod(item);
 
-            await ValueChanged.InvokeAsync(value);
+            if (IsMultiselect())
+            {
+                var valueList = Values ?? new List<TValue>();
+
+                if (valueList.Contains(value))
+                    valueList.Remove(value);
+                else
+                    valueList.Add(value);
+
+                await ValuesChanged.InvokeAsync(valueList);
+            }
+            else
+            {
+                await ValueChanged.InvokeAsync(value);
+            }
+
             _editContext?.NotifyFieldChanged(_fieldIdentifier);
         }
 
@@ -279,6 +321,9 @@ namespace Blazored.Typeahead
         public void Dispose()
         {
             _debounceTimer.Dispose();
+
+            if (_eventsHookedUp)
+                Interop.OnFocusOutEvent -= OnFocusOut;
         }
     }
 }

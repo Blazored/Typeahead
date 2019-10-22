@@ -7,6 +7,7 @@
 
     <BlazoredTypeahead SearchMethod="GetPeopleLocal"
                        @bind-Value="FormModel.SelectedPerson"
+                       EnableDropDown="true"
                        placeholder="Search by first name...">
         <SelectedTemplate Context="person">
             @person.Firstname
@@ -17,7 +18,7 @@
     </BlazoredTypeahead>
     <ValidationMessage For="@(() => FormModel.SelectedPerson)" />
 
-    <button class="btn btn-primary" type="submit">Submit</button>
+    <button class="btn btn-primary" type="submit" style="margin-top: 20px;">Submit</button>
 </EditForm>
 
 <hr />
@@ -55,10 +56,9 @@
 
 <h1>Blazored Typeahead - Disabled</h1>
 
-
 <BlazoredTypeahead SearchMethod="@GetPeopleLocal"
                    @bind-Value="@SelectedPerson"
-                   Disabled="true"
+                   Disabled="IsDisabled"
                    placeholder="Search by first name...">
     <SelectedTemplate Context="person">
         @person.Firstname
@@ -68,12 +68,72 @@
     </ResultTemplate>
 </BlazoredTypeahead>
 
+<button class="btn btn-primary" style="margin-top: 20px;" @onclick="@(() => IsDisabled = !IsDisabled)">Toggle Disabled</button>
+
+<hr />
+
+<h1>Blazored Typeahead - Binding to different type</h1>
+
+<BlazoredTypeahead SearchMethod="GetPeopleLocal"
+                   ConvertMethod="ConvertPerson"
+                   @bind-Value="SelectedPersonId"
+                   placeholder="Search by first name...">
+    <SelectedTemplate Context="personId">
+        @{
+            var selectedPerson = LoadSelectedPerson(personId);
+
+            <text>@selectedPerson?.Firstname @selectedPerson?.Lastname</text>
+        }
+    </SelectedTemplate>
+    <ResultTemplate Context="person">
+        @person.Firstname @person.Lastname (Id: @person.Id)
+    </ResultTemplate>
+</BlazoredTypeahead>
+
+<hr />
+
+@if (SelectedPersonId != null && SelectedPersonId > 0)
+{
+    <p>Selected Person Id: @SelectedPersonId</p>
+}
+
+<hr />
+
+<h1>Blazored Typeahead - Multi-select</h1>
+
+<BlazoredTypeahead SearchMethod="GetPeopleLocal"
+                   @bind-Values="SelectedPeople"
+                   EnableDropDown="true"
+                   placeholder="Search by first name...">
+    <SelectedTemplate Context="person">
+        @person.Firstname
+    </SelectedTemplate>
+    <ResultTemplate Context="person">
+        @person.Firstname @person.Lastname (Id: @person.Id)
+    </ResultTemplate>
+</BlazoredTypeahead>
+
+<hr />
+
+@if (SelectedPeople != null)
+{
+    <p>Selected People:</p>
+    foreach (var person in SelectedPeople)
+    {
+        <p>@person.Firstname @person.Lastname</p>
+    }
+}
+
 
 @code {
+
+    private bool IsDisabled = true;
 
     private List<Person> People = new List<Person>();
 
     private Person SelectedPerson;
+    private int? SelectedPersonId;
+    private IList<Person> SelectedPeople;
     private FormExample FormModel = new FormExample();
 
     protected override void OnInitialized()
@@ -143,4 +203,13 @@
         Console.WriteLine("Form Submitted Successfully!");
     }
 
+    public int? ConvertPerson(Person person)
+    {
+        return person?.Id;
+    }
+
+    public Person LoadSelectedPerson(int? id)
+    {
+        return People.FirstOrDefault(p => p.Id == id);
+    }
 }
