@@ -5,10 +5,7 @@ window.blazoredTypeahead = {
     },
     addFocusoutEventListener: (element) => {
         element.addEventListener("focusout", (event) => {
-            if (element.contains(document.activeElement)
-                || event.target.className === "blazored-typeahead__input "
-                || event.target.className === "blazored-typeahead__input-icon"
-                || event.target.className === "blazored-typeahead__input-mask") // workaround relatedTarget bug
+            if (element.contains(document.activeElement) || event.target.className.includes("blazored-typeahead")) // workaround relatedTarget bug
             {
                 return; // don't react to this since it's a child.
             }
