@@ -5,6 +5,16 @@
     border-radius: 5px;
 }
 
+    .blazored-typeahead.valid.modified {
+        outline: none !important;
+        border: 1px solid #26b050;
+    }
+
+    .blazored-typeahead.invalid {
+        outline: none !important;
+        border: 1px solid red;
+    }
+
 .blazored-typeahead__controls {
     position: relative;
     cursor: text;
