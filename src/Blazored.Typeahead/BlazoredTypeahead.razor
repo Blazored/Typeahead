@@ -4,7 +4,7 @@
 @typeparam TValue
 @inherits BlazoredTypeaheadBase<TItem, TValue>
 
-<div class="blazored-typeahead" @ref="typeahead">
+<div class="blazored-typeahead @FieldCssClasses" @ref="typeahead">
 
     <div class="blazored-typeahead__controls">
 
@@ -55,7 +55,7 @@
                            @attributes="AdditionalAttributes"
                            autocomplete="off"
                            type="text"
-                           class="blazored-typeahead__input blazored-typeahead__input-multi @FieldCssClasses" />
+                           class="blazored-typeahead__input blazored-typeahead__input-multi" />
                 </div>
             }
             else
@@ -78,7 +78,7 @@
                        @attributes="AdditionalAttributes"
                        autocomplete="off"
                        type="text"
-                       class="blazored-typeahead__input @(IsShowingMask ? "blazored-typeahead__input-hidden" : null) @FieldCssClasses" />
+                       class="blazored-typeahead__input @(IsShowingMask ? "blazored-typeahead__input-hidden" : null)" />
             }
         }
 
