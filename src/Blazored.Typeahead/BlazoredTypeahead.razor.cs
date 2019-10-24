@@ -76,6 +76,8 @@ namespace Blazored.Typeahead
             }
         }
 
+        protected string FieldCssClasses => _editContext?.FieldCssClass(_fieldIdentifier) ?? "";
+
         protected override void OnInitialized()
         {
             if (SearchMethod == null)
