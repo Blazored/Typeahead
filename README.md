@@ -57,6 +57,7 @@ Below is a list of all the options available on the Typeahead.
 - `MaximumSuggestions` (Optional - Default: 10) - Controls the amount of suggestions which are shown
 - `Disabled` (Optional - Default: false) - Marks the control as disabled and stops any interaction
 - `EnableDropDown` (Optional - Default: false) - Allows the control to behave as a dropdown
+- `ShowDropDownOnFocus` (Optional - Default: false) - When enabled, will show the suggestions dropdown automatically when the control is in search mode. If the control has a current value then the user would need to press the enter key first to enter search mode.
 
 The control also requires a `SearchMethod` to be provided with the following signature `Task<IEnumerable<TItem>>(string searchText)`. The control will invoke this method 
 passing the text the user has typed into the control. You can then query your data source and return the result as an `IEnumerable` for the control to render.

@@ -6,7 +6,7 @@
     <RootNamespace>Blazored.Typeahead</RootNamespace>
 
     <PackageId>Blazored.Typeahead</PackageId>
-    <Version>4.0.4</Version>
+    <Version>4.1.0</Version>
     <Authors>Chris Sainty</Authors>
     <Description>A typeahead control for Blazor applications</Description>
     <Copyright>Copyright 2019 (c) Chris Sainty. All rights reserved.</Copyright>

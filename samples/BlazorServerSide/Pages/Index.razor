@@ -36,6 +36,7 @@
 
 <BlazoredTypeahead SearchMethod="GetPeopleLocal"
                    @bind-Value="SelectedPerson"
+                   ShowDropDownOnFocus="true"
                    placeholder="Search by first name...">
     <SelectedTemplate Context="person">
         @person.Firstname

@@ -49,6 +49,7 @@ namespace Blazored.Typeahead
         [Parameter] public int MaximumSuggestions { get; set; } = 10;
         [Parameter] public bool Disabled { get; set; } = false;
         [Parameter] public bool EnableDropDown { get; set; } = false;
+        [Parameter] public bool ShowDropDownOnFocus { get; set; } = false;
 
         protected bool IsSearching { get; private set; } = false;
         protected bool IsShowingSuggestions { get; private set; } = false;
@@ -196,18 +197,6 @@ namespace Blazored.Typeahead
             }
         }
 
-        private bool _resettingControl = false;
-        protected async Task ResetControl()
-        {
-            if (!_resettingControl)
-            {
-                _resettingControl = true;
-                await Task.Delay(200);
-                Initialize();
-                _resettingControl = false;
-            }
-        }
-
         protected async Task HandleKeyup(KeyboardEventArgs args)
         {
             if (args.Key == "ArrowDown")
@@ -220,6 +209,26 @@ namespace Blazored.Typeahead
             }
             else if (args.Key == "Enter" && SelectedIndex >= 0 && SelectedIndex < Suggestions.Count())
                 await SelectResult(Suggestions[SelectedIndex]);
+        }
+
+        protected async Task HandleInputFocus()
+        {
+            if (ShowDropDownOnFocus)
+            {
+                await ShowMaximumSuggestions();
+            }
+        }
+
+        private bool _resettingControl = false;
+        protected async Task ResetControl()
+        {
+            if (!_resettingControl)
+            {
+                _resettingControl = true;
+                await Task.Delay(200);
+                Initialize();
+                _resettingControl = false;
+            }
         }
 
         protected async Task ShowMaximumSuggestions()
