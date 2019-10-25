@@ -29,9 +29,12 @@
     border-radius: 5px;
 }
 
+.blazored-typeahead:focus-within {
+    box-shadow: 0 0 0 0.2rem rgba(38,143,255,.5);
+}
+
     .blazored-typeahead__input:focus {
-        outline: none;
-        box-shadow: 0 0 0 0.2rem rgba(38,143,255,.5);
+        outline: none;        
     }
 
     .blazored-typeahead__input-multi:focus {
