@@ -108,6 +108,13 @@
     @if (ShouldShowSuggestions())
     {
         <div class="blazored-typeahead__results">
+            @if (HeaderTemplate != null)
+            {
+                <div class="blazored-typeahead__results-header">
+                    @HeaderTemplate
+                </div>
+            }
+
             @for (var i = 0; i < Suggestions.Count(); i++)
             {
                 var item = Suggestions[i];
@@ -130,6 +137,13 @@
     else if (ShowNotFound())
     {
         <div class="blazored-typeahead__results">
+            @if (HeaderTemplate != null)
+            {
+                <div class="blazored-typeahead__results-header">
+                    @HeaderTemplate
+                </div>
+            }
+
             @if (NotFoundTemplate != null)
             {
                 <div class="blazored-typeahead__notfound">

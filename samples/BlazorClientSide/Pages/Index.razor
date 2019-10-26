@@ -125,6 +125,33 @@
     }
 }
 
+<hr />
+
+<h1>Blazored Typeahead - Header and footer templates</h1>
+
+<BlazoredTypeahead SearchMethod="GetPeopleLocal"
+                   @bind-Value="SelectedPerson"
+                   placeholder="Search by first name...">
+    <SelectedTemplate Context="person">
+        @person.Firstname
+    </SelectedTemplate>
+    <HeaderTemplate>
+        Header template
+    </HeaderTemplate>
+    <ResultTemplate Context="person">
+        @person.Firstname @person.Lastname
+    </ResultTemplate>
+    <FooterTemplate>
+        Footer template
+    </FooterTemplate>
+</BlazoredTypeahead>
+
+<hr />
+
+@if (SelectedPersonId != null && SelectedPersonId > 0)
+{
+    <p>Selected Person Id: @SelectedPersonId</p>
+}
 
 @code {
 
