@@ -16,11 +16,10 @@
             @person.Firstname @person.Lastname
         </ResultTemplate>
         <HeaderTemplate>
-            <InputCheckbox id="showInactiveCheckbox" @bind-Value="@ShowInactive"/>
-            <label for="showInactiveCheckbox">Display inactive</label>
+            Header Template
         </HeaderTemplate>
         <FooterTemplate>
-            Count: @Results.Count
+            Footer Template
         </FooterTemplate>
     </BlazoredTypeaheadInput>
     <ValidationMessage For="@(() => FormModel.SelectedPerson)" />
@@ -61,99 +60,77 @@
 
 
 @code {
-    private List<Person> ExampleData = new List<Person>();
-    private ApiResult<IEnumerable<Person>> Results;
+
+    private List<Person> People = new List<Person>();
+
     private Person SelectedPerson;
     private FormExample FormModel = new FormExample();
-    private bool ShowInactive;
 
     protected override void OnInitialized()
     {
-        ExampleData.AddRange(new List<Person>() {
-            new Person() { Firstname = "Martelle", Lastname = "Cullon", IsActive = true },
-            new Person() { Firstname = "Zelda", Lastname = "Abrahamsson", IsActive = true },
-            new Person() { Firstname = "Benedetta", Lastname = "Posse", IsActive = true },
-            new Person() { Firstname = "Benoite", Lastname = "Gobel", IsActive = false },
-            new Person() { Firstname = "Charlot", Lastname = "Fullicks", IsActive = true },
-            new Person() { Firstname = "Vinson", Lastname = "Turbat", IsActive = false },
-            new Person() { Firstname = "Lenore", Lastname = "Malam", IsActive = true },
-            new Person() { Firstname = "Emanuele", Lastname = "Kolakovic", IsActive = true },
-            new Person() { Firstname = "Rosalyn", Lastname = "Mackin", IsActive = false },
-            new Person() { Firstname = "Yanaton", Lastname = "Krishtopaittis", IsActive = true },
-            new Person() { Firstname = "Frederik", Lastname = "McGeachie", IsActive = false },
-            new Person() { Firstname = "Parrnell", Lastname = "Ramsby", IsActive = false },
-            new Person() { Firstname = "Coreen", Lastname = "McGann", IsActive = false },
-            new Person() { Firstname = "Kyle", Lastname = "Coster", IsActive = true },
-            new Person() { Firstname = "Evangelia", Lastname = "Bowker", IsActive = true },
-            new Person() { Firstname = "Angeli", Lastname = "Collihole", IsActive = true },
-            new Person() { Firstname = "Bill", Lastname = "Lawther", IsActive = false },
-            new Person() { Firstname = "Kore", Lastname = "Reide", IsActive = false },
-            new Person() { Firstname = "Tracy", Lastname = "Gwinnell", IsActive = false },
-            new Person() { Firstname = "Lazaro", Lastname = "Partington", IsActive = true },
-            new Person() { Firstname = "Doretta", Lastname = "Aingell", IsActive = true },
-            new Person() { Firstname = "Olvan", Lastname = "Andraud", IsActive = true },
-            new Person() { Firstname = "Templeton", Lastname = "Chetwynd", IsActive = true },
-            new Person() { Firstname = "Daile", Lastname = "Kelsow", IsActive = true },
-            new Person() { Firstname = "Marcie", Lastname = "Brearty", IsActive = true },
-            new Person() { Firstname = "Irwinn", Lastname = "Lilian", IsActive = true },
-            new Person() { Firstname = "Niki", Lastname = "Moreland", IsActive = false },
-            new Person() { Firstname = "Honey", Lastname = "Waddup", IsActive = false },
-            new Person() { Firstname = "Amber", Lastname = "Hoopper", IsActive = true },
-            new Person() { Firstname = "Delilah", Lastname = "Dougary", IsActive = true },
-            new Person() { Firstname = "Tory", Lastname = "Ovington", IsActive = false },
-            new Person() { Firstname = "Doralin", Lastname = "Conrard", IsActive = false },
-            new Person() { Firstname = "Eugene", Lastname = "Custard", IsActive = false },
-            new Person() { Firstname = "Corella", Lastname = "Peotz", IsActive = true },
-            new Person() { Firstname = "Chris", Lastname = "Rayne", IsActive = true },
-            new Person() { Firstname = "Alexandro", Lastname = "Kwietek", IsActive = false },
-            new Person() { Firstname = "Selie", Lastname = "Tenwick", IsActive = false },
-            new Person() { Firstname = "Corliss", Lastname = "Haensel", IsActive = false },
-            new Person() { Firstname = "Misti", Lastname = "Jikylls", IsActive = false },
-            new Person() { Firstname = "Rosaline", Lastname = "Jephson", IsActive = false },
-            new Person() { Firstname = "Irene", Lastname = "Farnsworth", IsActive = false },
-            new Person() { Firstname = "Dominique", Lastname = "O'Shiels", IsActive = false },
-            new Person() { Firstname = "Mellie", Lastname = "Cyson", IsActive = true },
-            new Person() { Firstname = "Madelena", Lastname = "Chin", IsActive = true },
-            new Person() { Firstname = "Charlotte", Lastname = "Clixby", IsActive = true },
-            new Person() { Firstname = "Samara", Lastname = "Shavel", IsActive = true },
-            new Person() { Firstname = "Brod", Lastname = "Kitt", IsActive = true },
-            new Person() { Firstname = "Maridel", Lastname = "Dalley", IsActive = false },
-            new Person() { Firstname = "Wini", Lastname = "Hundley", IsActive = true },
+        People.AddRange(new List<Person>() {
+            new Person() { Firstname = "Martelle", Lastname = "Cullon" },
+            new Person() { Firstname = "Zelda", Lastname = "Abrahamsson" },
+            new Person() { Firstname = "Benedetta", Lastname = "Posse" },
+            new Person() { Firstname = "Benoite", Lastname = "Gobel" },
+            new Person() { Firstname = "Charlot", Lastname = "Fullicks" },
+            new Person() { Firstname = "Vinson", Lastname = "Turbat" },
+            new Person() { Firstname = "Lenore", Lastname = "Malam" },
+            new Person() { Firstname = "Emanuele", Lastname = "Kolakovic" },
+            new Person() { Firstname = "Rosalyn", Lastname = "Mackin" },
+            new Person() { Firstname = "Yanaton", Lastname = "Krishtopaittis" },
+            new Person() { Firstname = "Frederik", Lastname = "McGeachie" },
+            new Person() { Firstname = "Parrnell", Lastname = "Ramsby" },
+            new Person() { Firstname = "Coreen", Lastname = "McGann" },
+            new Person() { Firstname = "Kyle", Lastname = "Coster" },
+            new Person() { Firstname = "Evangelia", Lastname = "Bowker" },
+            new Person() { Firstname = "Angeli", Lastname = "Collihole" },
+            new Person() { Firstname = "Bill", Lastname = "Lawther" },
+            new Person() { Firstname = "Kore", Lastname = "Reide" },
+            new Person() { Firstname = "Tracy", Lastname = "Gwinnell" },
+            new Person() { Firstname = "Lazaro", Lastname = "Partington" },
+            new Person() { Firstname = "Doretta", Lastname = "Aingell" },
+            new Person() { Firstname = "Olvan", Lastname = "Andraud" },
+            new Person() { Firstname = "Templeton", Lastname = "Chetwynd" },
+            new Person() { Firstname = "Daile", Lastname = "Kelsow" },
+            new Person() { Firstname = "Marcie", Lastname = "Brearty" },
+            new Person() { Firstname = "Irwinn", Lastname = "Lilian" },
+            new Person() { Firstname = "Niki", Lastname = "Moreland" },
+            new Person() { Firstname = "Honey", Lastname = "Waddup" },
+            new Person() { Firstname = "Amber", Lastname = "Hoopper" },
+            new Person() { Firstname = "Delilah", Lastname = "Dougary" },
+            new Person() { Firstname = "Tory", Lastname = "Ovington" },
+            new Person() { Firstname = "Doralin", Lastname = "Conrard" },
+            new Person() { Firstname = "Eugene", Lastname = "Custard" },
+            new Person() { Firstname = "Corella", Lastname = "Peotz" },
+            new Person() { Firstname = "Chris", Lastname = "Rayne" },
+            new Person() { Firstname = "Alexandro", Lastname = "Kwietek" },
+            new Person() { Firstname = "Selie", Lastname = "Tenwick" },
+            new Person() { Firstname = "Corliss", Lastname = "Haensel" },
+            new Person() { Firstname = "Misti", Lastname = "Jikylls" },
+            new Person() { Firstname = "Rosaline", Lastname = "Jephson" },
+            new Person() { Firstname = "Irene", Lastname = "Farnsworth" },
+            new Person() { Firstname = "Dominique", Lastname = "O'Shiels" },
+            new Person() { Firstname = "Mellie", Lastname = "Cyson" },
+            new Person() { Firstname = "Madelena", Lastname = "Chin" },
+            new Person() { Firstname = "Charlotte", Lastname = "Clixby" },
+            new Person() { Firstname = "Samara", Lastname = "Shavel" },
+            new Person() { Firstname = "Brod", Lastname = "Kitt" },
+            new Person() { Firstname = "Maridel", Lastname = "Dalley" },
+            new Person() { Firstname = "Wini", Lastname = "Hundley" },
         });
     }
 
     private async Task<IEnumerable<Person>> GetPeopleLocal(string searchText)
     {
-        Results = new ApiResult<IEnumerable<Person>>()
-        {
-            Page = 1,
-            TotalPages = 1
-        };
-
-        var results =
-            await Task.FromResult(ExampleData.Where(x => x.Firstname.ToLower().Contains(searchText.ToLower()) && x.IsActive == ShowInactive).ToList());
-
-        Results.Data = results;
-        Results.Count = results.Count();
-
-        return results;
+        return await Task.FromResult(People.Where(x => x.Firstname.ToLower().Contains(searchText.ToLower())).ToList());
     }
 
     private async Task<IEnumerable<Person>> GetPeopleRemote(string searchText)
     {
-        Results = new ApiResult<IEnumerable<Person>>()
-        {
-            Page = 1,
-            TotalPages = 1
-        };
+        var result = await httpClient.GetJsonAsync<List<Person>>($"https://localhost:44376/api/persons/?name={searchText}");
 
-        var results =
-            await httpClient.GetJsonAsync<List<Person>>($"https://localhost:44376/api/persons/?name={searchText}");
-
-        Results.Data = results;
-        Results.Count = results.Count();
-
-        return results;
+        return result;
     }
 
     private void HandleFormSubmit()

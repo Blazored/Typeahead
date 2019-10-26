@@ -18,6 +18,5 @@ namespace Sample.Shared
         public string FullName { get => Firstname + " " + Lastname; }
         public int Age { get; set; }
         public string Location { get; set; }
-        public bool IsActive { get; set; }
     }
 }
