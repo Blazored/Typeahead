@@ -71,7 +71,7 @@ and return the new type.
 ### Local Data Example
 ```cs
 <EditForm Model="MyFormModel" OnValidSubmit="HandlValidSubmit">
-    <BlazoredTypeaheadInput SearchMethod="SearchFilms"
+    <BlazoredTypeahead SearchMethod="SearchFilms"
                             @bind-Value="MyFormModel.SelectedFilm">
         <SelectedTemplate>
             @context.Title
@@ -79,7 +79,7 @@ and return the new type.
         <ResultTemplate>
             @context.Title (@context.Year)
         </ResultTemplate>
-    </BlazoredTypeaheadInput>
+    </BlazoredTypeahead>
     <ValidationMessage For="@(() => MyFormModel.SelectedFilm)" />
 </EditForm>
 
