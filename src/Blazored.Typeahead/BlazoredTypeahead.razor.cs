@@ -200,14 +200,17 @@ namespace Blazored.Typeahead
 
         protected async Task HandleKeyup(KeyboardEventArgs args)
         {
+            if ((args.Key == "ArrowDown" || args.Key == "Enter") && !IsShowingSuggestions)
+            {
+                await ShowMaximumSuggestions();
+            }
+
             if (args.Key == "ArrowDown")
                 MoveSelection(1);
             else if (args.Key == "ArrowUp")
                 MoveSelection(-1);
             else if (args.Key == "Escape")
-            {
                 Initialize();
-            }
             else if (args.Key == "Enter" && SelectedIndex >= 0 && SelectedIndex < Suggestions.Count())
                 await SelectResult(Suggestions[SelectedIndex]);
         }
