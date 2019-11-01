@@ -200,7 +200,7 @@ namespace Blazored.Typeahead
 
         protected async Task HandleKeyup(KeyboardEventArgs args)
         {
-            if ((args.Key == "ArrowDown" || args.Key == "Enter") && !IsShowingSuggestions)
+            if ((args.Key == "ArrowDown" || args.Key == "Enter") && EnableDropDown && !IsShowingSuggestions)
             {
                 await ShowMaximumSuggestions();
             }
