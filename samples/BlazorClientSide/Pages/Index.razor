@@ -69,7 +69,7 @@
     </ResultTemplate>
 </BlazoredTypeahead>
 
-<button class="btn btn-primary" style="margin-top: 20px;" @onclick="@(() => IsDisabled = !IsDisabled)">Toggle Disabled</button>
+<button class="btn btn-primary" style="margin-top: 20px;" @onclick="@(() => IsDisabled = !IsDisabled)">@(IsDisabled ? "Enable" : "Disable")</button>
 
 <hr />
 
@@ -104,6 +104,7 @@
 
 <BlazoredTypeahead SearchMethod="GetPeopleLocal"
                    @bind-Values="SelectedPeople"
+                   Disabled="IsDisabledMulti"
                    EnableDropDown="true"
                    placeholder="Search by first name...">
     <SelectedTemplate Context="person">
@@ -113,6 +114,8 @@
         @person.Firstname @person.Lastname (Id: @person.Id)
     </ResultTemplate>
 </BlazoredTypeahead>
+
+<button class="btn btn-primary" style="margin-top: 20px;" @onclick="@(() => IsDisabledMulti = !IsDisabledMulti)">@(IsDisabledMulti ? "Enable" : "Disable")</button>
 
 <hr />
 
@@ -156,6 +159,7 @@
 @code {
 
     private bool IsDisabled = true;
+    private bool IsDisabledMulti;
 
     private List<Person> People = new List<Person>();
 

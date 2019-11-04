@@ -11,8 +11,26 @@
         @if (Disabled)
         {
             <div class="blazored-typeahead__input-mask-wrapper blazored-typeahead__input-mask-wrapper--disabled">
-                <div class="blazored-typeahead__input-mask" tabindex="0">
-                </div>
+                @if (IsMultiselect)
+                {
+                    @if (Values != null)
+                    {
+                        @foreach (var value in Values)
+                        {
+                            <div class="blazored-typeahead__multi-value">
+                                <div class="blazored-typeahead__multi-value-label">
+                                    @SelectedTemplate(value)
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+                else
+                {
+                    <div class="blazored-typeahead__input-mask" tabindex="0">
+                        @SelectedTemplate(Value)
+                    </div>
+                }
             </div>
             <div class="blazored-typeahead__input-icon blazored-typeahead__input-icon--disabled">
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="blazored-typeahead__down-arrow">
