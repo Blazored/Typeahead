@@ -49,7 +49,6 @@ namespace Blazored.Typeahead
         [Parameter] public int Debounce { get; set; } = 300;
         [Parameter] public int MaximumSuggestions { get; set; } = 10;
         [Parameter] public bool Disabled { get; set; } = false;
-        [Parameter] public bool DisabledBlockout { get; set; } = true;
         [Parameter] public bool EnableDropDown { get; set; } = false;
         [Parameter] public bool ShowDropDownOnFocus { get; set; } = false;
 

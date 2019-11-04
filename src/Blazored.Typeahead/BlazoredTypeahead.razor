@@ -11,11 +11,7 @@
         @if (Disabled)
         {
             <div class="blazored-typeahead__input-mask-wrapper blazored-typeahead__input-mask-wrapper--disabled">
-                @if (DisabledBlockout)
-                {
-                    <div class="blazored-typeahead__input-mask" tabindex="0"></div>
-                }
-                else if (IsMultiselect)
+                @if (IsMultiselect)
                 {
                     @if (Values != null)
                     {

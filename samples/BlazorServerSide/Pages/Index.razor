@@ -59,7 +59,7 @@
 
 <BlazoredTypeahead SearchMethod="@GetPeopleLocal"
                    @bind-Value="@SelectedPerson"
-                   Disabled="@IsDisabled"
+                   Disabled="IsDisabled"
                    placeholder="Search by first name...">
     <SelectedTemplate Context="person">
         @person.Firstname
@@ -104,7 +104,7 @@
 
 <BlazoredTypeahead SearchMethod="GetPeopleLocal"
                    @bind-Values="SelectedPeople"
-                   Disabled="@IsDisabledMulti"
+                   Disabled="IsDisabledMulti"
                    EnableDropDown="true"
                    placeholder="Search by first name...">
     <SelectedTemplate Context="person">
