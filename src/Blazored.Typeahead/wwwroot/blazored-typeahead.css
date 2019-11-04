@@ -125,7 +125,7 @@
 
 .blazored-typeahead__input-icon--disabled,
 .blazored-typeahead__input-icon--disabled:hover {
-    background-color: #dbdbdb;
+    background-color: #e9ecef;
     cursor: not-allowed;
 }
 
