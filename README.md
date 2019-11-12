@@ -35,7 +35,7 @@ Then add the JS script at the bottom of the page using the following script tag.
 I would also suggest adding the following using statement to your main `_Imports.razor` to make referencing the component a bit easier.
 
 ```cs
-@using Blazored.Typeahead.Forms
+@using Blazored.Typeahead
 ```
 
 ## Usage
