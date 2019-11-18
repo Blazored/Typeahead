@@ -211,6 +211,8 @@ namespace Blazored.Typeahead
                 MoveSelection(-1);
             else if (args.Key == "Escape")
                 Initialize();
+            else if (args.Key == "Enter" && Suggestions.Count() == 1)
+                await SelectTheFirstAndOnlySuggestion();
             else if (args.Key == "Enter" && SelectedIndex >= 0 && SelectedIndex < Suggestions.Count())
                 await SelectResult(Suggestions[SelectedIndex]);
         }
@@ -337,6 +339,12 @@ namespace Blazored.Typeahead
                 index = Suggestions.Count() - 1;
 
             SelectedIndex = index;
+        }
+
+        private Task SelectTheFirstAndOnlySuggestion()
+        {
+            SelectedIndex = 0;
+            return SelectResult(Suggestions[SelectedIndex]);
         }
 
         private bool IsSearchingOrDebouncing => IsSearching || _debounceTimer.Enabled;
