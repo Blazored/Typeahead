@@ -67,7 +67,6 @@ namespace Blazored.Typeahead
                 if (value.Length == 0)
                 {
                     _debounceTimer.Stop();
-                    //Suggestions = new TItem[0];
                     SelectedIndex = -1;
                 }
                 else if (value.Length >= MinimumLength)
@@ -211,13 +210,7 @@ namespace Blazored.Typeahead
                 MoveSelection(-1);
             else if (args.Key == "Escape")
                 Initialize();
-<<<<<<< Updated upstream
             else if (args.Key == "Enter" && SelectedIndex >= 0 && SelectedIndex < Suggestions.Count())
-=======
-            else if (args.Key == "Enter" && Suggestions.Count == 1)
-                await SelectTheFirstAndOnlySuggestion();
-            else if (args.Key == "Enter" && SelectedIndex >= 0 && SelectedIndex < Suggestions.Count)
->>>>>>> Stashed changes
                 await SelectResult(Suggestions[SelectedIndex]);
         }
 
