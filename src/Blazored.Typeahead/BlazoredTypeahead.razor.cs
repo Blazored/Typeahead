@@ -55,7 +55,7 @@ namespace Blazored.Typeahead
         protected bool IsSearching { get; private set; } = false;
         protected bool IsShowingSuggestions { get; private set; } = false;
         protected bool IsShowingMask { get; private set; } = false;
-        protected TItem[] Suggestions { get; set; } = new TItem[0];
+        protected List<TItem> Suggestions { get; set; } = new List<TItem>();
         protected int SelectedIndex { get; set; }
         protected string SearchText
         {
@@ -67,7 +67,6 @@ namespace Blazored.Typeahead
                 if (value.Length == 0)
                 {
                     _debounceTimer.Stop();
-                    Suggestions = new TItem[0];
                     SelectedIndex = -1;
                 }
                 else if (value.Length >= MinimumLength)
@@ -253,7 +252,7 @@ namespace Blazored.Typeahead
                 IsSearching = true;
                 await InvokeAsync(StateHasChanged);
 
-                Suggestions = (await SearchMethod?.Invoke(_searchText)).Take(MaximumSuggestions).ToArray();
+                Suggestions = (await SearchMethod?.Invoke(_searchText)).Take(MaximumSuggestions).ToList();
 
                 IsSearching = false;
                 await InvokeAsync(StateHasChanged);
@@ -285,7 +284,7 @@ namespace Blazored.Typeahead
         {
             IsSearching = true;
             await InvokeAsync(StateHasChanged);
-            Suggestions = (await SearchMethod?.Invoke(_searchText)).Take(MaximumSuggestions).ToArray();
+            Suggestions = (await SearchMethod?.Invoke(_searchText)).Take(MaximumSuggestions).ToList();
 
             IsSearching = false;
             IsShowingSuggestions = true;
@@ -330,11 +329,11 @@ namespace Blazored.Typeahead
         {
             var index = SelectedIndex + count;
 
-            if (index >= Suggestions.Count())
+            if (index >= Suggestions.Count)
                 index = 0;
 
             if (index < 0)
-                index = Suggestions.Count() - 1;
+                index = Suggestions.Count - 1;
 
             SelectedIndex = index;
         }
