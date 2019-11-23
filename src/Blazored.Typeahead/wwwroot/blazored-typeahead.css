@@ -66,6 +66,8 @@
 .blazored-typeahead__input-mask-wrapper--disabled {
     background-color: #e9ecef;
     cursor: not-allowed;
+    border-radius: 5px 0 0 5px;
+    color: grey;
 }
 
     .blazored-typeahead__input-mask-wrapper--disabled:focus {

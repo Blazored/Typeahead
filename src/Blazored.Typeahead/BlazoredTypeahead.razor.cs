@@ -152,6 +152,7 @@ namespace Blazored.Typeahead
         protected async Task HandleClear()
         {
             SearchText = "";
+            IsShowingMask = false;
 
             if (IsMultiselect)
                 await ValuesChanged.InvokeAsync(new List<TValue>());
