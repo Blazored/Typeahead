@@ -76,7 +76,7 @@
                            @attributes="AdditionalAttributes"
                            autocomplete="off"
                            type="text"
-                           class="blazored-typeahead__input blazored-typeahead__input-multi" />
+                           class="blazored-typeahead__input blazored-typeahead__input-multi @Class" />
                 </div>
             }
             else
@@ -101,7 +101,7 @@
                        @attributes="AdditionalAttributes"
                        autocomplete="off"
                        type="text"
-                       class="blazored-typeahead__input @(IsShowingMask ? "blazored-typeahead__input-hidden" : null)" />
+                       class="blazored-typeahead__input @(IsShowingMask ? "blazored-typeahead__input-hidden" : null) @Class" />
             }
         }
 
