@@ -16,7 +16,9 @@ You can install from NuGet using the following command:
 Or via the Visual Studio package manger.
 
 ### Setup
-Blazor Server applications will need to include the following CSS and JS files in their `_Host.cshtml`.
+Blazor Server applications will need to include the following CSS and JS files in their `_Host.cshtml` .
+
+Blazor Client applications will need to include the following CSS and JS files in their `Index.html` .
 
 In the `head` tag add the following CSS.
 
@@ -29,8 +31,6 @@ Then add the JS script at the bottom of the page using the following script tag.
 ```html
 <script src="_content/Blazored.Typeahead/blazored-typeahead.js"></script>
 ```
-
-**NOTE** If you're using Blazor WebAssembly then these files will get added to your `index.html` automagically.
 
 I would also suggest adding the following using statement to your main `_Imports.razor` to make referencing the component a bit easier.
 
