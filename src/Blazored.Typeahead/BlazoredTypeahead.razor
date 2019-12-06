@@ -27,9 +27,12 @@
                 }
                 else
                 {
-                    <div class="blazored-typeahead__input-mask" tabindex="0">
-                        @SelectedTemplate(Value)
-                    </div>
+                    if (Value != null)
+                    {
+                        <div class="blazored-typeahead__input-mask" tabindex="0">
+                            @SelectedTemplate(Value)
+                        </div>
+                    }
                 }
             </div>
             <div class="blazored-typeahead__input-icon blazored-typeahead__input-icon--disabled">

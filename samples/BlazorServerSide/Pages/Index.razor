@@ -73,6 +73,24 @@
 
 <hr />
 
+<h1>Blazored Typeahead - Disabled (Null Value)</h1>
+
+<BlazoredTypeahead SearchMethod="@GetPeopleLocal"
+                   @bind-Value="@SelectedPersonNull"
+                   Disabled="IsDisabled"
+                   placeholder="Search by first name...">
+    <SelectedTemplate Context="person">
+        @person.Firstname
+    </SelectedTemplate>
+    <ResultTemplate Context="person">
+        @person.Firstname @person.Lastname
+    </ResultTemplate>
+</BlazoredTypeahead>
+
+<button class="btn btn-primary" style="margin-top: 20px;" @onclick="@(() => IsDisabled = !IsDisabled)">@(IsDisabled ? "Enable" : "Disable")</button>
+
+<hr />
+
 <h1>Blazored Typeahead - Binding to different type</h1>
 
 <BlazoredTypeahead SearchMethod="GetPeopleLocal"
@@ -135,6 +153,7 @@
     private List<Person> People = new List<Person>();
 
     private Person SelectedPerson;
+    private Person SelectedPersonNull;
     private int? SelectedPersonId;
     private IList<Person> SelectedPeople;
     private FormExample FormModel = new FormExample();
