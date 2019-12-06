@@ -2,9 +2,8 @@
 
 @typeparam TItem
 @typeparam TValue
-@inherits BlazoredTypeaheadBase<TItem, TValue>
 
-<div class="blazored-typeahead @FieldCssClasses" @ref="typeahead">
+<div class="blazored-typeahead @FieldCssClasses">
 
     <div class="blazored-typeahead__controls">
 
@@ -70,7 +69,7 @@
                         }
                     }
 
-                    <input @ref="searchInput"
+                    <input @ref="_searchInput"
                            @bind-value="SearchText"
                            @bind-value:event="oninput"
                            @onkeyup="HandleKeyup"
@@ -87,7 +86,7 @@
                 if (IsShowingMask)
                 {
                     <div class="blazored-typeahead__input-mask-wrapper">
-                        <div class="blazored-typeahead__input-mask" @onclick="HandleClickOnMask" @onkeyup="HandleKeyUpOnMask" tabindex="0" @ref="mask">
+                        <div class="blazored-typeahead__input-mask" @onclick="HandleClickOnMask" @onkeyup="HandleKeyUpOnMask" tabindex="0" @ref="_mask">
                             @SelectedTemplate(Value)
                         </div>
                         <div class="blazored-typeahead__clear" @onclick="HandleClear" tabindex="-1">
@@ -95,7 +94,7 @@
                         </div>
                     </div>
                 }
-                <input @ref="searchInput"
+                <input @ref="_searchInput"
                        @bind-value="SearchText"
                        @bind-value:event="oninput"
                        @onkeyup="HandleKeyup"

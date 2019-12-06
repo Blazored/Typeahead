@@ -115,6 +115,7 @@
 
     .blazored-typeahead__input-icon:focus {
         outline: none;
+        box-shadow: 0 0 0 0.2rem rgba(38,143,255,.5);
     }
 
     .blazored-typeahead__input-icon:hover {
