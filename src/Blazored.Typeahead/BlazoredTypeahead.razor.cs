@@ -50,6 +50,9 @@ namespace Blazored.Typeahead
         [Parameter] public bool EnableDropDown { get; set; } = false;
         [Parameter] public bool ShowDropDownOnFocus { get; set; } = false;
 
+        [Parameter] public bool StopPropagation { get; set; } = false;
+        [Parameter] public bool PreventDefault { get; set; } = false;
+
         private bool IsSearching { get; set; } = false;
         private bool IsShowingSuggestions { get; set; } = false;
         private bool IsShowingMask { get; set; } = false;
