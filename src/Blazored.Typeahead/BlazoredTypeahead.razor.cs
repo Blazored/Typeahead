@@ -144,7 +144,9 @@ namespace Blazored.Typeahead
         {
             var valueList = Values ?? new List<TValue>();
             if (valueList.Contains(item))
+            {
                 valueList.Remove(item);
+            }
 
             await ValuesChanged.InvokeAsync(valueList);
             _editContext?.NotifyFieldChanged(_fieldIdentifier);
@@ -156,9 +158,13 @@ namespace Blazored.Typeahead
             IsShowingMask = false;
 
             if (IsMultiselect)
+            {
                 await ValuesChanged.InvokeAsync(new List<TValue>());
+            }
             else
+            {
                 await ValueChanged.InvokeAsync(default);
+            }
 
             _editContext?.NotifyFieldChanged(_fieldIdentifier);
 
@@ -178,17 +184,29 @@ namespace Blazored.Typeahead
         private async Task HandleKeyUpOnShowDropDown(KeyboardEventArgs args)
         {
             if (args.Key == "ArrowDown")
+            {
                 MoveSelection(1);
+            }
             else if (args.Key == "ArrowUp")
+            {
                 MoveSelection(-1);
+            }
             else if (args.Key == "Escape")
+            {
                 Initialize();
+            }
             else if (args.Key == "Enter" && Suggestions.Count() == 1)
+            {
                 await SelectTheFirstAndOnlySuggestion();
+            }
             else if (args.Key == "Enter" && SelectedIndex >= 0 && SelectedIndex < Suggestions.Count())
+            {
                 await SelectResult(Suggestions[SelectedIndex]);
+            }
             else if (args.Key == "Enter")
+            {
                 await ShowMaximumSuggestions();
+            }
         }
 
         private async Task HandleKeyUpOnMask(KeyboardEventArgs args)
@@ -217,15 +235,25 @@ namespace Blazored.Typeahead
             }
 
             if (args.Key == "ArrowDown")
+            {
                 MoveSelection(1);
+            }
             else if (args.Key == "ArrowUp")
+            {
                 MoveSelection(-1);
+            }
             else if (args.Key == "Escape")
+            {
                 Initialize();
+            }
             else if (args.Key == "Enter" && Suggestions.Count() == 1)
+            {
                 await SelectTheFirstAndOnlySuggestion();
+            }
             else if (args.Key == "Enter" && SelectedIndex >= 0 && SelectedIndex < Suggestions.Count())
+            {
                 await SelectResult(Suggestions[SelectedIndex]);
+            }
         }
 
         private async Task HandleInputFocus()
@@ -289,7 +317,9 @@ namespace Blazored.Typeahead
             }
 
             if (index == SelectedIndex)
+            {
                 return resultClass;
+            }
 
             return Equals(value, Value) ? resultClass : string.Empty;
         }
@@ -350,10 +380,14 @@ namespace Blazored.Typeahead
             var index = SelectedIndex + count;
 
             if (index >= Suggestions.Count)
+            {
                 index = 0;
+            }
 
             if (index < 0)
+            {
                 index = Suggestions.Count - 1;
+            }
 
             SelectedIndex = index;
         }
