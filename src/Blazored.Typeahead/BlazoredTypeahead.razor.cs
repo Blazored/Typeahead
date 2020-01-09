@@ -332,6 +332,7 @@ namespace Blazored.Typeahead
 
             IsSearching = false;
             IsShowingSuggestions = true;
+            SelectedIndex = 0;
             await InvokeAsync(StateHasChanged);
         }
 
