@@ -213,17 +213,25 @@ namespace Blazored.Typeahead
         {
             switch (args.Key)
             {
+                case "Tab":
+                    break; // Don't do anything on tab.
                 case "Enter":
-                    IsShowingMask = false;
-                    await Task.Delay(250); // Possible race condition here.
-                    await Interop.Focus(JSRuntime, _searchInput);
-                    break;
                 case "Backspace":
                 case "Delete":
+                case "Escape":
                     await HandleClear();
                     break;
                 default:
                     break;
+            }
+
+            // You can only start searching if it's not a special key (Tab, Enter, Escape, ...)
+            if(args.Key.Length == 1)
+            {
+                IsShowingMask = false;
+                await Task.Delay(250); // Possible race condition here.
+                await Interop.Focus(JSRuntime, _searchInput);
+                SearchText = args.Key;
             }
         }
 
@@ -373,7 +381,7 @@ namespace Blazored.Typeahead
         private bool ShouldShowSuggestions()
         {
             return IsShowingSuggestions &&
-                   Suggestions.Any();
+                   Suggestions.Any() && !IsSearchingOrDebouncing;
         }
 
         private void MoveSelection(int count)
