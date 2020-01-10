@@ -56,7 +56,7 @@ namespace Blazored.Typeahead
         private bool IsSearching { get; set; } = false;
         private bool IsShowingSuggestions { get; set; } = false;
         private bool IsShowingMask { get; set; } = false;
-        private List<TItem> Suggestions { get; set; } = new List<TItem>();
+        private TItem[] Suggestions { get; set; } = new TItem[0];
         private int SelectedIndex { get; set; }
         private string SearchText
         {
@@ -195,11 +195,11 @@ namespace Blazored.Typeahead
             {
                 Initialize();
             }
-            else if (args.Key == "Enter" && Suggestions.Count() == 1)
+            else if (args.Key == "Enter" && Suggestions.Length == 1)
             {
                 await SelectTheFirstAndOnlySuggestion();
             }
-            else if (args.Key == "Enter" && SelectedIndex >= 0 && SelectedIndex < Suggestions.Count())
+            else if (args.Key == "Enter" && SelectedIndex >= 0 && SelectedIndex < Suggestions.Length)
             {
                 await SelectResult(Suggestions[SelectedIndex]);
             }
@@ -302,7 +302,7 @@ namespace Blazored.Typeahead
                 IsSearching = true;
                 await InvokeAsync(StateHasChanged);
 
-                Suggestions = (await SearchMethod?.Invoke(_searchText)).Take(MaximumSuggestions).ToList();
+                Suggestions = (await SearchMethod?.Invoke(_searchText)).Take(MaximumSuggestions).ToArray();
 
                 IsSearching = false;
                 await InvokeAsync(StateHasChanged);
@@ -336,7 +336,7 @@ namespace Blazored.Typeahead
         {
             IsSearching = true;
             await InvokeAsync(StateHasChanged);
-            Suggestions = (await SearchMethod?.Invoke(_searchText)).Take(MaximumSuggestions).ToList();
+            Suggestions = (await SearchMethod?.Invoke(_searchText)).Take(MaximumSuggestions).ToArray();
 
             IsSearching = false;
             IsShowingSuggestions = true;
@@ -388,14 +388,14 @@ namespace Blazored.Typeahead
         {
             var index = SelectedIndex + count;
 
-            if (index >= Suggestions.Count)
+            if (index >= Suggestions.Length)
             {
                 index = 0;
             }
 
             if (index < 0)
             {
-                index = Suggestions.Count - 1;
+                index = Suggestions.Length - 1;
             }
 
             SelectedIndex = index;
