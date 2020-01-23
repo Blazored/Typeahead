@@ -1,7 +1,7 @@
 window.blazoredTypeahead = {
     assemblyname: "Blazored.Typeahead",
     setFocus: (element) => {
-        element.focus();
+        if (element) element.focus();
     },
     // No need to remove the event listeners later, the browser will clean this up automagically.
     addKeyDownEventListener: (element) => {
