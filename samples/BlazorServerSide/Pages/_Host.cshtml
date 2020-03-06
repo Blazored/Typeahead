@@ -27,6 +27,11 @@
         <component type="typeof(App)" render-mode="ServerPrerendered" />
     </app>
 
+    <script type="text/javascript">
+        if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) {
+            document.write('<script src="/blazor.polyfill.min.js"><\/script>');
+        }
+    </script>
     <script src="_framework/blazor.server.js"></script>
     <script src="_content/Blazored.Typeahead/blazored-typeahead.js"></script>
 </body>
