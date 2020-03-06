@@ -129,7 +129,15 @@
         }
     </div>
 
-    @if (ShouldShowSuggestions())
+    @if (ShouldShowHelpTemplate())
+    {
+        <div class="blazored-typeahead__results">
+            <div class="blazored-typeahead__results-help-template">
+                @HelpTemplate
+            </div>
+        </div>
+    }
+    else if (ShouldShowSuggestions())
     {
         <div class="blazored-typeahead__results">
             @if (HeaderTemplate != null)

@@ -8,10 +8,14 @@
     <BlazoredTypeahead SearchMethod="GetPeopleLocal"
                        @bind-Value="FormModel.SelectedPerson"
                        EnableDropDown="true"
+                       MinimumLength="3"
                        placeholder="Search by first name...">
         <SelectedTemplate Context="person">
             @person.Firstname
         </SelectedTemplate>
+        <HelpTemplate>
+            Please enter at least 3 character to perform a search.
+        </HelpTemplate>
         <ResultTemplate Context="person">
             @person.Firstname @person.Lastname
         </ResultTemplate>
@@ -124,10 +128,14 @@
                    @bind-Values="SelectedPeople"
                    Disabled="IsDisabledMulti"
                    EnableDropDown="true"
+                   MinimumLength="2"
                    placeholder="Search by first name...">
     <SelectedTemplate Context="person">
         @person.Firstname
     </SelectedTemplate>
+    <HelpTemplate>
+        Please enter a minimum of 2 characters to perform a search.
+    </HelpTemplate>
     <ResultTemplate Context="person">
         @person.Firstname @person.Lastname (Id: @person.Id)
     </ResultTemplate>
