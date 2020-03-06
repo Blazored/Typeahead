@@ -1,16 +1,18 @@
+"use strict";
+
 window.blazoredTypeahead = {
     assemblyname: "Blazored.Typeahead",
-    setFocus: (element) => {
+    setFocus: function (element) {
         if (element) element.focus();
     },
     // No need to remove the event listeners later, the browser will clean this up automagically.
-    addKeyDownEventListener: (element) => {
-        element.addEventListener('keydown', (event) => {
-            const key = event.key;
+    addKeyDownEventListener: function (element) {
+        element.addEventListener('keydown', function (event) {
+            var key = event.key;
 
             if (key === "Enter") {
                 event.preventDefault();
             }
         });
     }
-}
+};
