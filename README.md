@@ -47,6 +47,7 @@ Below is a list of all the options available on the Typeahead.
 
 - `ResultTemplate` (Required) - Allows the user to define a template for a result in the results list
 - `SelectedTemplate` (Required) - Allows the user to define a template for a selected item
+- `HelpTemplate` - Allows the user to define a template to show when the `MinimumLength` to perform a search hasn't been reached
 - `NotFoundTemplate` - Allows the user to define a template when no items are found
 - `FooterTemplate` - Allows the user to define a template which is displayed at the end of the results list
 

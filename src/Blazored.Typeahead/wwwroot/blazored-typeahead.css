@@ -194,6 +194,7 @@
 
 .blazored-typeahead__result,
 .blazored-typeahead__notfound,
+.blazored-typeahead__results-help-template,
 .blazored-typeahead__results-header,
 .blazored-typeahead__results-footer {
     padding: .5rem;

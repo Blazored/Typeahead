@@ -37,6 +37,7 @@ namespace Blazored.Typeahead
         [Parameter] public Func<TItem, TValue> ConvertMethod { get; set; }
 
         [Parameter] public RenderFragment NotFoundTemplate { get; set; }
+        [Parameter] public RenderFragment HelpTemplate { get; set; }
         [Parameter] public RenderFragment<TItem> ResultTemplate { get; set; }
         [Parameter] public RenderFragment<TValue> SelectedTemplate { get; set; }
         [Parameter] public RenderFragment HeaderTemplate { get; set; }
@@ -58,6 +59,7 @@ namespace Blazored.Typeahead
         private bool IsShowingMask { get; set; } = false;
         private TItem[] Suggestions { get; set; } = new TItem[0];
         private int SelectedIndex { get; set; }
+        private bool ShowHelpTemplate { get; set; } = false;
         private string SearchText
         {
             get => _searchText;
@@ -70,7 +72,7 @@ namespace Blazored.Typeahead
                     _debounceTimer.Stop();
                     SelectedIndex = -1;
                 }
-                else if (value.Length >= MinimumLength)
+                else
                 {
                     _debounceTimer.Stop();
                     _debounceTimer.Start();
@@ -226,7 +228,7 @@ namespace Blazored.Typeahead
             }
 
             // You can only start searching if it's not a special key (Tab, Enter, Escape, ...)
-            if(args.Key.Length == 1)
+            if (args.Key.Length == 1)
             {
                 IsShowingMask = false;
                 await Task.Delay(250); // Possible race condition here.
@@ -334,6 +336,14 @@ namespace Blazored.Typeahead
 
         private async void Search(Object source, ElapsedEventArgs e)
         {
+            if (_searchText.Length < MinimumLength)
+            {
+                ShowHelpTemplate = true;
+                await InvokeAsync(StateHasChanged);
+                return;
+            }
+
+            ShowHelpTemplate = false;
             IsSearching = true;
             await InvokeAsync(StateHasChanged);
             Suggestions = (await SearchMethod?.Invoke(_searchText)).Take(MaximumSuggestions).ToArray();
@@ -376,6 +386,13 @@ namespace Blazored.Typeahead
                 await Task.Delay(250);
                 await Interop.Focus(JSRuntime, _mask);
             }
+        }
+
+        private bool ShouldShowHelpTemplate()
+        {
+            return SearchText.Length > 0 &&
+                ShowHelpTemplate &&
+                HelpTemplate != null;
         }
 
         private bool ShouldShowSuggestions()
