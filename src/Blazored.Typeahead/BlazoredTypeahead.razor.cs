@@ -117,7 +117,6 @@ namespace Blazored.Typeahead
 
             _editContext = CascadedEditContext;
             _fieldIdentifier = IsMultiselect ? FieldIdentifier.Create(ValuesExpression) : FieldIdentifier.Create(ValueExpression);
-
             Initialize();
         }
 
@@ -235,6 +234,11 @@ namespace Blazored.Typeahead
                 await Interop.Focus(JSRuntime, _searchInput);
                 SearchText = args.Key;
             }
+        }
+
+        public async Task FocusInput()
+        {
+            await Interop.Focus(JSRuntime, _searchInput);
         }
 
         private async Task HandleKeyup(KeyboardEventArgs args)
