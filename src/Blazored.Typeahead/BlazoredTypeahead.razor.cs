@@ -29,6 +29,13 @@ namespace Blazored.Typeahead
         [Parameter] public EventCallback<TValue> ValueChanged { get; set; }
         [Parameter] public Expression<Func<TValue>> ValueExpression { get; set; }
 
+        /// <summary>
+        /// Set this to the nameof() of a property of TValue to enable repeated searching. 
+        /// This sets the search text to the ToString value of this property of currently selected value.
+        /// 
+        /// ShowDropDownOnFocus should be set to false for this to work correctly.
+        /// </summary>
+        [Parameter] public string EnableRepeatedSearchingBasedOnProperty { get; set; }
         [Parameter] public IList<TValue> Values { get; set; }
         [Parameter] public EventCallback<IList<TValue>> ValuesChanged { get; set; }
         [Parameter] public Expression<Func<IList<TValue>>> ValuesExpression { get; set; }
@@ -178,6 +185,17 @@ namespace Blazored.Typeahead
         {
             SearchText = "";
             IsShowingMask = false;
+
+            if (!string.IsNullOrEmpty(EnableRepeatedSearchingBasedOnProperty) && Value != null)
+            {
+                var property = Value.GetType().GetProperty(EnableRepeatedSearchingBasedOnProperty);
+                if (property != null)
+                {
+                    var existingValue = property.GetValue(Value);
+                    if (existingValue != null)
+                        _searchText = existingValue.ToString();
+                }
+            }
 
             await Task.Delay(250); // Possible race condition here.
             await Interop.Focus(JSRuntime, _searchInput);
