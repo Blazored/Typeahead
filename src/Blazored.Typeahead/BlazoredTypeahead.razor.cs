@@ -445,5 +445,10 @@ namespace Blazored.Typeahead
                 _debounceTimer.Dispose();
             }
         }
+
+        public async Task Focus()
+        {
+            await Interop.Focus(JSRuntime, _searchInput);
+        }
     }
 }
