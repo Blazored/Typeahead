@@ -264,6 +264,10 @@ namespace Blazored.Typeahead
             {
                 await SelectResult(Suggestions[SelectedIndex]);
             }
+            else if (IsMultiselect && args.Key == "Backspace")
+            {
+                await RemoveValue(Values.Last());
+            }
         }
 
         private async Task HandleInputFocus()
