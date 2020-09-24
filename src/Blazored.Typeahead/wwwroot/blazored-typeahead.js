@@ -3,7 +3,7 @@
 window.blazoredTypeahead = {
     assemblyname: "Blazored.Typeahead",
     setFocus: function (element) {
-        if (element) element.focus();
+        if (element && element.focus) element.focus();
     },
     // No need to remove the event listeners later, the browser will clean this up automagically.
     addKeyDownEventListener: function (element) {
