@@ -77,8 +77,8 @@
                            @onkeyup:preventDefault="@PreventDefault"
                            @onblur="ResetControl"
                            @onfocus="HandleInputFocus"
-                           @attributes="AdditionalAttributes"
                            autocomplete="off"
+                           @attributes="AdditionalAttributes"
                            type="text"
                            class="blazored-typeahead__input blazored-typeahead__input-multi" />
                 </div>
@@ -104,8 +104,8 @@
                        @onkeyup:preventDefault="@PreventDefault"
                        @onblur="ResetControl"
                        @onfocus="HandleInputFocus"
-                       @attributes="AdditionalAttributes"
                        autocomplete="off"
+                       @attributes="AdditionalAttributes"
                        type="text"
                        class="blazored-typeahead__input @(IsShowingMask ? "blazored-typeahead__input-hidden" : null)" />
             }
