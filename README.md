@@ -1,7 +1,7 @@
 # Blazored Typeahead
 Typeahead control for Blazor applications.
 
-[![Build Status](https://dev.azure.com/blazored/Typeahead/_apis/build/status/Blazored.Typeahead?branchName=master)](https://dev.azure.com/blazored/Typeahead/_build/latest?definitionId=10&branchName=master)
+![Build & Test Main](https://github.com/Blazored/Typeahead/workflows/Build%20&%20Test%20Main/badge.svg)
 
 ![Nuget](https://img.shields.io/nuget/v/blazored.typeahead.svg)
 
