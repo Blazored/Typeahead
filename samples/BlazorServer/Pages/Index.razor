@@ -58,6 +58,35 @@
 }
 
 <hr />
+<h1>Blazored Typeahead - Standalone - Disable single entries</h1>
+
+
+<BlazoredTypeahead SearchMethod="GetPeopleLocal"
+                   @bind-Value="SelectedPerson"
+                   ShowDropDownOnFocus="true"
+                   DisableSelectMethod="DisablePerson"
+                   placeholder="Search by first name...">
+    <SelectedTemplate Context="person">
+        @person.Firstname
+    </SelectedTemplate>
+    <ResultTemplate Context="person">
+        @person.Firstname @person.Lastname
+    </ResultTemplate>
+    <IconTemplate>
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </IconTemplate>
+</BlazoredTypeahead>
+
+<hr />
+
+@if (SelectedPerson != null)
+{
+    <p>Selected: @SelectedPerson.Firstname @SelectedPerson.Lastname</p>
+}
+
+<hr />
 
 <h1>Blazored Typeahead - Disabled</h1>
 
@@ -241,5 +270,14 @@
     public Person LoadSelectedPerson(int? id)
     {
         return People.FirstOrDefault(p => p.Id == id);
+    }
+
+    public async Task<bool> DisablePerson(Person person)
+    {
+        if (person.Firstname.Contains("ll") || person.Firstname.Contains("tt") )
+        {
+            return true;
+        }
+        return false;
     }
 }

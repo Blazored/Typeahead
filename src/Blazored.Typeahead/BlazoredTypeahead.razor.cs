@@ -42,6 +42,8 @@ namespace Blazored.Typeahead
         [Parameter] public RenderFragment<TValue> SelectedTemplate { get; set; }
         [Parameter] public RenderFragment HeaderTemplate { get; set; }
         [Parameter] public RenderFragment FooterTemplate { get; set; }
+        [Parameter] public RenderFragment IconTemplate { get; set; }
+        [Parameter] public Func<TItem, Task<bool>> DisableSelectMethod { get; set; }
 
         [Parameter(CaptureUnmatchedValues = true)] public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
         [Parameter] public int MinimumLength { get; set; } = 1;
@@ -53,7 +55,9 @@ namespace Blazored.Typeahead
 
         [Parameter] public bool StopPropagation { get; set; } = false;
         [Parameter] public bool PreventDefault { get; set; } = false;
-
+        [Parameter] public string ControlCss { get; set; }
+        private string AddControlCss { get; set; }
+        private bool DisableSelectButton { get; set; }
         private bool IsSearching { get; set; } = false;
         private bool IsShowingSuggestions { get; set; } = false;
         private bool IsShowingMask { get; set; } = false;
@@ -140,6 +144,7 @@ namespace Blazored.Typeahead
             SearchText = "";
             IsShowingSuggestions = false;
             IsShowingMask = Value != null;
+            AddControlCss = ControlCss;
         }
 
         private async Task RemoveValue(TValue item)
@@ -314,6 +319,11 @@ namespace Blazored.Typeahead
         private string GetSelectedSuggestionClass(TItem item, int index)
         {
             const string resultClass = "blazored-typeahead__active-item";
+
+            if (DisableSelect(item).Result)
+            {
+                return "blazored-typeahead__selected-item-disabled";
+            }
             TValue value = ConvertMethod(item);
 
             if (Equals(value, Value) || (Values?.Contains(value) ?? false))
@@ -354,8 +364,22 @@ namespace Blazored.Typeahead
             await InvokeAsync(StateHasChanged);
         }
 
+        private async Task<bool> DisableSelect(TItem item)
+        {
+
+            bool rc = false;
+            if (DisableSelectMethod!=null)
+            {
+                rc= await DisableSelectMethod(item);
+            }
+            return rc;
+        }
         private async Task SelectResult(TItem item)
         {
+            if (await DisableSelect(item))
+            {
+                return;
+            }
             var value = ConvertMethod(item);
 
             if (IsMultiselect)
@@ -387,7 +411,10 @@ namespace Blazored.Typeahead
                 await Interop.Focus(JSRuntime, _mask);
             }
         }
-
+        private bool IsIconTemplateConfigured()
+        {
+            return IconTemplate != null;
+        }
         private bool ShouldShowHelpTemplate()
         {
             return SearchText.Length > 0 &&
