@@ -139,3 +139,42 @@ The `SelectedTemplate` is used to display the selected item and the `ResultTempl
 }
 ```
 Because you provide the search method to the component, making a remote call is really straight-forward. In this example, the `Debounce` parameter has been upped to 500ms and the `NotFoundTemplate` has been specified.
+
+### Subscribing to changes in selected values
+It is common to want to be able to know when a value bound to the Typeahead changes. To do this you can't use the standard `@bind-Value` or `@bind-Values` syntax, you must handle the change event manually. To do this you must specify the following parameters:
+
+- Value
+- ValueChanged
+- ValueExpression
+- TValue & TItem (these are not always necessary)
+
+The code below shows an example of how these parameters should be used.
+
+```razor
+<BlazoredTypeahead SearchMethod="SearchPeople"
+                   TValue="Result"
+                   TItem="Result"
+                   Value="selectedResult"
+                   ValueChanged="SelectedResultChanged" 
+                   ValueExpression="@(() => selectedResult)"
+                   placeholder="Search by name...">
+</BlazoredTypeahead>
+
+@code {
+    private MovieCredits movieCredits;
+    private Result selectedResult;
+
+    private async Task<IEnumerable<Result>> SearchPeople(string searchText)
+    {
+        var search = await client.SearchPerson(searchText);
+        return search.Results;
+    }
+
+    private async Task SelectedResultChanged(Result result)
+    {
+        selectedResult = result;
+        movieCredits = await client.GetPersonMovieCredits(result.Id);
+    }
+}
+```
+
