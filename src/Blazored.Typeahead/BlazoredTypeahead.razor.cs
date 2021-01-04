@@ -50,6 +50,7 @@ namespace Blazored.Typeahead
         [Parameter] public bool Disabled { get; set; } = false;
         [Parameter] public bool EnableDropDown { get; set; } = false;
         [Parameter] public bool ShowDropDownOnFocus { get; set; } = false;
+        [Parameter] public bool DisableClear { get; set; } = false;
 
         [Parameter] public bool StopPropagation { get; set; } = false;
         [Parameter] public bool PreventDefault { get; set; } = false;
@@ -376,7 +377,7 @@ namespace Blazored.Typeahead
             }
             else
             {
-                if (Value.Equals(value)) return;
+                if (Value != null && Value.Equals(value)) return;
                 Value = value;
                 await ValueChanged.InvokeAsync(value);
             }
