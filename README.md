@@ -56,11 +56,12 @@ Below is a list of all the options available on the Typeahead.
 - `MinimumLength` (Optional - Default: 1) - Minimum number of characters before starting a search
 - `Debounce` (Optional - Default: 300) - Time to wait after last keypress before starting a search
 - `MaximumSuggestions` (Optional - Default: 10) - Controls the amount of suggestions which are shown
-- `Disabled` (Optional - Default: false) - Marks the control as disabled and stops any interaction
-- `EnableDropDown` (Optional - Default: false) - Allows the control to behave as a dropdown
-- `ShowDropDownOnFocus` (Optional - Default: false) - When enabled, will show the suggestions dropdown automatically when the control is in search mode. If the control has a current value then the user would need to press the enter key first to enter search mode.
-- `StopPropagation` (Optional - Default: false) - Control the StopPropagation behavior of the input of this component. See https://docs.microsoft.com/en-us/aspnet/core/blazor/components?view=aspnetcore-3.1#stop-event-propagation
-- `PreventDefault` (Optional - Default: false) - Control the PreventDefault behavior of the input of this component. See https://docs.microsoft.com/en-us/aspnet/core/blazor/components?view=aspnetcore-3.1#prevent-default-actions
+- `Disabled` (Optional - Default: `false`) - Marks the control as disabled and stops any interaction
+- `EnableDropDown` (Optional - Default: `false`) - Allows the control to behave as a dropdown
+- `DisableClear` (Optional - Default : `false`) - Hides the clear button from the Typeahead. Users can still change the selection by clicking on the current selection and typing however, they can't clear the control entirely.'
+- `ShowDropDownOnFocus` (Optional - Default: `false`) - When enabled, will show the suggestions dropdown automatically when the control is in search mode. If the control has a current value then the user would need to press the enter key first to enter search mode.
+- `StopPropagation` (Optional - Default: `false`) - Control the StopPropagation behavior of the input of this component. See https://docs.microsoft.com/en-us/aspnet/core/blazor/components?view=aspnetcore-3.1#stop-event-propagation
+- `PreventDefault` (Optional - Default: `false`) - Control the PreventDefault behavior of the input of this component. See https://docs.microsoft.com/en-us/aspnet/core/blazor/components?view=aspnetcore-3.1#prevent-default-actions
 
 The control also requires a `SearchMethod` to be provided with the following signature `Task<IEnumerable<TItem>>(string searchText)`. The control will invoke this method 
 passing the text the user has typed into the control. You can then query your data source and return the result as an `IEnumerable` for the control to render.
@@ -139,3 +140,42 @@ The `SelectedTemplate` is used to display the selected item and the `ResultTempl
 }
 ```
 Because you provide the search method to the component, making a remote call is really straight-forward. In this example, the `Debounce` parameter has been upped to 500ms and the `NotFoundTemplate` has been specified.
+
+### Subscribing to changes in selected values
+It is common to want to be able to know when a value bound to the Typeahead changes. To do this you can't use the standard `@bind-Value` or `@bind-Values` syntax, you must handle the change event manually. To do this you must specify the following parameters:
+
+- Value
+- ValueChanged
+- ValueExpression
+- TValue & TItem (these are not always necessary)
+
+The code below shows an example of how these parameters should be used.
+
+```razor
+<BlazoredTypeahead SearchMethod="SearchPeople"
+                   TValue="Result"
+                   TItem="Result"
+                   Value="selectedResult"
+                   ValueChanged="SelectedResultChanged" 
+                   ValueExpression="@(() => selectedResult)"
+                   placeholder="Search by name...">
+</BlazoredTypeahead>
+
+@code {
+    private MovieCredits movieCredits;
+    private Result selectedResult;
+
+    private async Task<IEnumerable<Result>> SearchPeople(string searchText)
+    {
+        var search = await client.SearchPerson(searchText);
+        return search.Results;
+    }
+
+    private async Task SelectedResultChanged(Result result)
+    {
+        selectedResult = result;
+        movieCredits = await client.GetPersonMovieCredits(result.Id);
+    }
+}
+```
+

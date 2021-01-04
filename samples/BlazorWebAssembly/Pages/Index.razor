@@ -9,7 +9,8 @@
     <BlazoredTypeahead SearchMethod="GetPeopleLocal"
                        @bind-Value="FormModel.SelectedPerson"
                        EnableDropDown="true"
-                       placeholder="Search by first name...">
+                       placeholder="Search by first name..."
+                       @ref="LocalBlazoredTypeahead">
         <SelectedTemplate Context="person">
             @person.Firstname
         </SelectedTemplate>
@@ -20,6 +21,7 @@
     <ValidationMessage For="@(() => FormModel.SelectedPerson)" />
 
     <button class="btn btn-primary" type="submit" style="margin-top: 20px;">Submit</button>
+    <button class="btn btn-info" type="button" style="margin-top: 20px" @onclick="@(_ => LocalBlazoredTypeahead.Focus())">Focus</button>
 </EditForm>
 
 <hr />
@@ -186,6 +188,7 @@
     private int? SelectedPersonId;
     private IList<Person> SelectedPeople;
     private FormExample FormModel = new FormExample();
+    private BlazoredTypeahead<Person, Person> LocalBlazoredTypeahead;
 
     protected override void OnInitialized()
     {

@@ -91,9 +91,13 @@
                         <div class="blazored-typeahead__input-mask" @onclick="HandleClickOnMask" @onkeyup="HandleKeyUpOnMask" tabindex="0" @ref="_mask">
                             @SelectedTemplate(Value)
                         </div>
-                        <div class="blazored-typeahead__clear" @onclick="HandleClear" tabindex="-1">
-                            &#10005;
-                        </div>
+
+                        @if (!DisableClear)
+                        {
+                            <div class="blazored-typeahead__clear" @onclick="HandleClear" tabindex="-1">
+                                &#10005;
+                            </div>
+                        }
                     </div>
                 }
                 <input @ref="_searchInput"

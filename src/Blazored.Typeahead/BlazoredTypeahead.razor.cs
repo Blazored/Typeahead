@@ -50,6 +50,7 @@ namespace Blazored.Typeahead
         [Parameter] public bool Disabled { get; set; } = false;
         [Parameter] public bool EnableDropDown { get; set; } = false;
         [Parameter] public bool ShowDropDownOnFocus { get; set; } = false;
+        [Parameter] public bool DisableClear { get; set; } = false;
 
         [Parameter] public bool StopPropagation { get; set; } = false;
         [Parameter] public bool PreventDefault { get; set; } = false;
@@ -264,9 +265,10 @@ namespace Blazored.Typeahead
             {
                 await SelectResult(Suggestions[SelectedIndex]);
             }
-            else if (IsMultiselect && args.Key == "Backspace")
+            else if (IsMultiselect && !IsShowingSuggestions && args.Key == "Backspace")
             {
-                await RemoveValue(Values.Last());
+                if (Values.Any())
+                    await RemoveValue(Values.Last());
             }
         }
 
@@ -375,6 +377,7 @@ namespace Blazored.Typeahead
             }
             else
             {
+                if (Value != null && Value.Equals(value)) return;
                 Value = value;
                 await ValueChanged.InvokeAsync(value);
             }
@@ -448,6 +451,11 @@ namespace Blazored.Typeahead
             {
                 _debounceTimer.Dispose();
             }
+        }
+
+        public async Task Focus()
+        {
+            await Interop.Focus(JSRuntime, _searchInput);
         }
     }
 }
