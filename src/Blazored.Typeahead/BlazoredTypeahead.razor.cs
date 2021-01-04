@@ -376,6 +376,7 @@ namespace Blazored.Typeahead
             }
             else
             {
+                if (Value.Equals(value)) return;
                 Value = value;
                 await ValueChanged.InvokeAsync(value);
             }
