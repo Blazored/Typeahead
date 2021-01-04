@@ -110,7 +110,6 @@
                        @onkeyup="HandleKeyup"
                        @onkeyup:stopPropagation="@StopPropagation"
                        @onkeyup:preventDefault="@PreventDefault"
-                       @onblur="ResetControl"
                        @onfocus="HandleInputFocus"
                        autocomplete="off"
                        @attributes="AdditionalAttributes"
@@ -126,7 +125,7 @@
 
         @if (!Disabled && EnableDropDown)
         {
-            <div class="blazored-typeahead__input-icon" @onclick="ShowMaximumSuggestions" @onkeyup="HandleKeyUpOnShowDropDown" @onblur="ResetControl" tabindex="@(IsShowingSuggestions ? "-1" : "0")">
+            <div class="blazored-typeahead__input-icon" @onclick="ShowMaximumSuggestions" @onkeyup="HandleKeyUpOnShowDropDown" tabindex="@(IsShowingSuggestions ? "-1" : "0")">
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="blazored-typeahead__down-arrow">
                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                         <polygon id="Shape" points="0 0 24 0 24 24 0 24" />

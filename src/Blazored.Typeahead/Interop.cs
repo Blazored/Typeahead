@@ -15,5 +15,10 @@ namespace Blazored.Typeahead
         {
             return jsRuntime.InvokeAsync<object>("blazoredTypeahead.addKeyDownEventListener", element);
         }
+
+        internal static ValueTask<object> OnOutsideClick(this IJSRuntime jsRuntime, ElementReference element, object caller, string methodName, bool clearOnFire = false)
+        {
+            return jsRuntime.InvokeAsync<object>("blazoredTypeahead.onOutsideClick", element, DotNetObjectReference.Create(caller), methodName, clearOnFire);
+        }
     }
 }
