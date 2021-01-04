@@ -179,3 +179,46 @@ The code below shows an example of how these parameters should be used.
 }
 ```
 
+### Using complex types but only binding to a single property
+There are times when you will want to use complex types with the Typeahead but only bind a certain property of that type. For example, you may want to search against a `Person` but once a person is selected, only bind to it's `Id` property. In order to do this you will need to implement the following:
+
+```razor
+<BlazoredTypeahead SearchMethod="GetPeopleLocal"
+                   ConvertMethod="ConvertPerson"
+                   @bind-Value="SelectedPersonId"
+                   placeholder="Search by first name...">
+    <SelectedTemplate Context="personId">
+        @{
+            var selectedPerson = LoadSelectedPerson(personId);
+
+            <text>@selectedPerson?.Firstname @selectedPerson?.Lastname</text>
+        }
+    </SelectedTemplate>
+    <ResultTemplate Context="person">
+        @person.Firstname @person.Lastname (Id: @person.Id)
+    </ResultTemplate>
+</BlazoredTypeahead>
+
+@code {
+    private List<Person> People = new List<Person>();
+
+    protected override void OnInitialized()
+    {
+        People.AddRange(new List<Person>() {
+            new Person() { Id = 1, Firstname = "Martelle", Lastname = "Cullon" },
+            new Person() { Id = 2, Firstname = "Zelda", Lastname = "Abrahamsson" },
+            new Person() { Id = 3, Firstname = "Benedetta", Lastname = "Posse" }
+        });
+    }
+
+    private async Task<IEnumerable<Person>> GetPeopleLocal(string searchText)
+    {
+        return await Task.FromResult(People.Where(x => x.Firstname.ToLower().Contains(searchText.ToLower())).ToList());
+    }
+
+    private int? ConvertPerson(Person person) => person?.Id;
+
+    private Person LoadSelectedPerson(int? id) => People.FirstOrDefault(p => p.Id == id);
+}
+
+```
