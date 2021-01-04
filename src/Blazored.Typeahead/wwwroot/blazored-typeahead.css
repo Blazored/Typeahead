@@ -68,6 +68,7 @@
     cursor: not-allowed;
     border-radius: 5px 0 0 5px;
     color: grey;
+    min-height: 40px;
 }
 
     .blazored-typeahead__input-mask-wrapper--disabled:focus {
