@@ -281,21 +281,20 @@ namespace Blazored.Typeahead
         }
 
         private bool _resettingControl = false;
-        private async Task ResetControl()
+        private void ResetControl()
         {
             if (!_resettingControl)
             {
                 _resettingControl = true;
-                await Task.Delay(200);
                 Initialize();
                 _resettingControl = false;
             }
         }
 
         [JSInvokable("ResetControlBlur")]
-        public async Task ResetControlBlur()
+        public void ResetControlBlur()
         {
-            await ResetControl();
+            ResetControl();
             StateHasChanged();
         }
 
@@ -371,7 +370,7 @@ namespace Blazored.Typeahead
 
         private async Task HookOutsideClick()
         {
-            await JSRuntime.OnOutsideClick(_searchInput, this, "ResetControlBlur", true); 
+            await JSRuntime.OnOutsideClick(_searchInput, this, "ResetControlBlur", true);
         }
 
         private async Task SelectResult(TItem item)

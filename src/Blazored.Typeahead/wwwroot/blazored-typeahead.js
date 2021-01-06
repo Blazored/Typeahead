@@ -25,10 +25,10 @@ window.blazoredTypeahead = {
             return;
         }
 
-        var bId = ""; 
+        var bId = "";
         for (var clearCount = 0; clearCount < element.attributes.length; clearCount++) {
             var a = element.attributes[clearCount];
-            if (a.name[0] == '_') {
+            if (a.name.startsWith('_bl_')) {
                 bId = a.name;
                 break;
             }
@@ -50,7 +50,7 @@ window.blazoredTypeahead = {
         var bId = "";//get the blazor internal ID to distinguish different components
         for (var clearCount = 0; clearCount < searchTextElement.attributes.length; clearCount++) {
             var a = searchTextElement.attributes[clearCount];
-            if (a.name[0] == '_') {
+            if (a.name.startsWith('_bl_')) {
                 bId = a.name;
                 break;
             }
