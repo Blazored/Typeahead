@@ -281,15 +281,21 @@ namespace Blazored.Typeahead
         }
 
         private bool _resettingControl = false;
-        private async Task ResetControl()
+        private void ResetControl()
         {
             if (!_resettingControl)
             {
                 _resettingControl = true;
-                await Task.Delay(200);
                 Initialize();
                 _resettingControl = false;
             }
+        }
+
+        [JSInvokable("ResetControlBlur")]
+        public void ResetControlBlur()
+        {
+            ResetControl();
+            StateHasChanged();
         }
 
         private async Task ShowMaximumSuggestions()
@@ -315,6 +321,7 @@ namespace Blazored.Typeahead
                 IsSearching = false;
                 await InvokeAsync(StateHasChanged);
             }
+            await HookOutsideClick();
         }
 
         private string GetSelectedSuggestionClass(TItem item, int index)
@@ -356,8 +363,14 @@ namespace Blazored.Typeahead
 
             IsSearching = false;
             IsShowingSuggestions = true;
+            await HookOutsideClick();
             SelectedIndex = 0;
             await InvokeAsync(StateHasChanged);
+        }
+
+        private async Task HookOutsideClick()
+        {
+            await JSRuntime.OnOutsideClick(_searchInput, this, "ResetControlBlur", true);
         }
 
         private async Task SelectResult(TItem item)
