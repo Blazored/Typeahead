@@ -240,6 +240,16 @@ namespace Blazored.Typeahead
                 SearchText = args.Key;
             }
         }
+        private async Task HandleKeydown(KeyboardEventArgs args)
+        {
+
+            Console.WriteLine("key: " + args.Key);
+            if (args.Key == "Tab")
+            {
+                await ResetControl();
+            }
+            
+        }
 
         private async Task HandleKeyup(KeyboardEventArgs args)
         {

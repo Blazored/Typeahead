@@ -76,6 +76,7 @@
                     <input @ref="_searchInput"
                            @bind-value="SearchText"
                            @bind-value:event="oninput"
+                           @onkeydown="HandleKeydown"
                            @onkeyup="HandleKeyup"
                            @onkeyup:stopPropagation="@StopPropagation"
                            @onkeyup:preventDefault="@PreventDefault"
