@@ -29,6 +29,9 @@ namespace Blazored.Typeahead
         [Parameter] public EventCallback<TValue> ValueChanged { get; set; }
         [Parameter] public Expression<Func<TValue>> ValueExpression { get; set; }
 
+        private IList<TValue> MultiListSelection { get; set; } = new List<TValue>();
+        private bool UpdateMultiListSelection = false;
+
         [Parameter] public IList<TValue> Values { get; set; }
         [Parameter] public EventCallback<IList<TValue>> ValuesChanged { get; set; }
         [Parameter] public Expression<Func<IList<TValue>>> ValuesExpression { get; set; }
@@ -281,7 +284,7 @@ namespace Blazored.Typeahead
         }
 
         private bool _resettingControl = false;
-        private void ResetControl()
+        private async Task ResetControl()
         {
             if (!_resettingControl)
             {
@@ -289,12 +292,27 @@ namespace Blazored.Typeahead
                 Initialize();
                 _resettingControl = false;
             }
+
+            if (IsMultiselect && UpdateMultiListSelection)
+            {
+
+                var valueItems = Values ?? new List<TValue>();
+                foreach (var i in MultiListSelection)
+                {
+                    valueItems.Add(i);
+                }
+                MultiListSelection.Clear();
+                UpdateMultiListSelection = false;
+                await ValuesChanged.InvokeAsync(valueItems);
+                _editContext?.NotifyFieldChanged(_fieldIdentifier);
+            }
+
         }
 
         [JSInvokable("ResetControlBlur")]
-        public void ResetControlBlur()
+        public async Task ResetControlBlur()
         {
-            ResetControl();
+            await ResetControl();
             StateHasChanged();
         }
 
@@ -329,7 +347,7 @@ namespace Blazored.Typeahead
             const string resultClass = "blazored-typeahead__active-item";
             TValue value = ConvertMethod(item);
 
-            if (Equals(value, Value) || (Values?.Contains(value) ?? false))
+            if (Equals(value, Value) || (Values?.Contains(value) ?? false) || (MultiListSelection?.Contains(value) ?? false))
             {
                 if (index == SelectedIndex)
                 {
@@ -379,14 +397,18 @@ namespace Blazored.Typeahead
 
             if (IsMultiselect)
             {
-                var valueList = Values ?? new List<TValue>();
-
+                var valueList = MultiListSelection;
+                UpdateMultiListSelection = true;
                 if (valueList.Contains(value))
                     valueList.Remove(value);
+                else if (Values?.Contains(value) ?? false)
+                {
+                    Values.Remove(value);
+                }
                 else
                     valueList.Add(value);
 
-                await ValuesChanged.InvokeAsync(valueList);
+                return;
             }
             else
             {
