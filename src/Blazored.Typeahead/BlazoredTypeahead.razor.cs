@@ -350,6 +350,10 @@ namespace Blazored.Typeahead
                 IsSearching = false;
                 await InvokeAsync(StateHasChanged);
             }
+            else
+            {
+                await ResetControlBlur();
+            }
             await HookOutsideClick();
         }
 
