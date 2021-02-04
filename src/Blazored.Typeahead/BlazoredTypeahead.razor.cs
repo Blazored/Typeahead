@@ -185,6 +185,7 @@ namespace Blazored.Typeahead
 
             await Task.Delay(250); // Possible race condition here.
             await Interop.Focus(JSRuntime, _searchInput);
+            await HookOutsideClick();
         }
 
         private async Task HandleKeyUpOnShowDropDown(KeyboardEventArgs args)
