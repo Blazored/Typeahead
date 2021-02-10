@@ -136,7 +136,7 @@ namespace Blazored.Typeahead
 
         protected override void OnParametersSet()
         {
-            Initialize();
+            //Initialize();
         }
 
         private void Initialize()
@@ -434,15 +434,7 @@ namespace Blazored.Typeahead
 
             _editContext?.NotifyFieldChanged(_fieldIdentifier);
 
-            if (IsMultiselect)
-            {
-                await Interop.Focus(JSRuntime, _searchInput);
-            }
-            else
-            {
-                await Task.Delay(250);
-                await Interop.Focus(JSRuntime, _mask);
-            }
+            Initialize();
         }
 
         private bool ShouldShowHelpTemplate()
@@ -505,7 +497,7 @@ namespace Blazored.Typeahead
 
         public async Task Focus()
         {
-            await Interop.Focus(JSRuntime, _searchInput);
+            await HandleClickOnMask(); // Interop.Focus(JSRuntime, _searchInput);
         }
     }
 }
