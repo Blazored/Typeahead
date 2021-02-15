@@ -29,9 +29,6 @@ namespace Blazored.Typeahead
         [Parameter] public EventCallback<TValue> ValueChanged { get; set; }
         [Parameter] public Expression<Func<TValue>> ValueExpression { get; set; }
 
-        private IList<TValue> MultiListSelection { get; set; } = new List<TValue>();
-        private bool UpdateMultiListSelection = false;
-
         [Parameter] public IList<TValue> Values { get; set; }
         [Parameter] public EventCallback<IList<TValue>> ValuesChanged { get; set; }
         [Parameter] public Expression<Func<IList<TValue>>> ValuesExpression { get; set; }
@@ -304,17 +301,9 @@ namespace Blazored.Typeahead
                 _resettingControl = false;
             }
 
-            if (IsMultiselect && UpdateMultiListSelection)
+            if (IsMultiselect)
             {
-
-                var valueItems = Values ?? new List<TValue>();
-                foreach (var i in MultiListSelection)
-                {
-                    valueItems.Add(i);
-                }
-                MultiListSelection.Clear();
-                UpdateMultiListSelection = false;
-                await ValuesChanged.InvokeAsync(valueItems);
+                await ValuesChanged.InvokeAsync(Values);
                 _editContext?.NotifyFieldChanged(_fieldIdentifier);
             }
 
@@ -362,7 +351,7 @@ namespace Blazored.Typeahead
             const string resultClass = "blazored-typeahead__active-item";
             TValue value = ConvertMethod(item);
 
-            if (Equals(value, Value) || (Values?.Contains(value) ?? false) || (MultiListSelection?.Contains(value) ?? false))
+            if (Equals(value, Value) || (Values?.Contains(value) ?? false))
             {
                 if (index == SelectedIndex)
                 {
@@ -409,21 +398,17 @@ namespace Blazored.Typeahead
         private async Task SelectResult(TItem item)
         {
             var value = ConvertMethod(item);
-
+       
             if (IsMultiselect)
             {
-                var valueList = MultiListSelection;
-                UpdateMultiListSelection = true;
+                var valueList = Values ?? new List<TValue>();
+
                 if (valueList.Contains(value))
                     valueList.Remove(value);
-                else if (Values?.Contains(value) ?? false)
-                {
-                    Values.Remove(value);
-                }
                 else
                     valueList.Add(value);
 
-                return;
+                await ValuesChanged.InvokeAsync(valueList);
             }
             else
             {
