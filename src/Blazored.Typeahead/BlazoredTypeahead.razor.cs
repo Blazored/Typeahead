@@ -133,7 +133,7 @@ namespace Blazored.Typeahead
 
         protected override void OnParametersSet()
         {
-            Initialize();
+            //Initialize();
         }
 
         private void Initialize()
@@ -182,6 +182,7 @@ namespace Blazored.Typeahead
 
             await Task.Delay(250); // Possible race condition here.
             await Interop.Focus(JSRuntime, _searchInput);
+            await HookOutsideClick();
         }
 
         private async Task HandleKeyUpOnShowDropDown(KeyboardEventArgs args)
@@ -237,6 +238,16 @@ namespace Blazored.Typeahead
                 SearchText = args.Key;
             }
         }
+        private async Task HandleKeydown(KeyboardEventArgs args)
+        {
+
+            Console.WriteLine("key: " + args.Key);
+            if (args.Key == "Tab")
+            {
+                await ResetControl();
+            }
+            
+        }
 
         private async Task HandleKeyup(KeyboardEventArgs args)
         {
@@ -281,7 +292,7 @@ namespace Blazored.Typeahead
         }
 
         private bool _resettingControl = false;
-        private void ResetControl()
+        private async Task ResetControl()
         {
             if (!_resettingControl)
             {
@@ -289,12 +300,19 @@ namespace Blazored.Typeahead
                 Initialize();
                 _resettingControl = false;
             }
+
+            if (IsMultiselect)
+            {
+                await ValuesChanged.InvokeAsync(Values);
+                _editContext?.NotifyFieldChanged(_fieldIdentifier);
+            }
+
         }
 
         [JSInvokable("ResetControlBlur")]
-        public void ResetControlBlur()
+        public async Task ResetControlBlur()
         {
-            ResetControl();
+            await ResetControl();
             StateHasChanged();
         }
 
@@ -320,6 +338,10 @@ namespace Blazored.Typeahead
 
                 IsSearching = false;
                 await InvokeAsync(StateHasChanged);
+            }
+            else
+            {
+                await ResetControlBlur();
             }
             await HookOutsideClick();
         }
@@ -376,7 +398,7 @@ namespace Blazored.Typeahead
         private async Task SelectResult(TItem item)
         {
             var value = ConvertMethod(item);
-
+       
             if (IsMultiselect)
             {
                 var valueList = Values ?? new List<TValue>();
@@ -397,15 +419,7 @@ namespace Blazored.Typeahead
 
             _editContext?.NotifyFieldChanged(_fieldIdentifier);
 
-            if (IsMultiselect)
-            {
-                await Interop.Focus(JSRuntime, _searchInput);
-            }
-            else
-            {
-                await Task.Delay(250);
-                await Interop.Focus(JSRuntime, _mask);
-            }
+            Initialize();
         }
 
         private bool ShouldShowHelpTemplate()
@@ -468,7 +482,7 @@ namespace Blazored.Typeahead
 
         public async Task Focus()
         {
-            await Interop.Focus(JSRuntime, _searchInput);
+            await HandleClickOnMask(); // Interop.Focus(JSRuntime, _searchInput);
         }
     }
 }
