@@ -89,7 +89,7 @@
             }
             else
             {
-                if (IsShowingMask)
+                if (IsShowingMask && Value != null)
                 {
                     <div class="blazored-typeahead__input-mask-wrapper">
                         <div class="blazored-typeahead__input-mask" @onclick="HandleClickOnMask" @onkeyup="HandleKeyUpOnMask" tabindex="0" @ref="_mask">
