@@ -71,6 +71,9 @@ of `Person` but when a `Person` was selected you wanted the control to bind to a
 a `ConvertMethod` The convert method will be invoked by the control when a selection is made and will be passed the type selected. The method will need to handle the conversion
 and return the new type.
 
+If you want to allow adding an item based on the search when no items have been found, you can achieve this by providing the `AddItemOnEmptyResultMethod` as a parameter.
+This method will make the `NotFoundTemplate` selectable the same way a item would normally be, and will be invoked when the user selects the `NotFoundTemplate`.
+This method passes the `SearchText` and expects a new item to be returned.
 
 ### Local Data Example
 ```cs

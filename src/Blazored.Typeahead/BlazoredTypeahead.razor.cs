@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -35,8 +36,9 @@ namespace Blazored.Typeahead
 
         [Parameter] public Func<string, Task<IEnumerable<TItem>>> SearchMethod { get; set; }
         [Parameter] public Func<TItem, TValue> ConvertMethod { get; set; }
+        [Parameter] public Func<string, Task<TItem>> AddItemOnEmptyResultMethod { get; set; }
 
-        [Parameter] public RenderFragment NotFoundTemplate { get; set; }
+        [Parameter] public RenderFragment<string> NotFoundTemplate { get; set; }
         [Parameter] public RenderFragment HelpTemplate { get; set; }
         [Parameter] public RenderFragment<TItem> ResultTemplate { get; set; }
         [Parameter] public RenderFragment<TValue> SelectedTemplate { get; set; }
@@ -272,6 +274,10 @@ namespace Blazored.Typeahead
             {
                 await SelectTheFirstAndOnlySuggestion();
             }
+            else if (args.Key == "Enter" && ShowNotFound() && AddItemOnEmptyResultMethod != null)
+            {
+                await SelectNotFoundPlaceholder();
+            }
             else if (args.Key == "Enter" && SelectedIndex >= 0 && SelectedIndex < Suggestions.Count())
             {
                 await SelectResult(Suggestions[SelectedIndex]);
@@ -369,6 +375,13 @@ namespace Blazored.Typeahead
             return Equals(value, Value) ? resultClass : string.Empty;
         }
 
+        private string GetSelectedSuggestionClass(int index)
+        {
+            const string resultClass = "blazored-typeahead__active-item";
+
+            return index == SelectedIndex ? resultClass : string.Empty;
+        }
+
         private async void Search(Object source, ElapsedEventArgs e)
         {
             if (_searchText.Length < MinimumLength)
@@ -420,6 +433,21 @@ namespace Blazored.Typeahead
             _editContext?.NotifyFieldChanged(_fieldIdentifier);
 
             Initialize();
+        }
+
+        private async Task SelectNotFoundPlaceholder()
+        {
+            Debug.Assert(AddItemOnEmptyResultMethod != null);
+            try
+            {
+                // Potentially dangerous code
+                var item = await AddItemOnEmptyResultMethod(SearchText);
+                await SelectResult(item);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
 
         private bool ShouldShowHelpTemplate()
