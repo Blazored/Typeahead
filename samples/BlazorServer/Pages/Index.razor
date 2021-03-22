@@ -150,8 +150,44 @@
     {
         <p>@person.Firstname @person.Lastname</p>
     }
+    <hr />
 }
 
+<h1>Blazored Typeahead - Multi-select - Adding items on empty search result</h1>
+
+<BlazoredTypeahead SearchMethod="GetPeopleLocal"
+                   @bind-Values="SelectedPeopleWithNotFoundTemplate"
+                   Disabled="IsDisabledMulti"
+                   EnableDropDown="true"
+                   MinimumLength="2"
+                   AddItemOnEmptyResultMethod="ItemAddedMethod"
+                   placeholder="Search by first name...">
+    <SelectedTemplate Context="person">
+        @person.Firstname
+    </SelectedTemplate>
+    <HelpTemplate>
+        Please enter a minimum of 2 characters to perform a search.
+    </HelpTemplate>
+    <NotFoundTemplate Context="searchText">
+        Add "@searchText" as a new user <br />
+        The newly added user will be selected after being added.
+    </NotFoundTemplate>
+    <ResultTemplate Context="person">
+        @person.Firstname @person.Lastname (Id: @person.Id)
+    </ResultTemplate>
+</BlazoredTypeahead>
+<button class="btn btn-primary" style="margin-top: 20px;" @onclick="@(() => IsDisabledMulti = !IsDisabledMulti)">@(IsDisabledMulti ? "Enable" : "Disable")</button>
+<hr />
+
+@if (SelectedPeopleWithNotFoundTemplate != null)
+{
+    <p>Selected People:</p>
+    foreach (var person in SelectedPeopleWithNotFoundTemplate)
+    {
+        <p>@person.Firstname @person.Lastname</p>
+    }
+    <hr />
+}
 
 @code {
 
@@ -164,6 +200,7 @@
     private Person SelectedPersonNull;
     private int? SelectedPersonId;
     private IList<Person> SelectedPeople;
+    private IList<Person> SelectedPeopleWithNotFoundTemplate;
     private FormExample FormModel = new FormExample();
 
     protected override void OnInitialized()
@@ -242,4 +279,14 @@
     {
         return People.FirstOrDefault(p => p.Id == id);
     }
+
+    private readonly Random _random = new Random();
+    private Task<Person> ItemAddedMethod(string searchText)
+    {
+        var randomPerson = People[_random.Next(People.Count - 1)];
+        var newPerson = new Person(_random.Next(1000, int.MaxValue), searchText, randomPerson.Lastname, _random.Next(10, 70), randomPerson.Location);
+        People.Add(newPerson);
+        return Task.FromResult(newPerson);
+    }
+
 }

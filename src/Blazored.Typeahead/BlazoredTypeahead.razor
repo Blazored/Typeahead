@@ -185,9 +185,19 @@
 
             @if (NotFoundTemplate != null)
             {
-                <div class="blazored-typeahead__notfound">
-                    @NotFoundTemplate
-                </div>
+                @if (AddItemOnEmptyResultMethod != null)
+                {
+                    <div class="blazored-typeahead__result @GetSelectedSuggestionClass(0)"
+                         @onclick="@SelectNotFoundPlaceholder">
+                        @NotFoundTemplate(SearchText)
+                    </div>
+                }
+                else
+                {
+                    <div class="blazored-typeahead__notfound">
+                        @NotFoundTemplate(SearchText)
+                    </div>    
+                }
             }
             else
             {
