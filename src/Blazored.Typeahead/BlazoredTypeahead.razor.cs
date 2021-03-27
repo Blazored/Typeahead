@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -133,11 +132,6 @@ namespace Blazored.Typeahead
             }
         }
 
-        protected override void OnParametersSet()
-        {
-            //Initialize();
-        }
-
         private void Initialize()
         {
             SearchText = "";
@@ -242,8 +236,6 @@ namespace Blazored.Typeahead
         }
         private async Task HandleKeydown(KeyboardEventArgs args)
         {
-
-            Console.WriteLine("key: " + args.Key);
             if (args.Key == "Tab")
             {
                 await ResetControl();
@@ -437,7 +429,6 @@ namespace Blazored.Typeahead
 
         private async Task SelectNotFoundPlaceholder()
         {
-            Debug.Assert(AddItemOnEmptyResultMethod != null);
             try
             {
                 // Potentially dangerous code
@@ -510,7 +501,7 @@ namespace Blazored.Typeahead
 
         public async Task Focus()
         {
-            await HandleClickOnMask(); // Interop.Focus(JSRuntime, _searchInput);
+            await HandleClickOnMask();
         }
     }
 }

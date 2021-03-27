@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.28822.285
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazored.Typeahead", "src\Blazored.Typeahead\Blazored.Typeahead.csproj", "{35F86DB0-5B44-471B-BCDB-8108CAE6E22F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "samples", "{B3DF8680-26E4-4B3D-830C-C82818CDC305}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{B3DF8680-26E4-4B3D-830C-C82818CDC305}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWebAssembly", "samples\BlazorWebAssembly\BlazorWebAssembly.csproj", "{02224AF2-F404-4E34-A47E-C0D64FFFE033}"
 EndProject
@@ -15,7 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Shared", "samples\Sh
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8A0DDEA2-BB13-49E5-8A95-9142DB636664}"
 	ProjectSection(SolutionItems) = preProject
-		azure-pipelines.yml = azure-pipelines.yml
 		README.md = README.md
 	EndProjectSection
 EndProject
