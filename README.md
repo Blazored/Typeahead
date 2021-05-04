@@ -225,3 +225,182 @@ There are times when you will want to use complex types with the Typeahead but o
 }
 
 ```
+
+## Dynamic component
+There are times when you need to create or update the typeahead component dynamically based on a runtime model or some user input.
+The dynamic component allows you to configure and update all the features of the typeahead component at runtime.
+The dynamic component is built to be extendable which allows customizing every aspect of the builder, including the rendering process.
+
+### Usage
+The dynamic component comes in 3 different forms.
+
+1. BlazoredTypeaheadModel: Using the blazor component with a BlazoredTypeaheadConfigModel, this component uses the default builder and will always render changes to the BlazoredTypeaheadConfigModel
+2. BlazoredTypeaheadBuilder: Using the typeahead builder with a BlazoredTypeaheadConfigModel that optionally rerenders the component on any change in the model
+3. BlazoredTypeaheadBuilder: Using the typeahead builder without a BlazoredTypeaheadConfigModel, this requires a bit more work as certain fields like the value require delegates to be updated
+
+#### BlazoredTypeaheadModel
+The BlazoredTypeaheadModel requires a BlazoredTypeaheadConfigModel to render which is essentially the same as the typeheadbuilder,
+the BlazoredTypeaheadModel however does not support modifiying the rendering process as it uses the default BlazoredTypeaheadBuilder.
+Changes to the BlazoredTypeaheadConfigModel rerenders the component.
+
+#### BlazoredTypeaheadBuilder
+The builder builds the typeahead component at runtime and is designed to be completely overridable.
+The builder requires a delegate which points to the StateHasChanged as this will be used to trigger changes and rerender the component.
+
+#### BlazoredTypeaheadBuilder with model
+Changes to the BlazoredTypeaheadConfigModel can optionally be rendered.
+Using the BlazoredTypeaheadConfigModel will automatically bind the value(s) of the typeahead component to the value(s) of the model, and can therefore not be rebinded to an different property.
+
+### BlazoredTypeaheadBuilder without model
+Using the builder without a model requires more work to be done for certain fields like binding the value(s) and setting the multiselect.
+This however adds the possibility of binding a property to the value(s).
+
+### Example
+#### BlazoredTypeaheadModel
+```razor
+<BlazoredTypeaheadModel ConfigModel="_configModelForComponent"></BlazoredTypeaheadModel>
+
+@code {
+    private List<Person> People = new List<Person>();
+    private BlazoredTypeaheadConfigModel<Person, Person> _configModelForComponent;
+
+    protected override void OnInitialized()
+    {
+        People.AddRange(new List<Person>() {
+            new Person() { Id = 1, Firstname = "Martelle", Lastname = "Cullon" },
+            new Person() { Id = 2, Firstname = "Zelda", Lastname = "Abrahamsson" },
+            new Person() { Id = 3, Firstname = "Benedetta", Lastname = "Posse" }
+        });
+
+        _configModelForComponent = new BlazoredTypeaheadConfigModel<Person, Person>
+        {
+            IsMultiSelect = true,
+            SearchMethod = GetPeopleLocal,
+            SelectedTemplate = _createDynamicComponent,
+            ResultTemplate = _createDynamicComponent,
+            EnableDropDown = true,
+            Debounce = 300,
+            MinimumLength = 2,
+            ShowDropDownOnFocus = true,
+            Placeholder = "dynamic component using component",
+            AdditionalAttributes = new ObservableDictionary<string, object> { { "id", "dynamic-aliases" } }
+        };
+    }
+
+    private async Task<IEnumerable<Person>> GetPeopleLocal(string searchText)
+    {
+        return await Task.FromResult(People.Where(x => x.Firstname.ToLower().Contains(searchText.ToLower())).ToList());
+    }
+
+    readonly RenderFragment<Person> _createDynamicComponent = message => __builder =>
+    {
+        @message.FullName
+    };
+
+    readonly RenderFragment _createDynamicFooter = __builder =>
+    {
+        <button class="btn btn-outline-primary">Constructed using the dynamic component builder</button>
+    };
+}
+
+```
+
+#### BlazoredTypeaheadBuilder with model
+```razor
+@if (_blazoredTypeaheadBuilder != null)
+{
+    @_blazoredTypeaheadBuilder.BuildTypeaheadComponent(StateHasChanged)
+}
+
+@code {
+    private List<Person> People = new List<Person>();
+
+    private BlazoredTypeaheadBuilder<Person, Person> _blazoredTypeaheadBuilder;
+    private BlazoredTypeaheadConfigModel<Person, Person> _configModel;
+
+    protected override void OnInitialized()
+    {
+        People.AddRange(new List<Person>() {
+            new Person() { Id = 1, Firstname = "Martelle", Lastname = "Cullon" },
+            new Person() { Id = 2, Firstname = "Zelda", Lastname = "Abrahamsson" },
+            new Person() { Id = 3, Firstname = "Benedetta", Lastname = "Posse" }
+        });
+
+        _configModel = new BlazoredTypeaheadConfigModel<Person, Person>
+        {
+            IsMultiSelect = true,
+            SearchMethod = GetPeopleLocal,
+            SelectedTemplate = _createDynamicComponent,
+            ResultTemplate = _createDynamicComponent,
+            EnableDropDown = true,
+            Debounce = 300,
+            MinimumLength = 2,
+            ShowDropDownOnFocus = true,
+            Placeholder = "dynamic component",
+            AdditionalAttributes = new ObservableDictionary<string, object> { { "id", "dynamic-aliases" } }
+        };
+
+        _blazoredTypeaheadBuilder = new BlazoredTypeaheadBuilder<Person, Person>(_configModel, true);
+    }
+
+    private async Task<IEnumerable<Person>> GetPeopleLocal(string searchText)
+    {
+        return await Task.FromResult(People.Where(x => x.Firstname.ToLower().Contains(searchText.ToLower())).ToList());
+    }
+
+    readonly RenderFragment<Person> _createDynamicComponent = message => __builder =>
+    {
+        @message.FullName
+    };
+}
+
+```
+
+#### BlazoredTypeaheadBuilder without model
+```razor
+@if (_blazoredTypeaheadBuilder != null)
+{
+    @_blazoredTypeaheadBuilder.BuildTypeaheadComponent(StateHasChanged)
+}
+
+@code {
+    private List<Person> People = new List<Person>();
+    private IList<Person> SelectedPeople;
+
+    private BlazoredTypeaheadBuilder<Person, Person> _blazoredTypeaheadBuilder;
+
+    protected override void OnInitialized()
+    {
+        People.AddRange(new List<Person>() {
+            new Person() { Id = 1, Firstname = "Martelle", Lastname = "Cullon" },
+            new Person() { Id = 2, Firstname = "Zelda", Lastname = "Abrahamsson" },
+            new Person() { Id = 3, Firstname = "Benedetta", Lastname = "Posse" }
+        });
+
+        _blazoredTypeaheadBuilder = new BlazoredTypeaheadBuilder<Person, Person>(() => SelectedPeople, (values) => SelectedPeople = values)
+        {
+            SearchMethod = GetPeopleLocal,
+            SelectedTemplate = _createDynamicComponent,
+            ResultTemplate = _createDynamicComponent,
+            EnableDropDown = true,
+            Debounce = 300,
+            MinimumLength = 2,
+            ShowDropDownOnFocus = true,
+            Placeholder = "dynamic component",
+        };
+
+        _blazoredTypeaheadBuilder.SetAdditionalAttribute("id", "dynamic-component");
+    }
+
+    private async Task<IEnumerable<Person>> GetPeopleLocal(string searchText)
+    {
+        return await Task.FromResult(People.Where(x => x.Firstname.ToLower().Contains(searchText.ToLower())).ToList());
+    }
+
+    readonly RenderFragment<Person> _createDynamicComponent = message => __builder =>
+    {
+        @message.FullName
+    };
+}
+
+```

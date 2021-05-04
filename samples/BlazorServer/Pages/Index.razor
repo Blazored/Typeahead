@@ -1,5 +1,9 @@
 ﻿@page "/"
 
+@using Blazored.Typeahead.DynamicComponent;
+@using System.Runtime.Serialization
+@using System.IO
+
 <h1>Blazored Typeahead - Form</h1>
 
 <EditForm Model="FormModel" OnValidSubmit="HandleFormSubmit">
@@ -189,6 +193,26 @@
     <hr />
 }
 
+<h1>Blazored Typeahead - Dynamic-select - Create component using the dynamic component builder</h1>
+
+@if (_blazoredTypeaheadBuilder != null)
+{
+    @_blazoredTypeaheadBuilder.BuildTypeaheadComponent(StateHasChanged)
+}
+
+<button class="btn btn-primary" style="margin-top: 20px;" @onclick="@(AddFooterTemplate)">@(_blazoredTypeaheadBuilder.FooterTemplate == null ? "Add footer template" : "Remove footer template")</button>
+<button class="btn btn-primary" style="margin-top: 20px;" @onclick="@(ChangeComponentType)">@(_blazoredTypeaheadBuilder.IsMultiSelect ? "Switch to single select" : "Switch to multi-select")</button>
+<hr />
+
+<h1>Blazored Typeahead - Dynamic-select - Create component using the typeaheadmodel component</h1>
+
+<BlazoredTypeaheadModel ConfigModel="_configModelForComponent"></BlazoredTypeaheadModel>
+
+<button class="btn btn-primary" style="margin-top: 20px;" @onclick="@(AddFooterTemplateForComponent)">@(_configModelForComponent.FooterTemplate == null ? "Add footer template" : "Remove footer template")</button>
+<button class="btn btn-primary" style="margin-top: 20px;" @onclick="@(ChangeComponentTypeForComponent)">@(_configModelForComponent.IsMultiSelect ? "Switch to single select" : "Switch to multi-select")</button>
+<button class="btn btn-primary" style="margin-top: 20px;" @onclick="@(ChangeModelReference)">Change to copy of dynamic component builder</button>
+<hr />
+
 @code {
 
     private bool IsDisabled = true;
@@ -205,6 +229,8 @@
 
     protected override void OnInitialized()
     {
+        CreateTypeaheadComponent();
+
         People.AddRange(new List<Person>() {
             new Person() { Id = 1, Firstname = "Martelle", Lastname = "Cullon" },
             new Person() { Id = 2, Firstname = "Zelda", Lastname = "Abrahamsson" },
@@ -289,4 +315,113 @@
         return Task.FromResult(newPerson);
     }
 
+    private BlazoredTypeaheadBuilder<Person, Person> _blazoredTypeaheadBuilder;
+
+    private BlazoredTypeaheadConfigModel<Person, Person> _configModel;
+    private BlazoredTypeaheadConfigModel<Person, Person> _configModelForComponent;
+
+    private void CreateTypeaheadComponent()
+    {
+        _configModel = new BlazoredTypeaheadConfigModel<Person, Person>
+        {
+            IsMultiSelect = true,
+            SearchMethod = GetPeopleLocal,
+            SelectedTemplate = _createDynamicComponent,
+            ResultTemplate = _createDynamicComponent,
+            EnableDropDown = true,
+            Debounce = 300,
+            MinimumLength = 2,
+            ShowDropDownOnFocus = true,
+            Placeholder = "dynamic component",
+            AdditionalAttributes = new ObservableDictionary<string, object> { { "id", "dynamic-aliases" } }
+        };
+
+        _blazoredTypeaheadBuilder = new BlazoredTypeaheadBuilder<Person, Person>(_configModel, true);
+
+        _configModelForComponent = new BlazoredTypeaheadConfigModel<Person, Person>
+        {
+            IsMultiSelect = true,
+            SearchMethod = GetPeopleLocal,
+            SelectedTemplate = _createDynamicComponent,
+            ResultTemplate = _createDynamicComponent,
+            EnableDropDown = true,
+            Debounce = 300,
+            MinimumLength = 2,
+            ShowDropDownOnFocus = true,
+            Placeholder = "dynamic component using component",
+            AdditionalAttributes = new ObservableDictionary<string, object> { { "id", "dynamic-aliases" } }
+        };
+    }
+
+    private void AddFooterTemplate()
+    {
+        // Alternatively, setting the _configModel.FooterTemplate would do the same as this code
+        _blazoredTypeaheadBuilder.FooterTemplate = _blazoredTypeaheadBuilder.FooterTemplate == null ? _createDynamicFooter : null;
+    }
+
+    private void AddFooterTemplateForComponent()
+    {
+        // Set the footer template for the component config
+        _configModelForComponent.FooterTemplate = _configModelForComponent.FooterTemplate == null ? _createDynamicFooter : null;
+    }
+
+    private void ChangeComponentType()
+    {
+        _configModel.IsMultiSelect = !_configModel.IsMultiSelect;
+
+        // Alternatively, using the code beneath will manually change the builder to use multiselect
+        // if (_blazoredTypeaheadBuilder.IsMultiSelect)
+        // {
+        //     _blazoredTypeaheadBuilder.ChangeToSingleSelect(() => _configModel.Value, person => _configModel.Value = person);
+        // }
+        // else
+        // {
+        //     _blazoredTypeaheadBuilder.ChangeToMultiSelect(() => _configModel.Values, people => _configModel.Values = people);
+        // }
+    }
+
+    private void ChangeComponentTypeForComponent()
+    {
+        // Set the multi-select for the component config
+        _configModelForComponent.IsMultiSelect = !_configModelForComponent.IsMultiSelect;
+    }
+
+    private void ChangeModelReference()
+    {
+
+        var serializer = new DataContractSerializer(_configModel.GetType());
+
+        using (var ms = new MemoryStream())
+        {
+            serializer.WriteObject(ms, _configModel);
+
+            ms.Seek(0, SeekOrigin.Begin);
+
+            var copyOfModel = (BlazoredTypeaheadConfigModel<Person, Person>)serializer.ReadObject(ms);
+
+            // Serialization does not support Funcs or render fragements so these need to be manually set
+            copyOfModel.SearchMethod = _configModel.SearchMethod;
+            copyOfModel.AddItemOnEmptyResultMethod = _configModel.AddItemOnEmptyResultMethod;
+            copyOfModel.ConvertMethod = _configModel.ConvertMethod;
+
+            copyOfModel.SelectedTemplate = _configModel.SelectedTemplate;
+            copyOfModel.ResultTemplate = _configModel.ResultTemplate;
+            copyOfModel.HelpTemplate = _configModel.HelpTemplate;
+            copyOfModel.NotFoundTemplate = _configModel.NotFoundTemplate;
+            copyOfModel.HeaderTemplate = _configModel.HeaderTemplate;
+            copyOfModel.FooterTemplate = _configModel.FooterTemplate;
+
+            _configModelForComponent = copyOfModel;
+        }
+    }
+
+    readonly RenderFragment<Person> _createDynamicComponent = message => __builder =>
+    {
+        @message.FullName
+    };
+
+    readonly RenderFragment _createDynamicFooter = __builder =>
+    {
+        <button class="btn btn-outline-primary">Constructed using the dynamic component builder</button>
+    };
 }

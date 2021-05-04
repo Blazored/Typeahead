@@ -87,6 +87,26 @@ namespace Blazored.Typeahead
 
         protected override void OnInitialized()
         {
+            InitializeParameters();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if ((firstRender && !Disabled) || (!_eventsHookedUp && !Disabled))
+            {
+                await Interop.AddKeyDownEventListener(JSRuntime, _searchInput);
+                _eventsHookedUp = true;
+            }
+        }
+
+        protected override void OnParametersSet()
+        {
+            // Revalidate and initialize the parameters because the methods and render templates can be changed
+            InitializeParameters();
+        }
+
+        private void InitializeParameters()
+        {
             if (SearchMethod == null)
             {
                 throw new InvalidOperationException($"{GetType()} requires a {nameof(SearchMethod)} parameter.");
@@ -112,10 +132,7 @@ namespace Blazored.Typeahead
                 throw new InvalidOperationException($"{GetType()} requires a {nameof(ResultTemplate)} parameter.");
             }
 
-            _debounceTimer = new Timer();
-            _debounceTimer.Interval = Debounce;
-            _debounceTimer.AutoReset = false;
-            _debounceTimer.Elapsed += Search;
+            SetTimer();
 
             _editContext = CascadedEditContext;
             _fieldIdentifier = IsMultiselect ? FieldIdentifier.Create(ValuesExpression) : FieldIdentifier.Create(ValueExpression);
@@ -123,13 +140,19 @@ namespace Blazored.Typeahead
             Initialize();
         }
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
+        private void SetTimer()
         {
-            if ((firstRender && !Disabled) || (!_eventsHookedUp && !Disabled))
+            if (_debounceTimer?.Interval == Debounce)
             {
-                await Interop.AddKeyDownEventListener(JSRuntime, _searchInput);
-                _eventsHookedUp = true;
+                return;
             }
+
+            _debounceTimer?.Dispose();
+
+            _debounceTimer = new Timer();
+            _debounceTimer.Interval = Debounce;
+            _debounceTimer.AutoReset = false;
+            _debounceTimer.Elapsed += Search;
         }
 
         private void Initialize()

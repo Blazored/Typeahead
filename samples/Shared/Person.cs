@@ -20,5 +20,21 @@ namespace Sample.Shared
         public string FullName { get => Firstname + " " + Lastname; }
         public int Age { get; set; }
         public string Location { get; set; }
+
+        // Override the equals as the reference to the person object is different when deserializing the BlazoredTypeaheadConfigModel
+        public override bool Equals(object obj)
+        {
+            if (obj is Person person)
+            {
+                return person.Id == Id;
+            }
+
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
     }
 }
