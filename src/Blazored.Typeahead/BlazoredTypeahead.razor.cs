@@ -132,6 +132,15 @@ namespace Blazored.Typeahead
             }
         }
 
+        protected override async Task OnParametersSetAsync()
+        {
+            await base.OnParametersSetAsync();
+
+            await Task.Delay(250);
+
+            Initialize();
+        }
+
         private void Initialize()
         {
             SearchText = "";
