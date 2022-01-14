@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Sample.Shared
 {
@@ -7,5 +7,5 @@ namespace Sample.Shared
         [Required]
         public Person SelectedPerson { get; set; }
     }
-    
+
 }

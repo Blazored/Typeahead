@@ -1,38 +1,38 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <RazorLangVersion>3.0</RazorLangVersion>
-    <RootNamespace>Blazored.Typeahead</RootNamespace>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
 
-    <Authors>Chris Sainty</Authors>
-    <Company></Company>
-    <Copyright>Copyright 2020 (c) Chris Sainty. All rights reserved.</Copyright> 
-    <Description>A typeahead component for Blazor applications</Description>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<Authors>Chris Sainty</Authors>
+		<Company></Company>
+		<Copyright>Copyright 2022 (c) Chris Sainty. All rights reserved.</Copyright>
+		<Description>A typeahead component for Blazor applications</Description>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
-    <!-- NuGet settings -->
-    <PackageId>Blazored.Typeahead</PackageId>
-    <PackageTags>Blazored;Blazor;Razor;Components;Typeahead;Autocomplete;Auto Complete;ASP.NET Core;CSharp;Web</PackageTags>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/Blazored/Typeahead</PackageProjectUrl>
-    <PackageIcon>icon.png</PackageIcon>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/Blazored/Typeahead</RepositoryUrl>
+		<!-- NuGet settings -->
+		<PackageId>Blazored.Typeahead</PackageId>
+		<PackageTags>Blazored;Blazor;Razor;Components;Typeahead;Autocomplete;Auto Complete;ASP.NET Core;CSharp;Web</PackageTags>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/Blazored/Typeahead</PackageProjectUrl>
+		<PackageIcon>icon.png</PackageIcon>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/Blazored/Typeahead</RepositoryUrl>
 
-    <!-- SourceLink settings -->
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-  </PropertyGroup>
+		<!-- SourceLink settings -->
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="3.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.1.2" />
-  </ItemGroup>
 
-  <ItemGroup>
-    <None Include="icon.png" Pack="true" PackagePath="\" />
-  </ItemGroup>
+	<ItemGroup>
+		<SupportedPlatform Include="browser" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.1" />
+	</ItemGroup>
 
 </Project>

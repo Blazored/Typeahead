@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Sample.Shared
+﻿namespace Sample.Shared
 {
     public class Person
     {
