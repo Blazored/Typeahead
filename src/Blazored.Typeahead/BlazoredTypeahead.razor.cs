@@ -55,6 +55,8 @@ namespace Blazored.Typeahead
 
         [Parameter] public bool StopPropagation { get; set; } = false;
         [Parameter] public bool PreventDefault { get; set; } = false;
+        /// <summary>The option to keep the menu open after selecting</summary>
+        [Parameter] public bool CloseOnSelect { get; set; } = true;
 
         private bool IsSearching { get; set; } = false;
         private bool IsShowingSuggestions { get; set; } = false;
@@ -132,10 +134,10 @@ namespace Blazored.Typeahead
             }
         }
 
-        private void Initialize()
+        private void Initialize(bool isShowingSuggestions = false)
         {
             SearchText = "";
-            IsShowingSuggestions = false;
+            IsShowingSuggestions = isShowingSuggestions;
             IsShowingMask = Value != null;
         }
 
@@ -424,7 +426,7 @@ namespace Blazored.Typeahead
 
             _editContext?.NotifyFieldChanged(_fieldIdentifier);
 
-            Initialize();
+            Initialize(isShowingSuggestions: !CloseOnSelect);
         }
 
         private async Task SelectNotFoundPlaceholder()
