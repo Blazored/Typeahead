@@ -80,11 +80,11 @@ This method passes the `SearchText` and expects a new item to be returned.
 <EditForm Model="MyFormModel" OnValidSubmit="HandlValidSubmit">
     <BlazoredTypeahead SearchMethod="SearchFilms"
                             @bind-Value="MyFormModel.SelectedFilm">
-        <SelectedTemplate>
-            @context.Title
+        <SelectedTemplate Context="film">
+            @film.Title
         </SelectedTemplate>
-        <ResultTemplate>
-            @context.Title (@context.Year)
+        <ResultTemplate Context="film">
+            @film.Title (@film.Year)
         </ResultTemplate>
     </BlazoredTypeahead>
     <ValidationMessage For="@(() => MyFormModel.SelectedFilm)" />
