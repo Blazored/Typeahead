@@ -18,6 +18,7 @@ namespace Blazored.Typeahead
         private Timer _debounceTimer;
         private string _searchText = string.Empty;
         private bool _eventsHookedUp = false;
+        private bool _initialized = false;
         private ElementReference _searchInput;
         private ElementReference _mask;
 
@@ -52,6 +53,7 @@ namespace Blazored.Typeahead
         [Parameter] public bool EnableDropDown { get; set; } = false;
         [Parameter] public bool ShowDropDownOnFocus { get; set; } = false;
         [Parameter] public bool DisableClear { get; set; } = false;
+        [Parameter] public bool DisableClearSearchText { get; set; } = false;
 
         [Parameter] public bool StopPropagation { get; set; } = false;
         [Parameter] public bool PreventDefault { get; set; } = false;
@@ -121,6 +123,7 @@ namespace Blazored.Typeahead
             _fieldIdentifier = IsMultiselect ? FieldIdentifier.Create(ValuesExpression) : FieldIdentifier.Create(ValueExpression);
 
             Initialize();
+            _initialized = true;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -134,7 +137,10 @@ namespace Blazored.Typeahead
 
         private void Initialize()
         {
-            SearchText = "";
+            if (!DisableClearSearchText || !_initialized || IsMultiselect)
+            {
+                SearchText = "";
+            }
             IsShowingSuggestions = false;
             IsShowingMask = Value != null;
         }
@@ -173,9 +179,12 @@ namespace Blazored.Typeahead
 
         private async Task HandleClickOnMask()
         {
-            SearchText = "";
-            IsShowingMask = false;
+            if (!DisableClearSearchText)
+            {
+                SearchText = "";
+            }
 
+            IsShowingMask = false;
             await Task.Delay(250); // Possible race condition here.
             await Interop.Focus(JSRuntime, _searchInput);
             await HookOutsideClick();
@@ -240,7 +249,7 @@ namespace Blazored.Typeahead
             {
                 await ResetControl();
             }
-            
+
         }
 
         private async Task HandleKeyup(KeyboardEventArgs args)
@@ -403,7 +412,7 @@ namespace Blazored.Typeahead
         private async Task SelectResult(TItem item)
         {
             var value = ConvertMethod(item);
-       
+
             if (IsMultiselect)
             {
                 var valueList = Values ?? new List<TValue>();
@@ -417,7 +426,7 @@ namespace Blazored.Typeahead
             }
             else
             {
-                if (Value != null && Value.Equals(value)) return;
+                if (Value != null && Value.Equals(value) && !DisableClearSearchText) return;
                 Value = value;
                 await ValueChanged.InvokeAsync(value);
             }
