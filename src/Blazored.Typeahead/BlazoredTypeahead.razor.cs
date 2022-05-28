@@ -409,7 +409,7 @@ namespace Blazored.Typeahead
             await JSRuntime.OnOutsideClick(_searchInput, this, "ResetControlBlur", true);
         }
 
-        private async Task SelectResult(TItem item)
+        public async Task SelectResult(TItem item)
         {
             var value = ConvertMethod(item);
 
