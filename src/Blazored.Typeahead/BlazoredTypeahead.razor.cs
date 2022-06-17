@@ -43,6 +43,7 @@ namespace Blazored.Typeahead
         [Parameter] public RenderFragment<TValue> SelectedTemplate { get; set; }
         [Parameter] public RenderFragment HeaderTemplate { get; set; }
         [Parameter] public RenderFragment FooterTemplate { get; set; }
+        [Parameter] public RenderFragment<Exception> ErrorTemplate { get; set; }
 
         [Parameter(CaptureUnmatchedValues = true)] public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
         [Parameter] public int MinimumLength { get; set; } = 1;
@@ -62,6 +63,10 @@ namespace Blazored.Typeahead
         private TItem[] Suggestions { get; set; } = new TItem[0];
         private int SelectedIndex { get; set; }
         private bool ShowHelpTemplate { get; set; } = false;
+
+        private Exception Error { get; set; }
+        private bool HasError => Error != null;
+
         private string SearchText
         {
             get => _searchText;
@@ -304,7 +309,6 @@ namespace Blazored.Typeahead
                 await ValuesChanged.InvokeAsync(Values);
                 _editContext?.NotifyFieldChanged(_fieldIdentifier);
             }
-
         }
 
         [JSInvokable("ResetControlBlur")]
@@ -332,7 +336,7 @@ namespace Blazored.Typeahead
                 IsSearching = true;
                 await InvokeAsync(StateHasChanged);
 
-                Suggestions = (await SearchMethod?.Invoke(_searchText)).Take(MaximumSuggestions).ToArray();
+                Suggestions = await SearchForSuggestionsAsync();
 
                 IsSearching = false;
                 await InvokeAsync(StateHasChanged);
@@ -386,13 +390,30 @@ namespace Blazored.Typeahead
             ShowHelpTemplate = false;
             IsSearching = true;
             await InvokeAsync(StateHasChanged);
-            Suggestions = (await SearchMethod?.Invoke(_searchText)).Take(MaximumSuggestions).ToArray();
+            Suggestions = await SearchForSuggestionsAsync();
 
             IsSearching = false;
-            IsShowingSuggestions = true;
             await HookOutsideClick();
             SelectedIndex = 0;
             await InvokeAsync(StateHasChanged);
+        }
+
+        private async Task<TItem[]> SearchForSuggestionsAsync()
+        {
+            try
+            {
+                Error = null;
+                var suggestions = (await SearchMethod?.Invoke(_searchText)).Take(MaximumSuggestions).ToArray();
+                IsShowingSuggestions = true;
+
+                return suggestions;
+            }
+            catch (Exception e) when (ErrorTemplate != null)
+            {
+                IsShowingSuggestions = false;
+                Error = e;
+                return null;
+            }
         }
 
         private async Task HookOutsideClick()
@@ -403,7 +424,7 @@ namespace Blazored.Typeahead
         private async Task SelectResult(TItem item)
         {
             var value = ConvertMethod(item);
-       
+
             if (IsMultiselect)
             {
                 var valueList = Values ?? new List<TValue>();
@@ -444,14 +465,16 @@ namespace Blazored.Typeahead
         private bool ShouldShowHelpTemplate()
         {
             return SearchText.Length > 0 &&
-                ShowHelpTemplate &&
-                HelpTemplate != null;
+                   ShowHelpTemplate &&
+                   HelpTemplate != null;
         }
 
         private bool ShouldShowSuggestions()
         {
             return IsShowingSuggestions &&
-                   Suggestions.Any() && !IsSearchingOrDebouncing;
+                   Suggestions.Any() &&
+                   !IsSearchingOrDebouncing &&
+                   !HasError;
         }
 
         private void MoveSelection(int count)
@@ -478,11 +501,21 @@ namespace Blazored.Typeahead
         }
 
         private bool IsSearchingOrDebouncing => IsSearching || _debounceTimer.Enabled;
+
         private bool ShowNotFound()
         {
             return IsShowingSuggestions &&
                    !IsSearchingOrDebouncing &&
-                   !Suggestions.Any();
+                   !Suggestions.Any() &&
+                   !HasError;
+        }
+
+        private bool ShowError()
+        {
+            return ErrorTemplate != null &&
+                   HasError &&
+                   !IsShowingSuggestions &&
+                   !IsSearchingOrDebouncing;
         }
 
         public void Dispose()

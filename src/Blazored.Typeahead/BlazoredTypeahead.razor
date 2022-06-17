@@ -214,4 +214,10 @@
             }
         </div>
     }
+    else if (ShowError())
+    {
+        <div class="blazored-typeahead__notfound">  
+            @ErrorTemplate(Error)
+        </div>
+    }
 </div>

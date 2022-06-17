@@ -189,6 +189,23 @@
     <hr />
 }
 
+<h1>Blazored Typeahead - Error Handler</h1>
+
+<BlazoredTypeahead SearchMethod="@GetErrorPeople"
+                   @bind-Value="@SelectedPersonNull"
+                   placeholder="Search by first name...">
+    <SelectedTemplate Context="person">
+        @person.Firstname
+    </SelectedTemplate>
+    <ResultTemplate Context="person">
+        @person.Firstname @person.Lastname
+    </ResultTemplate>
+    <ErrorTemplate>
+        <span style="color: red;">@context.Message</span>
+    </ErrorTemplate>
+</BlazoredTypeahead>
+<hr />
+
 @code {
 
     private bool IsDisabled = true;
@@ -263,6 +280,16 @@
     private async Task<IEnumerable<Person>> GetPeopleLocal(string searchText)
     {
         return await Task.FromResult(People.Where(x => x.Firstname.ToLower().Contains(searchText.ToLower())).ToList());
+    }
+    
+    private async Task<IEnumerable<Person>> GetErrorPeople(string searchText)
+    {
+        if (searchText.Contains("win", StringComparison.InvariantCultureIgnoreCase))
+        {
+           return await GetPeopleLocal(searchText);
+        }
+
+        throw new InvalidOperationException("Only people with 'win' in name allowed");
     }
 
     private void HandleFormSubmit()
