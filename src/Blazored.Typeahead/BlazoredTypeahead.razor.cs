@@ -132,6 +132,11 @@ namespace Blazored.Typeahead
             }
         }
 
+        protected override void OnParametersSet()
+        {
+            Initialize();
+        }
+
         private void Initialize()
         {
             SearchText = "";
@@ -240,7 +245,7 @@ namespace Blazored.Typeahead
             {
                 await ResetControl();
             }
-            
+
         }
 
         private async Task HandleKeyup(KeyboardEventArgs args)
@@ -403,7 +408,7 @@ namespace Blazored.Typeahead
         private async Task SelectResult(TItem item)
         {
             var value = ConvertMethod(item);
-       
+
             if (IsMultiselect)
             {
                 var valueList = Values ?? new List<TValue>();
