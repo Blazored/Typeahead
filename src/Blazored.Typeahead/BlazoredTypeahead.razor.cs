@@ -16,6 +16,7 @@ namespace Blazored.Typeahead
         private EditContext _editContext;
         private FieldIdentifier _fieldIdentifier;
         private Timer _debounceTimer;
+        private Timer _searchTimer;
         private string _searchText = string.Empty;
         private bool _eventsHookedUp = false;
         private ElementReference _searchInput;
@@ -39,6 +40,7 @@ namespace Blazored.Typeahead
 
         [Parameter] public RenderFragment<string> NotFoundTemplate { get; set; }
         [Parameter] public RenderFragment HelpTemplate { get; set; }
+        [Parameter] public RenderFragment SearchingTemplate { get; set; }
         [Parameter] public RenderFragment<TItem> ResultTemplate { get; set; }
         [Parameter] public RenderFragment<TValue> SelectedTemplate { get; set; }
         [Parameter] public RenderFragment HeaderTemplate { get; set; }
@@ -52,6 +54,7 @@ namespace Blazored.Typeahead
         [Parameter] public bool EnableDropDown { get; set; } = false;
         [Parameter] public bool ShowDropDownOnFocus { get; set; } = false;
         [Parameter] public bool DisableClear { get; set; } = false;
+        [Parameter] public int SearchingDisplayTimeout { get; set; } = 300;
 
         [Parameter] public bool StopPropagation { get; set; } = false;
         [Parameter] public bool PreventDefault { get; set; } = false;
@@ -116,6 +119,11 @@ namespace Blazored.Typeahead
             _debounceTimer.Interval = Debounce;
             _debounceTimer.AutoReset = false;
             _debounceTimer.Elapsed += Search;
+
+            _searchTimer = new Timer();
+            _searchTimer.Interval = SearchingDisplayTimeout;
+            _searchTimer.AutoReset = false;
+            _searchTimer.Elapsed += SetIsSearching;
 
             _editContext = CascadedEditContext;
             _fieldIdentifier = IsMultiselect ? FieldIdentifier.Create(ValuesExpression) : FieldIdentifier.Create(ValueExpression);
@@ -329,11 +337,12 @@ namespace Blazored.Typeahead
             if (IsShowingSuggestions)
             {
                 SearchText = "";
-                IsSearching = true;
+                _searchTimer.Start();
                 await InvokeAsync(StateHasChanged);
 
                 Suggestions = (await SearchMethod?.Invoke(_searchText)).Take(MaximumSuggestions).ToArray();
 
+                _searchTimer.Stop();
                 IsSearching = false;
                 await InvokeAsync(StateHasChanged);
             }
@@ -384,10 +393,11 @@ namespace Blazored.Typeahead
             }
 
             ShowHelpTemplate = false;
-            IsSearching = true;
+            _searchTimer.Start();
             await InvokeAsync(StateHasChanged);
             Suggestions = (await SearchMethod?.Invoke(_searchText)).Take(MaximumSuggestions).ToArray();
-
+            
+            _searchTimer.Stop();
             IsSearching = false;
             IsShowingSuggestions = true;
             await HookOutsideClick();
@@ -485,6 +495,12 @@ namespace Blazored.Typeahead
                    !Suggestions.Any();
         }
 
+        private async void SetIsSearching(Object source, ElapsedEventArgs e)
+        {
+            IsSearching = true;
+            await InvokeAsync(StateHasChanged);
+        }
+
         public void Dispose()
         {
             Dispose(true);
@@ -496,6 +512,7 @@ namespace Blazored.Typeahead
             if (disposing)
             {
                 _debounceTimer.Dispose();
+                _searchTimer.Dispose();
             }
         }
 
