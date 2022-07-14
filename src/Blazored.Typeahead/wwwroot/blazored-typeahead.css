@@ -197,7 +197,8 @@
 .blazored-typeahead__notfound,
 .blazored-typeahead__results-help-template,
 .blazored-typeahead__results-header,
-.blazored-typeahead__results-footer {
+.blazored-typeahead__results-footer,
+.blazored-typeahead__results-searching {
     padding: .5rem;
     border-top: 1px solid #fff;
     border-bottom: 1px solid #fff;

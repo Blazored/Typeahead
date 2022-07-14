@@ -120,7 +120,16 @@
 
         @if (IsSearching)
         {
-            <div class="blazored-typeahead__loader"></div>
+            if (this.SearchingTemplate != null)
+            {
+                <div class="blazored-typeahead__results-searching">
+                    @SearchingTemplate
+                </div>
+            }
+            else
+            {
+                <div class="blazored-typeahead__loader"></div>
+            }
         }
 
         @if (!Disabled && EnableDropDown)
