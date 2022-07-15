@@ -5,8 +5,8 @@ on:
     branches: [ main ]
 
 env:
-    NETCORE_VERSION: '3.1.301'
     PROJECT_NAME: Blazored.Typeahead
+    NETCORE_VERSION: '6.0.x'
 
 jobs:
   build:
