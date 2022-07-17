@@ -414,6 +414,7 @@ namespace Blazored.Typeahead
                 else
                     valueList.Add(value);
 
+                Values = valueList;
                 await ValuesChanged.InvokeAsync(valueList);
             }
             else
