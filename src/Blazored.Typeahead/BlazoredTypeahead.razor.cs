@@ -2,11 +2,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using System.Timers;
 
 namespace Blazored.Typeahead
@@ -15,7 +11,7 @@ namespace Blazored.Typeahead
     {
         private EditContext _editContext;
         private FieldIdentifier _fieldIdentifier;
-        private Timer _debounceTimer;
+        private System.Timers.Timer _debounceTimer;
         private string _searchText = string.Empty;
         private bool _eventsHookedUp = false;
         private ElementReference _searchInput;
@@ -112,7 +108,7 @@ namespace Blazored.Typeahead
                 throw new InvalidOperationException($"{GetType()} requires a {nameof(ResultTemplate)} parameter.");
             }
 
-            _debounceTimer = new Timer();
+            _debounceTimer = new System.Timers.Timer();
             _debounceTimer.Interval = Debounce;
             _debounceTimer.AutoReset = false;
             _debounceTimer.Elapsed += Search;
@@ -130,6 +126,11 @@ namespace Blazored.Typeahead
                 await Interop.AddKeyDownEventListener(JSRuntime, _searchInput);
                 _eventsHookedUp = true;
             }
+        }
+
+        protected override void OnParametersSet()
+        {
+            Initialize();
         }
 
         private void Initialize()
@@ -240,7 +241,7 @@ namespace Blazored.Typeahead
             {
                 await ResetControl();
             }
-            
+
         }
 
         private async Task HandleKeyup(KeyboardEventArgs args)
@@ -403,7 +404,7 @@ namespace Blazored.Typeahead
         private async Task SelectResult(TItem item)
         {
             var value = ConvertMethod(item);
-       
+
             if (IsMultiselect)
             {
                 var valueList = Values ?? new List<TValue>();
