@@ -51,6 +51,7 @@ namespace Blazored.Typeahead
 
         [Parameter] public bool StopPropagation { get; set; } = false;
         [Parameter] public bool PreventDefault { get; set; } = false;
+        [Parameter] public bool DeleteItemsOnBackspace { get; set; } = true;
 
         private bool IsSearching { get; set; } = false;
         private bool IsShowingSuggestions { get; set; } = false;
@@ -275,7 +276,7 @@ namespace Blazored.Typeahead
             {
                 await SelectResult(Suggestions[SelectedIndex]);
             }
-            else if (IsMultiselect && !IsShowingSuggestions && args.Key == "Backspace")
+            else if (IsMultiselect && !IsShowingSuggestions && args.Key == "Backspace" && DeleteItemsOnBackspace)
             {
                 if (Values.Any())
                     await RemoveValue(Values.Last());
