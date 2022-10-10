@@ -22,7 +22,19 @@ namespace Blazored.Typeahead
 
         [CascadingParameter] private EditContext CascadedEditContext { get; set; }
 
-        [Parameter] public TValue Value { get; set; }
+        private TValue _value;
+        [Parameter] public TValue Value 
+        {
+            get => _value; 
+            set
+            {
+                if (_valueComparer.Equals(_value, value) == false)
+                {
+                    _value = value;
+                    Initialize();
+                }
+            }
+        }
         [Parameter] public EventCallback<TValue> ValueChanged { get; set; }
         [Parameter] public Expression<Func<TValue>> ValueExpression { get; set; }
 
@@ -131,7 +143,6 @@ namespace Blazored.Typeahead
 
         protected override void OnParametersSet()
         {
-            Initialize();
         }
 
         private void Initialize()
