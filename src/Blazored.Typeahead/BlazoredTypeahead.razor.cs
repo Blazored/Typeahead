@@ -16,6 +16,7 @@ namespace Blazored.Typeahead
         private bool _eventsHookedUp = false;
         private ElementReference _searchInput;
         private ElementReference _mask;
+        private IEqualityComparer<TValue> _valueComparer = EqualityComparer<TValue>.Default;
 
         [Inject] private IJSRuntime JSRuntime { get; set; }
 
@@ -143,7 +144,7 @@ namespace Blazored.Typeahead
         private async Task RemoveValue(TValue item)
         {
             var valueList = Values ?? new List<TValue>();
-            if (valueList.Contains(item))
+            if (valueList.Contains(item, _valueComparer))
             {
                 valueList.Remove(item);
             }
@@ -409,7 +410,7 @@ namespace Blazored.Typeahead
             {
                 var valueList = Values ?? new List<TValue>();
 
-                if (valueList.Contains(value))
+                if (valueList.Contains(value, _valueComparer))
                     valueList.Remove(value);
                 else
                     valueList.Add(value);
@@ -418,7 +419,7 @@ namespace Blazored.Typeahead
             }
             else
             {
-                if (Value != null && Value.Equals(value)) return;
+                if (_valueComparer.Equals(Value, value)) return;
                 Value = value;
                 await ValueChanged.InvokeAsync(value);
             }
