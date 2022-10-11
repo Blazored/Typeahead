@@ -135,8 +135,7 @@ namespace Blazored.Typeahead
 
         protected override void OnParametersSet()
         {
-            //Initialize();
-            IsShowingMask = Value != null;
+            Initialize();
         }
 
         private void Initialize()
