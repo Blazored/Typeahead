@@ -111,7 +111,7 @@ namespace Blazored.Typeahead
                 throw new InvalidOperationException($"{GetType()} requires a {nameof(ResultTemplate)} parameter.");
             }
 
-            _capturedAttributes = CaptureCSSAttributes(AdditionalAttributes);
+            _capturedAttributes = CaptureCssAttributes(AdditionalAttributes);
 
             _debounceTimer = new System.Timers.Timer();
             _debounceTimer.Interval = Debounce;
@@ -146,7 +146,7 @@ namespace Blazored.Typeahead
             IsShowingMask = Value != null;
         }
 
-        private IReadOnlyDictionary<string, object> CaptureCSSAttributes(IReadOnlyDictionary<string, object> additionalAttributes)
+        private IReadOnlyDictionary<string, object> CaptureCssAttributes(IReadOnlyDictionary<string, object> additionalAttributes)
         {
             var capturedAttributes = additionalAttributes.ToDictionary(k => k.Key, v => v.Value);
             if (capturedAttributes.ContainsKey("class"))
