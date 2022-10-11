@@ -16,6 +16,9 @@ namespace Blazored.Typeahead
         private bool _eventsHookedUp = false;
         private ElementReference _searchInput;
         private ElementReference _mask;
+        private IReadOnlyDictionary<string, object> _capturedAttributes = default!;
+        private string _classAttribute = string.Empty;
+        private string _styleAttribute = string.Empty;
 
         [Inject] private IJSRuntime JSRuntime { get; set; }
 
@@ -108,6 +111,8 @@ namespace Blazored.Typeahead
                 throw new InvalidOperationException($"{GetType()} requires a {nameof(ResultTemplate)} parameter.");
             }
 
+            _capturedAttributes = CaptureCSSAttributes(AdditionalAttributes);
+
             _debounceTimer = new System.Timers.Timer();
             _debounceTimer.Interval = Debounce;
             _debounceTimer.AutoReset = false;
@@ -130,7 +135,8 @@ namespace Blazored.Typeahead
 
         protected override void OnParametersSet()
         {
-            Initialize();
+            //Initialize();
+            IsShowingMask = Value != null;
         }
 
         private void Initialize()
@@ -138,6 +144,22 @@ namespace Blazored.Typeahead
             SearchText = "";
             IsShowingSuggestions = false;
             IsShowingMask = Value != null;
+        }
+
+        private IReadOnlyDictionary<string, object> CaptureCSSAttributes(IReadOnlyDictionary<string, object> additionalAttributes)
+        {
+            var capturedAttributes = additionalAttributes.ToDictionary(k => k.Key, v => v.Value);
+            if (capturedAttributes.ContainsKey("class"))
+            {
+                _classAttribute = (string)capturedAttributes["class"];
+                capturedAttributes.Remove("class");
+            }
+            if (capturedAttributes.ContainsKey("style"))
+            {
+                _styleAttribute = (string)capturedAttributes["style"];
+                capturedAttributes.Remove("style");
+            }
+            return capturedAttributes;
         }
 
         private async Task RemoveValue(TValue item)
