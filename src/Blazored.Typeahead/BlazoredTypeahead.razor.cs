@@ -151,12 +151,12 @@ namespace Blazored.Typeahead
             var capturedAttributes = additionalAttributes.ToDictionary(k => k.Key, v => v.Value);
             if (capturedAttributes.ContainsKey("class"))
             {
-                _classAttribute = (string)capturedAttributes["class"];
+                _classAttribute = Convert.ToString(capturedAttributes["class"]) ?? string.Empty;
                 capturedAttributes.Remove("class");
             }
             if (capturedAttributes.ContainsKey("style"))
             {
-                _styleAttribute = (string)capturedAttributes["style"];
+                _styleAttribute = Convert.ToString(capturedAttributes["style"]) ?? string.Empty;
                 capturedAttributes.Remove("style");
             }
             return capturedAttributes;
