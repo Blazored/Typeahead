@@ -82,7 +82,7 @@
                            @onkeyup:preventDefault="@PreventDefault"
                            @onfocus="HandleInputFocus"
                            autocomplete="off"
-                           @attributes="AdditionalAttributes"
+                           @attributes="_capturedAttributes"
                            type="text"
                            class="blazored-typeahead__input blazored-typeahead__input-multi" />
                 </div>
@@ -112,7 +112,7 @@
                        @onkeyup:preventDefault="@PreventDefault"
                        @onfocus="HandleInputFocus"
                        autocomplete="off"
-                       @attributes="AdditionalAttributes"
+                       @attributes="_capturedAttributes"
                        type="text"
                        class="blazored-typeahead__input @(IsShowingMask ? "blazored-typeahead__input-hidden" : null)" />
             }
