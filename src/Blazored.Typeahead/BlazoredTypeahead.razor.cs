@@ -16,7 +16,7 @@ namespace Blazored.Typeahead
         private bool _eventsHookedUp = false;
         private ElementReference _searchInput;
         private ElementReference _mask;
-        private IReadOnlyDictionary<string, object> _capturedAttributes = default!;
+        private IReadOnlyDictionary<string, object>? _capturedAttributes;
         private string _classAttribute = string.Empty;
         private string _styleAttribute = string.Empty;
 
@@ -43,7 +43,7 @@ namespace Blazored.Typeahead
         [Parameter] public RenderFragment HeaderTemplate { get; set; }
         [Parameter] public RenderFragment FooterTemplate { get; set; }
 
-        [Parameter(CaptureUnmatchedValues = true)] public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
+        [Parameter(CaptureUnmatchedValues = true)] public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
         [Parameter] public int MinimumLength { get; set; } = 1;
         [Parameter] public int Debounce { get; set; } = 300;
         [Parameter] public int MaximumSuggestions { get; set; } = 10;
@@ -145,8 +145,13 @@ namespace Blazored.Typeahead
             IsShowingMask = Value != null;
         }
 
-        private IReadOnlyDictionary<string, object> CaptureCssAttributes(IReadOnlyDictionary<string, object> additionalAttributes)
+        private IReadOnlyDictionary<string, object>? CaptureCssAttributes(IReadOnlyDictionary<string, object>? additionalAttributes)
         {
+            if (additionalAttributes == null)
+            {
+                return null;
+            }
+
             var capturedAttributes = additionalAttributes.ToDictionary(k => k.Key, v => v.Value);
             if (capturedAttributes.ContainsKey("class"))
             {
