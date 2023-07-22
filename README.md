@@ -1,9 +1,9 @@
 # Blazored Typeahead
 Typeahead control for Blazor applications.
 
+[![Nuget version](https://img.shields.io/nuget/v/Blazored.Typeahead.svg?logo=nuget)](https://www.nuget.org/packages/Blazored.Typeahead/)
+[![Nuget downloads](https://img.shields.io/nuget/dt/Blazored.Typeahead?logo=nuget)](https://www.nuget.org/packages/Blazored.Typeahead/)
 ![Build & Test Main](https://github.com/Blazored/Typeahead/workflows/Build%20&%20Test%20Main/badge.svg)
-
-![Nuget](https://img.shields.io/nuget/v/blazored.typeahead.svg)
 
 ![Screenshot](screenshot.png)
 
