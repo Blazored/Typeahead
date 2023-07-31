@@ -3,7 +3,7 @@
 @typeparam TItem
 @typeparam TValue
 
-<div class="blazored-typeahead @FieldCssClasses">
+<div class="blazored-typeahead @_classAttribute @FieldCssClasses" style="@_styleAttribute">
 
     <div class="blazored-typeahead__controls">
 
@@ -82,7 +82,7 @@
                            @onkeyup:preventDefault="@PreventDefault"
                            @onfocus="HandleInputFocus"
                            autocomplete="off"
-                           @attributes="AdditionalAttributes"
+                           @attributes="_capturedAttributes"
                            type="text"
                            class="blazored-typeahead__input blazored-typeahead__input-multi" />
                 </div>
@@ -112,7 +112,7 @@
                        @onkeyup:preventDefault="@PreventDefault"
                        @onfocus="HandleInputFocus"
                        autocomplete="off"
-                       @attributes="AdditionalAttributes"
+                       @attributes="_capturedAttributes"
                        type="text"
                        class="blazored-typeahead__input @(IsShowingMask ? "blazored-typeahead__input-hidden" : null)" />
             }
